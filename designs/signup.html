@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nex Campus | Create Account</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=Berkeley+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#191f2f",
+                      "on-tertiary": "#063254",
+                      "on-primary-container": "#00285d",
+                      "on-primary-fixed-variant": "#004395",
+                      "outline-variant": "#424754",
+                      "tertiary-fixed": "#d0e4ff",
+                      "background": "#0d1322",
+                      "on-tertiary-container": "#002b4c",
+                      "on-surface": "#dde2f8",
+                      "secondary-container": "#ee9800",
+                      "on-tertiary-fixed": "#001d35",
+                      "inverse-surface": "#dde2f8",
+                      "on-tertiary-fixed-variant": "#25496c",
+                      "primary-fixed-dim": "#adc6ff",
+                      "primary-container": "#4d8eff",
+                      "on-secondary-container": "#5b3800",
+                      "on-error": "#690005",
+                      "surface-container-lowest": "#080e1d",
+                      "on-secondary": "#472a00",
+                      "on-surface-variant": "#c2c6d6",
+                      "on-primary-fixed": "#001a42",
+                      "secondary-fixed-dim": "#ffb95f",
+                      "surface-variant": "#2f3445",
+                      "tertiary-fixed-dim": "#a7caf3",
+                      "surface-dim": "#0d1322",
+                      "surface-tint": "#adc6ff",
+                      "tertiary": "#a7caf3",
+                      "surface-container-low": "#151b2b",
+                      "secondary": "#ffb95f",
+                      "primary-fixed": "#d8e2ff",
+                      "on-primary": "#002e6a",
+                      "on-secondary-fixed": "#2a1700",
+                      "secondary-fixed": "#ffddb8",
+                      "outline": "#8c909f",
+                      "inverse-primary": "#005ac2",
+                      "error": "#ffb4ab",
+                      "surface-container-highest": "#2f3445",
+                      "surface": "#0d1322",
+                      "error-container": "#93000a",
+                      "surface-container-high": "#242a3a",
+                      "on-error-container": "#ffdad6",
+                      "tertiary-container": "#7194bb",
+                      "surface-bright": "#33394a",
+                      "inverse-on-surface": "#2a3040",
+                      "primary": "#adc6ff",
+                      "on-secondary-fixed-variant": "#653e00",
+                      "on-background": "#dde2f8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "fontFamily": {
+                      "headline": ["Inter"],
+                      "body": ["Inter"],
+                      "label": ["Inter"],
+                      "mono": ["Berkeley Mono"]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            backdrop-filter: blur(20px);
+            background: rgba(13, 19, 34, 0.8);
+        }
+        .bento-grid-pattern {
+            background-image: radial-gradient(circle at 2px 2px, rgba(66, 71, 84, 0.15) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30 selection:text-primary min-h-screen flex flex-col">
+<!-- TopNavBar (Suppressed for focused Transactional screen as per instructions, but placeholder logic included if needed) -->
+<header class="fixed top-0 left-0 w-full z-50 glass-nav border-b border-outline-variant/10">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-[1440px] mx-auto">
+<div class="text-xl font-bold tracking-tighter text-white font-headline">
+                Nex Campus
+            </div>
+<div class="flex items-center gap-4">
+<span class="font-mono text-[10px] tracking-widest text-outline uppercase">System Status: Optimal</span>
+<div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(173,198,255,0.6)]"></div>
+</div>
+</div>
+</header>
+<main class="flex-grow flex items-center justify-center pt-20 pb-12 relative overflow-hidden bento-grid-pattern">
+<!-- Background decorative elements -->
+<div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-tertiary/5 rounded-full blur-[100px]"></div>
+<div class="w-full max-w-xl px-6 relative z-10">
+<!-- Form Container -->
+<div class="bg-surface-container-low rounded-xl p-8 md:p-12 shadow-2xl ring-1 ring-outline-variant/15">
+<div class="mb-10">
+<h1 class="text-3xl font-bold tracking-tighter text-white font-headline mb-2">Create your account</h1>
+<p class="text-on-surface-variant font-body leading-relaxed">Join the next generation of intelligent campus management.</p>
+</div>
+<form class="space-y-6">
+<!-- Name Field -->
+<div class="space-y-2">
+<label class="text-xs font-mono tracking-widest text-outline uppercase ml-1">Full Name</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-highest border-none rounded-lg py-3.5 px-4 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary-container transition-all" placeholder="Enter your full name" type="text"/>
+</div>
+</div>
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="text-xs font-mono tracking-widest text-outline uppercase ml-1">Student Email</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-highest border-none rounded-lg py-3.5 px-4 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary-container transition-all" placeholder="name@campus.edu" type="email"/>
+</div>
+</div>
+<!-- USN/ID Field -->
+<div class="space-y-2">
+<label class="text-xs font-mono tracking-widest text-outline uppercase ml-1">University Serial Number (USN)</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-highest border-none rounded-lg py-3.5 px-4 text-on-surface placeholder:text-outline font-mono focus:ring-1 focus:ring-primary-container transition-all" placeholder="e.g. 1NC24CS001" type="text"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<label class="text-xs font-mono tracking-widest text-outline uppercase ml-1">Password</label>
+<div class="relative group">
+<input class="w-full bg-surface-container-highest border-none rounded-lg py-3.5 px-4 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary-container transition-all" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<!-- Terms -->
+<div class="flex items-start gap-3 py-2">
+<input class="mt-1 rounded-sm bg-surface-variant border-outline-variant text-primary focus:ring-primary/20" id="terms" type="checkbox"/>
+<label class="text-sm text-on-surface-variant leading-tight" for="terms">
+                            I agree to the <span class="text-primary hover:underline cursor-pointer">Terms of Service</span> and <span class="text-primary hover:underline cursor-pointer">Privacy Policy</span>.
+                        </label>
+</div>
+<!-- CTA -->
+<button class="w-full bg-primary text-on-primary font-bold py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-fixed-dim transition-all active:scale-[0.98]" type="submit">
+<span>Create Account</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+<!-- Footer Link -->
+<div class="mt-10 pt-8 border-t border-outline-variant/10 text-center">
+<p class="text-on-surface-variant text-sm">
+                        Already have an account? 
+                        <a class="text-primary font-semibold hover:text-white transition-colors ml-1" href="#">Sign in to Portal</a>
+</p>
+</div>
+</div>
+<!-- Side features (Bento Style) -->
+<div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container-low/50 p-4 rounded-xl ring-1 ring-outline-variant/10 flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary" data-icon="verified_user">verified_user</span>
+</div>
+<div>
+<p class="text-xs font-mono text-outline uppercase tracking-wider">Security</p>
+<p class="text-xs text-on-surface-variant">SSO Integrated Auth</p>
+</div>
+</div>
+<div class="bg-surface-container-low/50 p-4 rounded-xl ring-1 ring-outline-variant/10 flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="bolt">bolt</span>
+</div>
+<div>
+<p class="text-xs font-mono text-outline uppercase tracking-wider">Access</p>
+<p class="text-xs text-on-surface-variant">Instant Provisioning</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-outline-variant/15 bg-background">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 px-8 py-12 max-w-7xl mx-auto">
+<div class="md:col-span-1">
+<div class="font-mono text-xs uppercase tracking-widest text-[#adc6ff] mb-4">Nex Campus</div>
+<p class="text-sm text-outline leading-relaxed max-w-xs">
+                    The precision platform for modern educational ecosystems. Smart. Scalable. Secure.
+                </p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 md:col-span-3 gap-8">
+<div class="space-y-3">
+<h4 class="text-xs font-bold uppercase tracking-widest text-white">Platform</h4>
+<ul class="space-y-2">
+<li><a class="text-sm text-outline hover:text-primary transition-colors" href="#">Portal</a></li>
+<li><a class="text-sm text-outline hover:text-primary transition-colors" href="#">Campus Status</a></li>
+</ul>
+</div>
+<div class="space-y-3">
+<h4 class="text-xs font-bold uppercase tracking-widest text-white">Resources</h4>
+<ul class="space-y-2">
+<li><a class="text-sm text-outline hover:text-primary transition-colors" href="#">Documentation</a></li>
+<li><a class="text-sm text-outline hover:text-primary transition-colors" href="#">Support</a></li>
+</ul>
+</div>
+<div class="space-y-3">
+<h4 class="text-xs font-bold uppercase tracking-widest text-white">Legal</h4>
+<ul class="space-y-2">
+<li><a class="text-sm text-outline hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="text-sm text-outline hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="px-8 py-6 border-t border-outline-variant/10 text-center flex flex-col md:flex-row justify-between items-center gap-4 max-w-7xl mx-auto">
+<p class="font-inter text-xs text-[#c2c6d6]">© 2024 Nex Campus. Precision in Education.</p>
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors text-[20px]" data-icon="terminal">terminal</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors text-[20px]" data-icon="database">database</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors text-[20px]" data-icon="public">public</span>
+</div>
+</div>
+</footer>
+</body></html>

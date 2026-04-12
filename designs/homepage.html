@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nex Campus | The Intelligent Monolith</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @font-face {
+            font-family: 'Berkeley Mono';
+            src: local('JetBrains Mono'), local('Courier New');
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1322;
+        }
+        .font-berkeley-mono {
+            font-family: 'Berkeley Mono', monospace;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(36, 42, 58, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .ghost-border {
+            outline: 1px solid rgba(66, 71, 84, 0.15);
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d1322;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2f3445;
+            border-radius: 4px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#191f2f",
+                      "on-tertiary": "#063254",
+                      "on-primary-container": "#00285d",
+                      "on-primary-fixed-variant": "#004395",
+                      "outline-variant": "#424754",
+                      "tertiary-fixed": "#d0e4ff",
+                      "background": "#0d1322",
+                      "on-tertiary-container": "#002b4c",
+                      "on-surface": "#dde2f8",
+                      "secondary-container": "#ee9800",
+                      "on-tertiary-fixed": "#001d35",
+                      "inverse-surface": "#dde2f8",
+                      "on-tertiary-fixed-variant": "#25496c",
+                      "primary-fixed-dim": "#adc6ff",
+                      "primary-container": "#4d8eff",
+                      "on-secondary-container": "#5b3800",
+                      "on-error": "#690005",
+                      "surface-container-lowest": "#080e1d",
+                      "on-secondary": "#472a00",
+                      "on-surface-variant": "#c2c6d6",
+                      "on-primary-fixed": "#001a42",
+                      "secondary-fixed-dim": "#ffb95f",
+                      "surface-variant": "#2f3445",
+                      "tertiary-fixed-dim": "#a7caf3",
+                      "surface-dim": "#0d1322",
+                      "surface-tint": "#adc6ff",
+                      "tertiary": "#a7caf3",
+                      "surface-container-low": "#151b2b",
+                      "secondary": "#ffb95f",
+                      "primary-fixed": "#d8e2ff",
+                      "on-primary": "#002e6a",
+                      "on-secondary-fixed": "#2a1700",
+                      "secondary-fixed": "#ffddb8",
+                      "outline": "#8c909f",
+                      "inverse-primary": "#005ac2",
+                      "error": "#ffb4ab",
+                      "surface-container-highest": "#2f3445",
+                      "surface": "#0d1322",
+                      "error-container": "#93000a",
+                      "surface-container-high": "#242a3a",
+                      "on-error-container": "#ffdad6",
+                      "tertiary-container": "#7194bb",
+                      "surface-bright": "#33394a",
+                      "inverse-on-surface": "#2a3040",
+                      "primary": "#adc6ff",
+                      "on-secondary-fixed-variant": "#653e00",
+                      "on-background": "#dde2f8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "fontFamily": {
+                      "headline": ["Inter"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary/30">
+<!-- TopNavBar -->
+<header class="bg-[#0d1322] dark:bg-[#0d1322] docked full-width top-0 z-50 tonal-shift bg-[#151b2b] sticky border-b border-outline-variant/10">
+<nav class="flex justify-between items-center w-full px-6 py-3 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-white">Nex Campus</span>
+<div class="hidden md:flex gap-6">
+<a class="text-[#adc6ff] border-b-2 border-[#adc6ff] pb-1 font-inter tracking-tighter font-semibold" href="#">Home</a>
+<a class="text-[#c2c6d6] hover:text-white transition-colors font-inter tracking-tighter font-semibold" href="#">Portal</a>
+<a class="text-[#c2c6d6] hover:text-white transition-colors font-inter tracking-tighter font-semibold" href="#">Events</a>
+<a class="text-[#c2c6d6] hover:text-white transition-colors font-inter tracking-tighter font-semibold" href="#">Courses</a>
+<a class="text-[#c2c6d6] hover:text-white transition-colors font-inter tracking-tighter font-semibold" href="#">Facilities</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-white transition-all duration-200 p-2 rounded-lg scale-95 active:opacity-80">search</button>
+<button class="bg-primary text-on-primary px-5 py-1.5 rounded-lg font-semibold tracking-tighter text-sm transition-all duration-200 scale-95 active:opacity-80">Portal Live</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden ghost-border">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="close-up portrait of a professional male student in a minimal modern setting with soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfIXqQy7fQNUDh6K-OzotQh6f7ZAE5yl30f0C_EmRkS-HkrnUR2_3bXWKO930cjgm5bbtdYJSM60q27bFRvK9YJwMcolCknHTA1AdNsdW-RF_Dzz1NAvH9rMj_WUmBZkhoSzBPb_VxZMsyFCUQPyOYCUF0bTm9sJEabSMBzuH2TR-mPU-89ZQvB3Mn3jQ3f5_WS8nEIdNlnVpziZps8Zjbd2CK5ly4DXagXXrFZgKKGWYbLV6N-wXeepmma_41fIj4dtc06iDJrDw"/>
+</div>
+</div>
+</nav>
+</header>
+<main class="min-h-screen">
+<!-- Hero Section -->
+<section class="relative pt-24 pb-32 px-6 overflow-hidden">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-7 space-y-8">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-low ghost-border rounded-full text-primary text-xs font-berkeley-mono uppercase tracking-widest">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                        Nex Campus OS v2.4 Now Live
+                    </div>
+<h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter leading-[0.9] text-white">
+                        Nex Campus, coordinated like a <span class="text-primary">living system</span>
+</h1>
+<p class="text-xl text-on-surface-variant max-w-xl leading-relaxed">
+                        The product development system for teams and agents. Integrate campus operations, academic tracking, and facility management into a monolithic intelligent workspace.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold text-lg hover:brightness-110 transition-all flex items-center gap-2">
+                            Enter the Portal
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="bg-surface-container-high text-on-surface px-8 py-4 rounded-xl font-bold text-lg ghost-border hover:bg-surface-variant transition-all">
+                            View Documentation
+                        </button>
+</div>
+</div>
+<div class="lg:col-span-5 relative">
+<!-- Dashboard Widget Hero -->
+<div class="glass-panel ghost-border rounded-xl p-6 shadow-2xl relative z-10">
+<div class="flex justify-between items-center mb-8">
+<div>
+<p class="text-xs font-berkeley-mono text-outline mb-1 uppercase tracking-widest">Live Capacity</p>
+<h3 class="text-2xl font-bold tracking-tighter">Main Plaza</h3>
+</div>
+<div class="text-right">
+<p class="text-primary font-berkeley-mono text-xl font-bold">84%</p>
+<p class="text-[10px] text-outline">OCCUPANCY</p>
+</div>
+</div>
+<div class="space-y-4">
+<div class="h-24 w-full bg-surface-container-lowest rounded-lg overflow-hidden flex items-end gap-1 p-2">
+<div class="bg-primary/20 w-full h-[40%] rounded-t-sm"></div>
+<div class="bg-primary/30 w-full h-[60%] rounded-t-sm"></div>
+<div class="bg-primary/40 w-full h-[55%] rounded-t-sm"></div>
+<div class="bg-primary/50 w-full h-[80%] rounded-t-sm"></div>
+<div class="bg-primary w-full h-[95%] rounded-t-sm"></div>
+<div class="bg-primary/70 w-full h-[70%] rounded-t-sm"></div>
+<div class="bg-primary/40 w-full h-[45%] rounded-t-sm"></div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-3 bg-surface-container-lowest rounded-lg ghost-border">
+<p class="text-[10px] text-outline font-berkeley-mono uppercase">Energy Efficiency</p>
+<p class="text-lg font-bold text-secondary">A+ High</p>
+</div>
+<div class="p-3 bg-surface-container-lowest rounded-lg ghost-border">
+<p class="text-[10px] text-outline font-berkeley-mono uppercase">Next Event</p>
+<p class="text-lg font-bold">Tech Summit</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Decorative back elements -->
+<div class="absolute -top-10 -right-10 w-64 h-64 bg-primary/10 blur-[100px] -z-10 rounded-full"></div>
+<div class="absolute -bottom-10 -left-10 w-64 h-64 bg-secondary/10 blur-[100px] -z-10 rounded-full"></div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Feature Section -->
+<section class="py-24 px-6 bg-surface-container-low">
+<div class="max-w-7xl mx-auto">
+<div class="mb-16 text-center max-w-3xl mx-auto">
+<h2 class="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-6">A new species of campus tool</h2>
+<p class="text-on-surface-variant text-lg">Engineered for high-performance universities who demand precision in every interaction.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 grid-rows-2 gap-6 h-auto lg:h-[700px]">
+<!-- Large Bento Item -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-xl overflow-hidden ghost-border flex flex-col">
+<div class="p-8">
+<span class="material-symbols-outlined text-primary mb-4 text-3xl">architecture</span>
+<h3 class="text-2xl font-bold tracking-tight mb-2">Unified Infrastructure</h3>
+<p class="text-on-surface-variant max-w-md">Real-time synchronization across every department, facility, and student touchpoint.</p>
+</div>
+<div class="mt-auto flex-1 bg-gradient-to-t from-primary/5 to-transparent flex items-center justify-center p-8">
+<img alt="Infrastructure Visualization" class="rounded-lg ghost-border w-full h-full object-cover opacity-80" data-alt="a high-tech minimalist data visualization dashboard with clean lines and blue glowing charts on a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyGkycWpK_WR53-_6FDGM-PlLbTZ3LAvn5zoQ_QPn0b-fTnHSDaYrAwc84KG0hdhWvsNgsG-9HdQQO1Pu591I9J0yIpxXlK1vbJR9y4vv51e3ygIahl3buYrIEmREcr4RyK8Pab2M8YSYoLdklFd7D9BYptDUcze-irq9w0FiK0dxjul-b_OPlfZUzVOWUQMVy9Y9wmZxWmMbGFSDL819GdaWRDi9OCiwo1B4JwaA_PXz6yy59pe4aMtALZt7peEzWViIBa8xd_m4"/>
+</div>
+</div>
+<!-- Vertical Bento Item -->
+<div class="md:col-span-4 bg-surface-container-high rounded-xl p-8 ghost-border relative overflow-hidden">
+<div class="relative z-10 h-full flex flex-col">
+<span class="material-symbols-outlined text-secondary mb-4 text-3xl">bolt</span>
+<h3 class="text-2xl font-bold tracking-tight mb-2">Instant Operations</h3>
+<p class="text-on-surface-variant mb-8">Deploy resources with zero latency. If it happens on campus, it happens in Nex.</p>
+<div class="mt-auto space-y-4">
+<div class="bg-surface-container-lowest p-4 rounded-lg ghost-border">
+<div class="flex justify-between mb-2">
+<span class="text-xs font-berkeley-mono text-outline">CPU LOAD</span>
+<span class="text-xs font-berkeley-mono text-primary">12%</span>
+</div>
+<div class="w-full bg-surface-variant h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[12%]"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-lg ghost-border">
+<div class="flex justify-between mb-2">
+<span class="text-xs font-berkeley-mono text-outline">NETWORK</span>
+<span class="text-xs font-berkeley-mono text-secondary">STABLE</span>
+</div>
+<div class="flex gap-1 h-4 items-end">
+<div class="w-1 bg-secondary h-full"></div>
+<div class="w-1 bg-secondary h-[80%]"></div>
+<div class="w-1 bg-secondary h-[90%]"></div>
+<div class="w-1 bg-secondary h-[100%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Horizontal Bento Item 1 -->
+<div class="md:col-span-5 bg-surface-container-high rounded-xl p-8 ghost-border flex items-center gap-6">
+<div class="w-1/2">
+<h3 class="text-xl font-bold tracking-tight mb-2">Smart Facilities</h3>
+<p class="text-sm text-on-surface-variant">IoT-enabled room booking and maintenance.</p>
+</div>
+<div class="w-1/2 h-32 bg-surface-container-lowest rounded-lg overflow-hidden">
+<img alt="Facilities" class="w-full h-full object-cover" data-alt="modern glass walled office room with minimalist furniture and cool blue atmospheric lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKrfBbN54AyTW2DZUz2sMXV7HZXPzVGxrFzMp-puBlSUTwW5VYbzC_1hBdGPOjUStc1jS9S5Ak5UZGSRe6E6ZqOgXMPh2X7M0WNMdbHml9gPM_AFg3CopPhgAijfz2AaM65en4BkD2QL1uVuJDoYzf-4GU9cQqI9EbafEHo-74C_ZBgTJgXwHBRKoxnGkmXuTI5j3MofWXXb92BVvE4JBFnCuMzZ8gIG8z_h3dbzBRQixRgVYW-FCohtigrEdL9FsNfiJ5HpdVQl0"/>
+</div>
+</div>
+<!-- Horizontal Bento Item 2 -->
+<div class="md:col-span-7 bg-primary text-on-primary rounded-xl p-8 flex justify-between items-center relative overflow-hidden group">
+<div class="relative z-10">
+<h3 class="text-2xl font-bold tracking-tight mb-2">Academic Core</h3>
+<p class="text-on-primary/80 max-w-xs">Track progress, manage courses, and facilitate research in one fluid view.</p>
+</div>
+<span class="material-symbols-outlined text-8xl opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:rotate-0 transition-transform duration-500" data-weight="fill">school</span>
+<button class="relative z-10 bg-on-primary text-primary px-6 py-3 rounded-lg font-bold hover:bg-white transition-colors">Launch Core</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Self-Driving Operations Section -->
+<section class="py-24 px-6 overflow-hidden">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="order-2 lg:order-1">
+<div class="relative w-full aspect-square max-w-lg mx-auto">
+<!-- Abstract Visualizer -->
+<div class="absolute inset-0 border-[1px] border-primary/20 rounded-full animate-[spin_20s_linear_infinite]"></div>
+<div class="absolute inset-12 border-[1px] border-secondary/20 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
+<div class="absolute inset-24 border-[1px] border-primary/10 rounded-full"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="glass-panel p-8 rounded-full ghost-border flex flex-col items-center">
+<span class="text-4xl font-berkeley-mono font-bold text-white mb-2">99.8%</span>
+<span class="text-[10px] font-berkeley-mono text-outline tracking-[0.2em] uppercase">Autonomous</span>
+</div>
+</div>
+<!-- Floating Data Points -->
+<div class="absolute top-0 right-10 bg-surface-container-high ghost-border px-4 py-2 rounded-lg text-xs font-berkeley-mono text-primary shadow-xl">
+                            NODE_ALPHA_ACTIVE
+                        </div>
+<div class="absolute bottom-20 left-0 bg-surface-container-high ghost-border px-4 py-2 rounded-lg text-xs font-berkeley-mono text-secondary shadow-xl">
+                            SYNC_PROTOCOL_V2
+                        </div>
+</div>
+</div>
+<div class="order-1 lg:order-2 space-y-8">
+<h2 class="text-4xl md:text-5xl font-bold tracking-tighter text-white">Make campus operations self-driving</h2>
+<p class="text-on-surface-variant text-xl leading-relaxed">
+                        Nex Campus employs advanced algorithmic agents to handle scheduling, energy optimization, and security protocols automatically. Set your parameters, and watch the system optimize itself.
+                    </p>
+<ul class="space-y-6">
+<li class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary ghost-border">
+<span class="material-symbols-outlined">auto_graph</span>
+</div>
+<div>
+<h4 class="font-bold text-white mb-1">Predictive Resource Loading</h4>
+<p class="text-on-surface-variant text-sm">Anticipate student needs before bottlenecks occur using historical flow data.</p>
+</div>
+</li>
+<li class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary ghost-border">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div>
+<h4 class="font-bold text-white mb-1">Neural Academic Routing</h4>
+<p class="text-on-surface-variant text-sm">Match students with optimal learning resources based on individual progress maps.</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Featured Grid Sections -->
+<section class="py-24 px-6 border-t border-outline-variant/10">
+<div class="max-w-7xl mx-auto space-y-32">
+<!-- Featured Courses -->
+<div>
+<div class="flex justify-between items-end mb-12">
+<div>
+<h2 class="text-3xl font-bold tracking-tight text-white mb-2">Featured Courses</h2>
+<p class="text-on-surface-variant">The frontiers of knowledge, delivered via the OS.</p>
+</div>
+<button class="text-primary hover:underline font-semibold flex items-center gap-1">
+                            Explore Catalog
+                            <span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="group cursor-pointer">
+<div class="aspect-[16/10] bg-surface-container-low rounded-xl overflow-hidden mb-4 ghost-border">
+<img alt="Course Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="close-up of a high-tech processor and glowing circuit lines in a dark technical environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJuyKGrUdfPP3j40KR_T3cfGYhnqObEEzgHOIKe0WXci4u-KeOW21Jw0Q7S7gEe6ITn5ZioCsSvpTd-HZXjcETps4_svgvTWlDpFnS_8C2yFchKyl05KEfKUS9VrRZDg2e4PcNNmcGb1vl005zXJt5ZlMLZly6lKNDiR7x1CSWSMqYB7U66uK3OJd7w-kNv3S5oF6X9rzcjReBoj9Hys4A42QndQrhiu8wLKtfdSpsDwhK6WRTVxjX5y5rhcaRTvdruiISZf4UXzE"/>
+</div>
+<h3 class="text-xl font-bold mb-1">Quantum Systems Design</h3>
+<p class="text-sm text-on-surface-variant">Level 400 • 12 Credits</p>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-[16/10] bg-surface-container-low rounded-xl overflow-hidden mb-4 ghost-border">
+<img alt="Course Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="a digital portrait representing artificial intelligence with glowing points of light forming a human-like profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDExOURvciBR3gc2mvKthcE8HbV3zOqA-IRbnKvpQ8X6z7essWKskt7zoRekZoK8rubJulZVIfDD5QRjQ3GQJ6WDcQsmniBMrttDppvk1DBW4OOCzxQCCMRAmey_ND5q45klNLsRKJYNsnT0xpGiLJPGjYmga5k_VNbFAdm3n7C6U7ZBu0NWQa0dKTQIrMw8XNZzGclSHgA6KUrnotioBtUq3v1Fh8HN2JyK18ZnUuRCY74O7HFYw1OXCZfg9sL22GXgjp03GwBLq0"/>
+</div>
+<h3 class="text-xl font-bold mb-1">Algorithmic Ethics</h3>
+<p class="text-sm text-on-surface-variant">Level 300 • 8 Credits</p>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-[16/10] bg-surface-container-low rounded-xl overflow-hidden mb-4 ghost-border">
+<img alt="Course Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="abstract satellite view of earth at night with glowing network connections and city lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8MBspROSwHgN0KPkgkV0vi0KX3eWPTiVKVJ_iG8o8hLQAg0dCI7dTLhLOHaxDanCESAmK6ML8hToB0HPsLyFWQlxj2d5c8Bp9QO_n21L-9mbAV2LyYxHWPeMpv_HH3uV2RKX6KOV2VU_0CZGYrNhZCwjN0yWj78JvAkAiPW-ymKcx_wLpOh-sqLFdkHTJ8-8xQ_3dpPR91JuUltHAzxet-ZuCqfPZPxvODApZuiT6XOJfYozaFLVLXhPg4MrQy5gZDYU1gii5OUQ"/>
+</div>
+<h3 class="text-xl font-bold mb-1">Orbital Economics</h3>
+<p class="text-sm text-on-surface-variant">Level 500 • 15 Credits</p>
+</div>
+</div>
+</div>
+<!-- Facilities: Side-by-Side Asymmetric -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-5 space-y-6">
+<h2 class="text-3xl font-bold tracking-tight text-white">Facilities engineered for the future</h2>
+<p class="text-on-surface-variant leading-relaxed">
+                            Our campus is a collection of high-performance environments, from zero-latency labs to bioclimatic social hubs, all connected via the Nex network.
+                        </p>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-surface-container-high rounded-lg ghost-border">
+<p class="text-primary font-berkeley-mono text-xl mb-1">42</p>
+<p class="text-[10px] text-outline uppercase tracking-widest">Active Labs</p>
+</div>
+<div class="p-4 bg-surface-container-high rounded-lg ghost-border">
+<p class="text-secondary font-berkeley-mono text-xl mb-1">2.4k</p>
+<p class="text-[10px] text-outline uppercase tracking-widest">Smart Hubs</p>
+</div>
+</div>
+<button class="bg-surface-container-high text-white px-6 py-3 rounded-lg font-bold ghost-border w-full hover:bg-surface-variant transition-all">Explore Campus Map</button>
+</div>
+<div class="lg:col-span-7">
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-4 pt-12">
+<img alt="Library" class="rounded-xl ghost-border w-full aspect-[3/4] object-cover" data-alt="interior of a futuristic minimalist library with tall white shelves and geometric ceiling design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBzUqpGQAQXQQLDqMDTRr9x7mG57L7Vsw4jFwaTH0ZbaUUbu-jEkhN_rorOgcxVaD1N15akyHFYl36okrIW5lhNbr9_KI7b5Q-BAvCwQoYUMk3IHcoHE2j1by6PjnJboa9i9gW9tpn94-4J8klK0f5wGaanmswzqOoRVV-BiO_KwFAf_nR1jMSDYYkXS8yGa869FJAv-DZIXj1diKqOQAlLg76udxLYgLoI_5ClslExiEFMZYB9unHJRBfbsh-NLpU0H_XuKrKZk8"/>
+<img alt="Engineering Lab" class="rounded-xl ghost-border w-full aspect-video object-cover" data-alt="close-up of a robotic arm in a brightly lit modern engineering laboratory" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyXVbyaqQGheduA_MhGOWZ8ph_djwNlGUXOBeowCMVA6I25CqZ_22HgFIvxt5Z_b4IX--MSWPs02tVY5TORhaxI9SGOhnkzJYZQ5JJY8DT2QDIEFFxNND5SGggeQRlbmtyXIDbvoejBBGxmCX9msIibkGbhXZeFaA6fn6EteXUm_EVyHnAyqqCG6p7VdP-MQ5_Z3P5lkfWKqcbJD-emWBkfLDPSm43m96WrpgJt0CWzu-sRX1d29ZbVSVouo0khbF3DZv0KbcAQc8"/>
+</div>
+<div class="space-y-4">
+<img alt="Social Hub" class="rounded-xl ghost-border w-full aspect-square object-cover" data-alt="modern indoor social area with wooden accents and warm designer lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLK09EwdE4QjWDA52SA7bacRwF2M9zAbXsMoImClAAlc6j-cniRP4NOvyTrNErDaDweUoL433ErXErPT-nBBWn796OuBbSUsOcXyJNj9ytf-jK3Hal7UufEzHD1TrQGc4tYFlebrD-Va6VksSyxzFbiWqX56kIMW_41IJ9TpAFIQ3rdpUMQPkcp3k7Cr1ladQPe9cG4yTthZ5NTMqWqOjZfDZ0MUBb1rX39bgj1s32qNLTlMFk4sBkx7lJ0mogOhjoCWUGYhzBS8M"/>
+<img alt="Data Center" class="rounded-xl ghost-border w-full aspect-[3/4] object-cover" data-alt="a sleek dark server room with rows of machines and neon blue activity lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClv4Di6ppD1zK66m1YvRfRdjqNaV-HIiKqmlbbXj8qaLTAU9f9hyg94LfLOZGUqlihxyGdPWN0gM7hkgV6m7VGg0ErHSQRIVnUkQ5JyAiATzW0Qmv5yTDGlXjYBAitguQiyTU60_GPH2JcR-3D3Znhp0kX6wcd-DDqZa3GIC3pCjdh8uHIUw9657KiaQfhahaX-PzRTkg0zJLHho_6eT9-BcJoqiM25TovFUr00FUf2SGoeNy3NLyuNH8bsMFAU0DAOYc-nDtM1YI"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Events: Full Width Horizontal Scroller -->
+<div>
+<h2 class="text-3xl font-bold tracking-tight text-white mb-12">Upcoming Events</h2>
+<div class="flex gap-6 overflow-x-auto pb-8 scrollbar-hide no-scrollbar">
+<div class="flex-shrink-0 w-80 bg-surface-container-high rounded-xl overflow-hidden ghost-border group">
+<div class="h-40 relative">
+<img alt="Event" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="large auditorium with a high-tech stage presentation and blue atmospheric lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK485cEVVNJXpEYfuL7WZK8eEzfxHu4EzD93FJf3xJ51x90gZreReNdI36-uBVX099I_7QDLbc28I-kq6Ekcbl9kpONegoNxWTDPL6m5xWEuBDbgKv9tA2XXkUP_gM9SF0t-PAQBbuZyrFPK2LOC6Q7ph3BxwTi1n6Wah3EJcDwjjbJO1WewR63SOMeG5lG6fr_W8jqMSvzY4B5t1N1-pwfNoRmp63iSLcVv-nZXaKR0xTmZk1CiBTysE_KkLgVdXk05OhQFC2HeM"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-berkeley-mono px-2 py-1 rounded">OCT 24</div>
+</div>
+<div class="p-6">
+<h3 class="text-lg font-bold mb-2">Nex Summit 2024</h3>
+<p class="text-sm text-on-surface-variant mb-4">The annual gathering of campus innovators and developers.</p>
+<div class="flex items-center gap-2 text-[10px] font-berkeley-mono text-outline">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                    GREAT HALL • 09:00 AM
+                                </div>
+</div>
+</div>
+<div class="flex-shrink-0 w-80 bg-surface-container-high rounded-xl overflow-hidden ghost-border group">
+<div class="h-40 relative">
+<img alt="Event" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="close-up of digital code and glowing green security icons on a dark screen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK_5LwPvVet91yTvIYUzi6I8WbYwLbJvDJS87GxE5HU8yqGfb4oRL_sWiVy2z6CRXdfLW3loKF8CoqD5E8bJPZWxzYgplljCfphUbFXXWlYku9swJUV1P5XV1XqhN9QEw4mvpCYKNsVisa6hVfZN6wu_dFXOT99eZNKbdesvjvjtQQ78NaoimXKWXbp-BgNuvnKvvzmZjEvIN81P2rL7p4PnJ69NyHL0FIWxAxXkvIm0X_0A1jHnZt2L_MrcF3Z1Mos-znK9TV6yM"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-berkeley-mono px-2 py-1 rounded">OCT 28</div>
+</div>
+<div class="p-6">
+<h3 class="text-lg font-bold mb-2">Cyber Security Hackathon</h3>
+<p class="text-sm text-on-surface-variant mb-4">48 hours of intense perimeter testing and offensive security.</p>
+<div class="flex items-center gap-2 text-[10px] font-berkeley-mono text-outline">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                    NODE LAB • 06:00 PM
+                                </div>
+</div>
+</div>
+<div class="flex-shrink-0 w-80 bg-surface-container-high rounded-xl overflow-hidden ghost-border group">
+<div class="h-40 relative">
+<img alt="Event" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="students collaborating in a modern office space with laptops and large windows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDI_DqMg5FTxRRH89rX0FmrKm7wF3GzQsHcLBV1aPfpD4Nx37IsrZmhEjxQEkhx-VufHjT0VpgJxiXJY9Rub9HIzmmRcvsB88emOYeAixo5fZ-JXwR1Gv5-myCs91jtHxNhzQb8f6PZlM-jL8IRTLApK2Eh3C38u2eyQspfI3IBn9debzzWLYiDU6WGlYrIJ_u9xvSmJ6QUpfC9Wikvwn495VBcH7q3TPvW91iSKfiOj4pi4xTi1tisQNvFpXnJhowAmhRMGUjwLDk"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-berkeley-mono px-2 py-1 rounded">NOV 02</div>
+</div>
+<div class="p-6">
+<h3 class="text-lg font-bold mb-2">Social Design Workshop</h3>
+<p class="text-sm text-on-surface-variant mb-4">Redefining human interaction in the digital age.</p>
+<div class="flex items-center gap-2 text-[10px] font-berkeley-mono text-outline">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                    PLAZA HUB • 02:00 PM
+                                </div>
+</div>
+</div>
+<div class="flex-shrink-0 w-80 bg-surface-container-high rounded-xl overflow-hidden ghost-border group">
+<div class="h-40 relative">
+<img alt="Event" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="crowd of people at a tech conference with colorful stage lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBqFnnCWrH5AwAW1w8bjc4-Nt7cVwpqGEgq2967NznbNzGp9nvUAzWqCa7o_6d3Qd363cJIaFFKppTiCqICpz9Gb5HvjfRXnIMpZArzXR3A56ct13LSnN5crAkUryiqoVr3yISKY6L1WSHpkSjrH4qrG6OVaHBqfiYgmijFWGgqcc5bwC_d_P-XvCJqsAb8-k61nNCMHqO-uwtYYKh0Yk7N7MUlgDeL-h0XhVdB_z85_gQ8pqtXe-IAca4hnL6Nq7guWiZ4SeRAqA"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-berkeley-mono px-2 py-1 rounded">NOV 05</div>
+</div>
+<div class="p-6">
+<h3 class="text-lg font-bold mb-2">Alumni Networking</h3>
+<p class="text-sm text-on-surface-variant mb-4">Connect with the Nex pioneers shaping global industries.</p>
+<div class="flex items-center gap-2 text-[10px] font-berkeley-mono text-outline">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                    VIRTUAL HUB • 07:00 PM
+                                </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-24 px-6">
+<div class="max-w-5xl mx-auto glass-panel rounded-2xl p-12 text-center ghost-border relative overflow-hidden">
+<div class="absolute -top-24 -left-24 w-64 h-64 bg-primary/20 blur-[80px] rounded-full"></div>
+<div class="relative z-10">
+<h2 class="text-4xl font-bold tracking-tighter text-white mb-6">Ready to upgrade your campus experience?</h2>
+<p class="text-on-surface-variant text-lg mb-10 max-w-2xl mx-auto">Join thousands of students and faculty members who are already navigating the future of education on Nex Campus.</p>
+<div class="flex justify-center gap-4">
+<button class="bg-primary text-on-primary px-8 py-3 rounded-lg font-bold hover:scale-105 transition-transform">Get Started Free</button>
+<button class="bg-surface-container-high text-white px-8 py-3 rounded-lg font-bold ghost-border hover:bg-surface-variant transition-all">Request Demo</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-[#424754]/15 bg-[#0d1322] tonal-shift">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 px-8 py-12 max-w-7xl mx-auto">
+<div class="col-span-1 md:col-span-1">
+<span class="font-berkeley-mono text-xs uppercase tracking-widest text-[#adc6ff] block mb-4">Nex Campus</span>
+<p class="text-sm text-[#8c909f] leading-relaxed">The Intelligent Monolith for modern education systems. Scalable, secure, and unified.</p>
+</div>
+<div>
+<span class="text-white text-xs font-bold uppercase tracking-widest block mb-6">Navigation</span>
+<ul class="space-y-3 font-inter text-sm text-[#8c909f]">
+<li><a class="hover:text-[#adc6ff] transition-colors" href="#">Portal</a></li>
+<li><a class="hover:text-[#adc6ff] transition-colors" href="#">Courses</a></li>
+<li><a class="hover:text-[#adc6ff] transition-colors" href="#">Events</a></li>
+<li><a class="hover:text-[#adc6ff] transition-colors" href="#">Research</a></li>
+</ul>
+</div>
+<div>
+<span class="text-white text-xs font-bold uppercase tracking-widest block mb-6">Platform</span>
+<ul class="space-y-3 font-inter text-sm text-[#8c909f]">
+<li><a class="hover:text-[#adc6ff] transition-colors" href="#">Sitemap</a></li>
+<li><a class="hover:text-[#adc6ff] transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-[#adc6ff] transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-[#adc6ff] transition-colors" href="#">Campus Status</a></li>
+</ul>
+</div>
+<div>
+<span class="text-white text-xs font-bold uppercase tracking-widest block mb-6">Newsletter</span>
+<div class="flex">
+<input class="bg-surface-container-low border-0 ghost-border rounded-l-lg text-sm px-4 py-2 w-full focus:ring-1 focus:ring-primary" placeholder="Email Address" type="email"/>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-r-lg">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-8 py-8 border-t border-outline-variant/10 text-center">
+<p class="font-inter text-sm text-[#8c909f]">© 2024 Nex Campus. Precision in Education.</p>
+</div>
+</footer>
+</body></html>

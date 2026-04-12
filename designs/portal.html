@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nex Campus | Student Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Berkeley Mono surrogate using a clean monospace stack -->
+<style>
+        .font-berkeley-mono { font-family: 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', monospace; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(36, 42, 58, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .ghost-border {
+            outline: 1px solid rgba(66, 71, 84, 0.15);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#191f2f",
+                        "on-tertiary": "#063254",
+                        "on-primary-container": "#00285d",
+                        "on-primary-fixed-variant": "#004395",
+                        "outline-variant": "#424754",
+                        "tertiary-fixed": "#d0e4ff",
+                        "background": "#0d1322",
+                        "on-tertiary-container": "#002b4c",
+                        "on-surface": "#dde2f8",
+                        "secondary-container": "#ee9800",
+                        "on-tertiary-fixed": "#001d35",
+                        "inverse-surface": "#dde2f8",
+                        "on-tertiary-fixed-variant": "#25496c",
+                        "primary-fixed-dim": "#adc6ff",
+                        "primary-container": "#4d8eff",
+                        "on-secondary-container": "#5b3800",
+                        "on-error": "#690005",
+                        "surface-container-lowest": "#080e1d",
+                        "on-secondary": "#472a00",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-primary-fixed": "#001a42",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "surface-variant": "#2f3445",
+                        "tertiary-fixed-dim": "#a7caf3",
+                        "surface-dim": "#0d1322",
+                        "surface-tint": "#adc6ff",
+                        "tertiary": "#a7caf3",
+                        "surface-container-low": "#151b2b",
+                        "secondary": "#ffb95f",
+                        "primary-fixed": "#d8e2ff",
+                        "on-primary": "#002e6a",
+                        "on-secondary-fixed": "#2a1700",
+                        "secondary-fixed": "#ffddb8",
+                        "outline": "#8c909f",
+                        "inverse-primary": "#005ac2",
+                        "error": "#ffb4ab",
+                        "surface-container-highest": "#2f3445",
+                        "surface": "#0d1322",
+                        "error-container": "#93000a",
+                        "surface-container-high": "#242a3a",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#7194bb",
+                        "surface-bright": "#33394a",
+                        "inverse-on-surface": "#2a3040",
+                        "primary": "#adc6ff",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "on-background": "#dde2f8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary selection:text-on-primary">
+<!-- Top Navigation Bar -->
+<nav class="bg-[#0d1322] dark:bg-[#0d1322] fixed top-0 z-50 w-full tonal-shift bg-[#151b2b]">
+<div class="flex justify-between items-center w-full px-6 py-3 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-white">Nex Campus</span>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-[#c2c6d6] hover:text-white transition-colors font-inter tracking-tighter font-semibold" href="#">Home</a>
+<a class="text-[#adc6ff] border-b-2 border-[#adc6ff] pb-1 font-inter tracking-tighter font-semibold" href="#">Portal</a>
+<a class="text-[#c2c6d6] hover:text-white transition-colors font-inter tracking-tighter font-semibold" href="#">Events</a>
+<a class="text-[#c2c6d6] hover:text-white transition-colors font-inter tracking-tighter font-semibold" href="#">Courses</a>
+<a class="text-[#c2c6d6] hover:text-white transition-colors font-inter tracking-tighter font-semibold" href="#">Facilities</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden lg:flex items-center gap-2 px-4 py-1.5 bg-surface-container-high text-primary ghost-border rounded-lg text-sm font-semibold hover:bg-[#242a3a] transition-all duration-200">
+<span class="material-symbols-outlined text-sm" data-icon="sensors">sensors</span>
+                    Portal Live
+                </button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="User Profile" data-alt="close-up portrait of a young man with a focused expression in a dimly lit modern indoor setting with blue ambient light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCE_q3dWgYcmDbFLKg-lwtJwQJE_Y7stffchltAkbLqldU0TAvcGdvwMKYdVbZCCfy3p470DJXJzrrHuwA4zwGbIm29GXp6x93WpSy8gVZXh7oX0vAkq_sySRsbXvAsUgaUY1SK7vwNWa63cwrnTZNEkInbgMS3J2lB-V_BdU4v0Rw_0gmstErYK7XFULMeWkC4wFFcw1lZrYn7F6gd5BABTeXEeO4BuMqqaIgaSxXJL8VI1Z20QpeLF01A2Ssytjf6a6eJrEiABXY"/>
+</div>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-20">
+<!-- Hero Section -->
+<section class="max-w-[1440px] mx-auto px-6 mb-16">
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low min-h-[400px] flex flex-col justify-center items-center text-center p-8">
+<div class="absolute inset-0 opacity-20 pointer-events-none">
+<img class="w-full h-full object-cover" data-alt="abstract digital network visualization with blue glowing nodes and lines on a dark background representing intelligent campus connectivity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFK-JOIqRc96iV4q-x7SAButIXxoVj0u9yDVgsSS6xsGilQvXDwRYL_7Ed6Bjn-hvfLNjSekf1p3QbOSYzOAjcsGmUfK4VNw5BnHD60StvQqzher_mOQlhAGsvWW60DCd-Zpodd-ejuE1hX1PJ7_Wx8f-aQCCPsT7Ce0R3gSOx8CCV82zPpBOhHzQ76NVfk6abM4-MoINcHmTVQTlQG2eeFV9UktNweBbovqfF5lFmhheFmP2OPm-vg0Wve9x6Zm-Z5PbQD8GDxJM"/>
+</div>
+<h1 class="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6 max-w-4xl leading-tight">
+                    A calm place for Nex Campus students to check what matters next.
+                </h1>
+<p class="text-on-surface-variant text-lg md:text-xl max-w-2xl font-inter mb-10">
+                    Streamline your academic life with our precision-engineered portal. Access grades, schedules, and campus resources in one unified view.
+                </p>
+<!-- Auth Callout -->
+<div class="glass-panel ghost-border p-6 rounded-xl flex flex-col md:flex-row items-center gap-6 max-w-md w-full">
+<div class="text-left flex-1">
+<p class="text-white font-semibold">Log in to open your student profile.</p>
+<p class="text-on-surface-variant text-sm">Secure access for verified USN holders.</p>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-bold tracking-tight hover:opacity-90 transition-opacity whitespace-nowrap">
+                        Sign In Now
+                    </button>
+</div>
+</div>
+</section>
+<!-- Bento Grid Section -->
+<section class="max-w-[1440px] mx-auto px-6 mb-16">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Verification Tile -->
+<div class="md:col-span-8 bg-surface-container-low ghost-border rounded-xl p-8 flex flex-col justify-between group cursor-pointer hover:bg-surface-container transition-colors">
+<div>
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary" data-icon="verified_user">verified_user</span>
+<span class="font-berkeley-mono text-xs text-primary uppercase tracking-widest">Security Layer</span>
+</div>
+<h3 class="text-2xl font-bold text-white mb-2">USN Verification</h3>
+<p class="text-on-surface-variant max-w-md">Instantly authenticate your campus identity using your unique Student Number for secure portal access.</p>
+</div>
+<div class="mt-8 flex items-end justify-between">
+<span class="text-4xl font-bold text-primary opacity-20 group-hover:opacity-100 transition-opacity">01</span>
+<span class="material-symbols-outlined text-white" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Schedule Tile -->
+<div class="md:col-span-4 bg-surface-container-low ghost-border rounded-xl p-8 flex flex-col justify-between group cursor-pointer hover:bg-surface-container transition-colors">
+<div>
+<span class="material-symbols-outlined text-secondary mb-6" data-icon="calendar_month">calendar_month</span>
+<h3 class="text-2xl font-bold text-white mb-2">Course schedule</h3>
+<p class="text-on-surface-variant">Your daily academic rhythm, synced in real-time with campus changes.</p>
+</div>
+<div class="mt-8">
+<div class="flex flex-col gap-2">
+<div class="h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-2/3"></div>
+</div>
+<span class="font-berkeley-mono text-[10px] text-on-surface-variant uppercase">Next: Advance Robotics 14:00</span>
+</div>
+</div>
+</div>
+<!-- Event Feed Tile -->
+<div class="md:col-span-4 bg-surface-container-low ghost-border rounded-xl p-8 flex flex-col justify-between group cursor-pointer hover:bg-surface-container transition-colors">
+<div>
+<span class="material-symbols-outlined text-tertiary mb-6" data-icon="campaign">campaign</span>
+<h3 class="text-2xl font-bold text-white mb-2">Event feed</h3>
+<p class="text-on-surface-variant">Stay connected with live campus happenings, workshops, and guest lectures.</p>
+</div>
+<div class="mt-8 flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-surface-variant border-2 border-surface-container-low"></div>
+<div class="w-8 h-8 rounded-full bg-tertiary border-2 border-surface-container-low"></div>
+<div class="w-8 h-8 rounded-full bg-surface-variant border-2 border-surface-container-low flex items-center justify-center text-[10px]">+12</div>
+</div>
+</div>
+<!-- Support Tile -->
+<div class="md:col-span-8 bg-surface-container-low ghost-border rounded-xl p-8 flex items-center gap-8 group cursor-pointer hover:bg-surface-container transition-colors overflow-hidden">
+<div class="flex-1">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary" data-icon="support_agent">support_agent</span>
+<span class="font-berkeley-mono text-xs text-primary uppercase tracking-widest">24/7 Concierge</span>
+</div>
+<h3 class="text-2xl font-bold text-white mb-2">Campus support</h3>
+<p class="text-on-surface-variant">Direct line to academic advisors and technical support teams for immediate assistance.</p>
+</div>
+<div class="hidden lg:block w-48 h-48 relative">
+<img class="absolute inset-0 w-full h-full object-cover rounded-xl grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all" data-alt="modern collaborative office space with clean lines and soft lighting reflecting a supportive professional environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYB3PbAClabbSeyeYt8cbrLZREHl7wVDDVnTZig7mZipc7Gn01LgZ0QWfL_rz1SrCTMoEN-tErZv0aRTTenWRhU2_dIUT_1KZG-_ns9mNE-pbTdey7EdO0mvNNoSCgN0o9u1XtNWuaNc4XnU9A__i8e06L_Qv5K_0VFVHiQFg2ahof-BNKvRgCu0iGXN-FITRtgB28lhW6B1yOT3RIrlPsFqBfIotLqtVwEWYb5hrZrZ8NrZAykKpgQAf7l60xagFNh7QfW8EaD8Y"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Content Sections: Dual Column -->
+<section class="max-w-[1440px] mx-auto px-6">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+<!-- Quick Courses (Left Column) -->
+<div>
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-bold text-white tracking-tight">Quick Courses</h2>
+<span class="font-berkeley-mono text-xs text-on-surface-variant uppercase">Active Enrollment</span>
+</div>
+<div class="space-y-4">
+<div class="bg-surface-container-low p-5 rounded-xl flex items-center gap-4 ghost-border hover:bg-surface-container-high transition-colors">
+<div class="w-12 h-12 bg-primary-container/20 rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="code">code</span>
+</div>
+<div class="flex-1">
+<h4 class="text-white font-semibold">Advanced Systems Design</h4>
+<p class="text-on-surface-variant text-sm">Unit 04: Distributed Ledger Technology</p>
+</div>
+<div class="text-right">
+<span class="font-berkeley-mono text-xs text-primary">84%</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-5 rounded-xl flex items-center gap-4 ghost-border hover:bg-surface-container-high transition-colors">
+<div class="w-12 h-12 bg-secondary-container/20 rounded-lg flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="architecture">architecture</span>
+</div>
+<div class="flex-1">
+<h4 class="text-white font-semibold">Urban Ecology &amp; Planning</h4>
+<p class="text-on-surface-variant text-sm">Unit 12: Vertical Farming Architecture</p>
+</div>
+<div class="text-right">
+<span class="font-berkeley-mono text-xs text-secondary">42%</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-5 rounded-xl flex items-center gap-4 ghost-border hover:bg-surface-container-high transition-colors">
+<div class="w-12 h-12 bg-tertiary-container/20 rounded-lg flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+</div>
+<div class="flex-1">
+<h4 class="text-white font-semibold">Cognitive Neurobiology</h4>
+<p class="text-on-surface-variant text-sm">Unit 09: Neural Plasticity Models</p>
+</div>
+<div class="text-right">
+<span class="font-berkeley-mono text-xs text-tertiary">100%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Campus Services (Right Column) -->
+<div>
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-bold text-white tracking-tight">Campus Services</h2>
+<span class="font-berkeley-mono text-xs text-on-surface-variant uppercase">Global Directory</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-6 rounded-xl ghost-border hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-on-surface-variant mb-4" data-icon="local_library">local_library</span>
+<h4 class="text-white font-semibold mb-1">Central Library</h4>
+<p class="text-on-surface-variant text-xs">Reserve study pods or digital archives.</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl ghost-border hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-on-surface-variant mb-4" data-icon="fitness_center">fitness_center</span>
+<h4 class="text-white font-semibold mb-1">Sports Complex</h4>
+<p class="text-on-surface-variant text-xs">Book courts or check gym capacity.</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl ghost-border hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-on-surface-variant mb-4" data-icon="restaurant">restaurant</span>
+<h4 class="text-white font-semibold mb-1">Dining Hall</h4>
+<p class="text-on-surface-variant text-xs">Live menu and table availability.</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl ghost-border hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-on-surface-variant mb-4" data-icon="medical_services">medical_services</span>
+<h4 class="text-white font-semibold mb-1">Health Center</h4>
+<p class="text-on-surface-variant text-xs">Schedule walk-ins or vaccinations.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#0d1322] w-full border-t border-[#424754]/15 mt-20">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 px-8 py-12 max-w-7xl mx-auto tonal-shift">
+<div class="col-span-1 md:col-span-1">
+<span class="font-berkeley-mono text-xs uppercase tracking-widest text-[#adc6ff] block mb-4">Nex Campus</span>
+<p class="font-inter text-sm text-[#c2c6d6]">Precision in Education. The intelligent monolith for modern academia.</p>
+</div>
+<div class="col-span-1">
+<h5 class="text-white font-semibold mb-4 text-sm">Navigation</h5>
+<ul class="space-y-2">
+<li><a class="font-inter text-sm text-[#8c909f] hover:text-[#adc6ff] transition-colors" href="#">Sitemap</a></li>
+<li><a class="font-inter text-sm text-[#8c909f] hover:text-[#adc6ff] transition-colors" href="#">Campus Status</a></li>
+</ul>
+</div>
+<div class="col-span-1">
+<h5 class="text-white font-semibold mb-4 text-sm">Legal</h5>
+<ul class="space-y-2">
+<li><a class="font-inter text-sm text-[#8c909f] hover:text-[#adc6ff] transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="font-inter text-sm text-[#8c909f] hover:text-[#adc6ff] transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div class="col-span-1 flex flex-col items-start md:items-end">
+<p class="font-inter text-sm text-[#c2c6d6] text-left md:text-right">© 2024 Nex Campus.<br/>Precision in Education.</p>
+</div>
+</div>
+</footer>
+</body></html>
