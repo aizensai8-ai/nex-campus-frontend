@@ -1,12 +1,11 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { pageTransition } from '../lib/animations';
 
 const Signup = () => {
     return (
         <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            {...pageTransition}
             className="min-h-screen flex flex-col antialiased bg-background text-on-surface"
         >
             {/* TopNavBar */}

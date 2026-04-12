@@ -14,7 +14,7 @@ function App() {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
         {/* Layout routes with Navbar & Footer */}
         <Route element={<Layout />}>

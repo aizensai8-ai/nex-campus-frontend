@@ -1,40 +1,64 @@
 import { motion } from 'framer-motion';
+import { fadeUp, staggerContainer, staggerItem, pageTransition } from '../lib/animations';
 
 const Home = () => {
   return (
     <motion.main
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, transition: { duration: 0.5 } }}
-      exit={{ opacity: 0 }}
+      {...pageTransition}
       className="min-h-screen"
     >
-      {/* Hero Section */}
+      {/* ─── Hero ─── */}
       <section className="relative pt-24 pb-32 px-6 overflow-hidden">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-7 space-y-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-low ghost-border rounded-full text-primary text-xs font-berkeley-mono uppercase tracking-widest">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-low ghost-border rounded-full text-primary text-xs font-berkeley-mono uppercase tracking-widest"
+            >
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
               Nex Campus OS v2.4 Now Live
-            </div>
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-[0.9] text-white">
-              Nex Campus, coordinated like a <span className="text-primary">living system</span>
-            </h1>
-            <p className="text-xl text-on-surface-variant max-w-xl leading-relaxed">
+            </motion.div>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+              className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-[0.9] text-white font-satoshi"
+            >
+              Nex Campus, coordinated like a{' '}
+              <span className="gradient-text">living system</span>
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.35 }}
+              className="text-xl text-on-surface-variant max-w-xl leading-relaxed"
+            >
               The product development system for teams and agents. Integrate campus operations, academic tracking, and facility management into a monolithic intelligent workspace.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <button className="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold text-lg hover:brightness-110 transition-all flex items-center gap-2">
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="flex flex-wrap gap-4"
+            >
+              <button className="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold text-lg hover:brightness-110 hover:scale-[1.02] transition-all duration-200 flex items-center gap-2">
                 Enter the Portal
                 <span className="material-symbols-outlined">arrow_forward</span>
               </button>
-              <button className="bg-surface-container-high text-on-surface px-8 py-4 rounded-xl font-bold text-lg ghost-border hover:bg-surface-variant transition-all">
+              <button className="bg-surface-container-high text-on-surface px-8 py-4 rounded-xl font-bold text-lg ghost-border hover:bg-surface-variant hover:scale-[1.02] transition-all duration-200">
                 View Documentation
               </button>
-            </div>
+            </motion.div>
           </div>
           <div className="lg:col-span-5 relative">
-            {/* Dashboard Widget Hero */}
-            <div className="glass-panel ghost-border rounded-xl p-6 shadow-2xl relative z-10">
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+              className="glass-panel ghost-border rounded-xl p-6 shadow-2xl relative z-10"
+            >
               <div className="flex justify-between items-center mb-8">
                 <div>
                   <p className="text-xs font-berkeley-mono text-outline mb-1 uppercase tracking-widest">Live Capacity</p>
@@ -66,36 +90,51 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-            </div>
-            {/* Decorative back elements */}
+            </motion.div>
             <div className="absolute -top-10 -right-10 w-64 h-64 bg-primary/10 blur-[100px] -z-10 rounded-full"></div>
-            <div class="absolute -bottom-10 -left-10 w-64 h-64 bg-secondary/10 blur-[100px] -z-10 rounded-full"></div>
+            <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-secondary/10 blur-[100px] -z-10 rounded-full"></div>
           </div>
         </div>
       </section>
 
-      {/* Bento Grid Feature Section */}
+      {/* ─── Bento Grid Feature Section ─── */}
       <section className="py-24 px-6 bg-surface-container-low">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-16 text-center max-w-3xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-6">A new species of campus tool</h2>
+          <motion.div
+            {...fadeUp}
+            className="mb-16 text-center max-w-3xl mx-auto"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-6 font-satoshi">A new species of campus tool</h2>
             <p className="text-on-surface-variant text-lg">Engineered for high-performance universities who demand precision in every interaction.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-12 grid-rows-2 gap-6 h-auto lg:h-[700px]">
+          </motion.div>
+          <motion.div
+            {...staggerContainer}
+            className="grid grid-cols-1 md:grid-cols-12 grid-rows-2 gap-6 h-auto lg:h-[700px]"
+          >
             {/* Large Bento Item */}
-            <div className="md:col-span-8 bg-surface-container-lowest rounded-xl overflow-hidden ghost-border flex flex-col">
+            <motion.div
+              {...staggerItem}
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="md:col-span-8 bg-surface-container-lowest rounded-xl overflow-hidden ghost-border flex flex-col hover:shadow-2xl hover:shadow-black/30 transition-shadow duration-300"
+            >
               <div className="p-8">
                 <span className="material-symbols-outlined text-primary mb-4 text-3xl">architecture</span>
                 <h3 className="text-2xl font-bold tracking-tight mb-2">Unified Infrastructure</h3>
                 <p className="text-on-surface-variant max-w-md">Real-time synchronization across every department, facility, and student touchpoint.</p>
               </div>
               <div className="mt-auto flex-1 bg-gradient-to-t from-primary/5 to-transparent flex items-center justify-center p-8">
-                <img alt="Infrastructure Visualization" className="rounded-lg ghost-border w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyGkycWpK_WR53-_6FDGM-PlLbTZ3LAvn5zoQ_QPn0b-fTnHSDaYrAwc84KG0hdhWvsNgsG-9HdQQO1Pu591I9J0yIpxXlK1vbJR9y4vv51e3ygIahl3buYrIEmREcr4RyK8Pab2M8YSYoLdklFd7D9BYptDUcze-irq9w0FiK0dxjul-b_OPlfZUzVOWUQMVy9Y9wmZxWmMbGFSDL819GdaWRDi9OCiwo1B4JwaA_PXz6yy59pe4aMtALZt7peEzWViIBa8xd_m4"/>
+                <img alt="Infrastructure Visualization" className="rounded-lg ghost-border w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyGkycWpK_WR53-_6FDGM-PlLbTZ3LAvn5zoQ_QPn0b-fTnHSDaYrAwc84KG0hdhWvsNgsG-9HdQQO1Pu591I9J0yIpxXlK1vbJR9y4vv51e3ygIahl3buYrIEmREcr4RyK8Pab2M8YSYoLdklFd7D9BYptDUcze-irq9w0FiK0dxjul-b_OPlfZUzVOWUQMVy9Y9wmZxWmMbGFSDL819GdaWRDi9OCiwo1B4JwaA_PXz6yy59pe4aMtALZt7peEzWViIBa8xd_m4" />
               </div>
-            </div>
-            
+            </motion.div>
+
             {/* Vertical Bento Item */}
-            <div className="md:col-span-4 bg-surface-container-high rounded-xl p-8 ghost-border relative overflow-hidden">
+            <motion.div
+              {...staggerItem}
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="md:col-span-4 bg-surface-container-high rounded-xl p-8 ghost-border relative overflow-hidden hover:shadow-2xl hover:shadow-black/30 transition-shadow duration-300"
+            >
               <div className="relative z-10 h-full flex flex-col">
                 <span className="material-symbols-outlined text-secondary mb-4 text-3xl">bolt</span>
                 <h3 className="text-2xl font-bold tracking-tight mb-2">Instant Operations</h3>
@@ -124,38 +163,51 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Horizontal Bento Item 1 */}
-            <div className="md:col-span-5 bg-surface-container-high rounded-xl p-8 ghost-border flex items-center gap-6">
-              <div class="w-1/2">
-                <h3 class="text-xl font-bold tracking-tight mb-2">Smart Facilities</h3>
-                <p class="text-sm text-on-surface-variant">IoT-enabled room booking and maintenance.</p>
+            <motion.div
+              {...staggerItem}
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="md:col-span-5 bg-surface-container-high rounded-xl p-8 ghost-border flex items-center gap-6 hover:shadow-2xl hover:shadow-black/30 transition-shadow duration-300"
+            >
+              <div className="w-1/2">
+                <h3 className="text-xl font-bold tracking-tight mb-2">Smart Facilities</h3>
+                <p className="text-sm text-on-surface-variant">IoT-enabled room booking and maintenance.</p>
               </div>
-              <div class="w-1/2 h-32 bg-surface-container-lowest rounded-lg overflow-hidden">
-                <img alt="Facilities" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKrfBbN54AyTW2DZUz2sMXV7HZXPzVGxrFzMp-puBlSUTwW5VYbzC_1hBdGPOjUStc1jS9S5Ak5UZGSRe6E6ZqOgXMPh2X7M0WNMdbHml9gPM_AFg3CopPhgAijfz2AaM65en4BkD2QL1uVuJDoYzf-4GU9cQqI9EbafEHo-74C_ZBgTJgXwHBRKoxnGkmXuTI5j3MofWXXb92BVvE4JBFnCuMzZ8gIG8z_h3dbzBRQixRgVYW-FCohtigrEdL9FsNfiJ5HpdVQl0"/>
+              <div className="w-1/2 h-32 bg-surface-container-lowest rounded-lg overflow-hidden">
+                <img alt="Facilities" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKrfBbN54AyTW2DZUz2sMXV7HZXPzVGxrFzMp-puBlSUTwW5VYbzC_1hBdGPOjUStc1jS9S5Ak5UZGSRe6E6ZqOgXMPh2X7M0WNMdbHml9gPM_AFg3CopPhgAijfz2AaM65en4BkD2QL1uVuJDoYzf-4GU9cQqI9EbafEHo-74C_ZBgTJgXwHBRKoxnGkmXuTI5j3MofWXXb92BVvE4JBFnCuMzZ8gIG8z_h3dbzBRQixRgVYW-FCohtigrEdL9FsNfiJ5HpdVQl0" />
               </div>
-            </div>
-            
+            </motion.div>
+
             {/* Horizontal Bento Item 2 */}
-            <div className="md:col-span-7 bg-primary text-on-primary rounded-xl p-8 flex justify-between items-center relative overflow-hidden group">
+            <motion.div
+              {...staggerItem}
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="md:col-span-7 bg-primary text-on-primary rounded-xl p-8 flex justify-between items-center relative overflow-hidden group hover:shadow-2xl hover:shadow-primary/20 transition-shadow duration-300"
+            >
               <div className="relative z-10">
                 <h3 className="text-2xl font-bold tracking-tight mb-2">Academic Core</h3>
                 <p className="text-on-primary/80 max-w-xs">Track progress, manage courses, and facilitate research in one fluid view.</p>
               </div>
-              <span className="material-symbols-outlined text-8xl opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:rotate-0 transition-transform duration-500" style={{fontVariationSettings: "'FILL' 1"}}>school</span>
-              <button className="relative z-10 bg-on-primary text-primary px-6 py-3 rounded-lg font-bold hover:bg-white transition-colors">Launch Core</button>
-            </div>
-          </div>
+              <span className="material-symbols-outlined text-8xl opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:rotate-0 transition-transform duration-500" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
+              <button className="relative z-10 bg-on-primary text-primary px-6 py-3 rounded-lg font-bold hover:bg-white hover:scale-[1.02] transition-all duration-200">Launch Core</button>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Self-Driving Operations Section */}
+      {/* ─── Self-Driving Operations ─── */}
       <section className="py-24 px-6 overflow-hidden">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="order-2 lg:order-1">
+          <motion.div
+            {...fadeUp}
+            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+            className="order-2 lg:order-1"
+          >
             <div className="relative w-full aspect-square max-w-lg mx-auto">
-              {/* Abstract Visualizer */}
               <div className="absolute inset-0 border-[1px] border-primary/20 rounded-full animate-[spin_20s_linear_infinite]"></div>
               <div className="absolute inset-12 border-[1px] border-secondary/20 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
               <div className="absolute inset-24 border-[1px] border-primary/10 rounded-full"></div>
@@ -165,7 +217,6 @@ const Home = () => {
                   <span className="text-[10px] font-berkeley-mono text-outline tracking-[0.2em] uppercase">Autonomous</span>
                 </div>
               </div>
-              {/* Floating Data Points */}
               <div className="absolute top-0 right-10 bg-surface-container-high ghost-border px-4 py-2 rounded-lg text-xs font-berkeley-mono text-primary shadow-xl">
                 NODE_ALPHA_ACTIVE
               </div>
@@ -173,11 +224,15 @@ const Home = () => {
                 SYNC_PROTOCOL_V2
               </div>
             </div>
-          </div>
-          <div className="order-1 lg:order-2 space-y-8">
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white">Make campus operations self-driving</h2>
+          </motion.div>
+          <motion.div
+            {...fadeUp}
+            transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
+            className="order-1 lg:order-2 space-y-8"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white font-satoshi">Make campus operations self-driving</h2>
             <p className="text-on-surface-variant text-xl leading-relaxed">
-              Nex Campus employs advanced algorithmic agents to handle scheduling, energy optimization, and security protocols automatically. Set your parameters, and watch the system optimize itself.
+              Nex Campus employs advanced algorithmic agents to handle scheduling, energy optimization, and security protocols automatically.
             </p>
             <ul className="space-y-6">
               <li className="flex gap-4">
@@ -199,54 +254,62 @@ const Home = () => {
                 </div>
               </li>
             </ul>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Featured Grid Sections */}
+      {/* ─── Featured Grid Sections ─── */}
       <section className="py-24 px-6 border-t border-outline-variant/10">
         <div className="max-w-7xl mx-auto space-y-32">
+
           {/* Featured Courses */}
           <div>
-            <div className="flex justify-between items-end mb-12">
+            <motion.div
+              {...fadeUp}
+              className="flex justify-between items-end mb-12"
+            >
               <div>
-                <h2 className="text-3xl font-bold tracking-tight text-white mb-2">Featured Courses</h2>
+                <h2 className="text-3xl font-bold tracking-tight text-white mb-2 font-satoshi">Featured Courses</h2>
                 <p className="text-on-surface-variant">The frontiers of knowledge, delivered via the OS.</p>
               </div>
-              <button className="text-primary hover:underline font-semibold flex items-center gap-1">
+              <button className="text-primary hover:underline font-semibold flex items-center gap-1 hover:scale-[1.02] transition-transform duration-200">
                 Explore Catalog
                 <span className="material-symbols-outlined">chevron_right</span>
               </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="group cursor-pointer">
-                <div className="aspect-[16/10] bg-surface-container-low rounded-xl overflow-hidden mb-4 ghost-border">
-                  <img alt="Course Thumbnail" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJuyKGrUdfPP3j40KR_T3cfGYhnqObEEzgHOIKe0WXci4u-KeOW21Jw0Q7S7gEe6ITn5ZioCsSvpTd-HZXjcETps4_svgvTWlDpFnS_8C2yFchKyl05KEfKUS9VrRZDg2e4PcNNmcGb1vl005zXJt5ZlMLZly6lKNDiR7x1CSWSMqYB7U66uK3OJd7w-kNv3S5oF6X9rzcjReBoj9Hys4A42QndQrhiu8wLKtfdSpsDwhK6WRTVxjX5y5rhcaRTvdruiISZf4UXzE"/>
-                </div>
-                <h3 className="text-xl font-bold mb-1">Quantum Systems Design</h3>
-                <p className="text-sm text-on-surface-variant">Level 400 • 12 Credits</p>
-              </div>
-              <div className="group cursor-pointer">
-                <div className="aspect-[16/10] bg-surface-container-low rounded-xl overflow-hidden mb-4 ghost-border">
-                  <img alt="Course Thumbnail" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDExOURvciBR3gc2mvKthcE8HbV3zOqA-IRbnKvpQ8X6z7essWKskt7zoRekZoK8rubJulZVIfDD5QRjQ3GQJ6WDcQsmniBMrttDppvk1DBW4OOCzxQCCMRAmey_ND5q45klNLsRKJYNsnT0xpGiLJPGjYmga5k_VNbFAdm3n7C6U7ZBu0NWQa0dKTQIrMw8XNZzGclSHgA6KUrnotioBtUq3v1Fh8HN2JyK18ZnUuRCY74O7HFYw1OXCZfg9sL22GXgjp03GwBLq0"/>
-                </div>
-                <h3 className="text-xl font-bold mb-1">Algorithmic Ethics</h3>
-                <p className="text-sm text-on-surface-variant">Level 300 • 8 Credits</p>
-              </div>
-              <div className="group cursor-pointer">
-                <div className="aspect-[16/10] bg-surface-container-low rounded-xl overflow-hidden mb-4 ghost-border">
-                  <img alt="Course Thumbnail" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8MBspROSwHgN0KPkgkV0vi0KX3eWPTiVKVJ_iG8o8hLQAg0dCI7dTLhLOHaxDanCESAmK6ML8hToB0HPsLyFWQlxj2d5c8Bp9QO_n21L-9mbAV2LyYxHWPeMpv_HH3uV2RKX6KOV2VU_0CZGYrNhZCwjN0yWj78JvAkAiPW-ymKcx_wLpOh-sqLFdkHTJ8-8xQ_3dpPR91JuUltHAzxet-ZuCqfPZPxvODApZuiT6XOJfYozaFLVLXhPg4MrQy5gZDYU1gii5OUQ"/>
-                </div>
-                <h3 className="text-xl font-bold mb-1">Orbital Economics</h3>
-                <p className="text-sm text-on-surface-variant">Level 500 • 15 Credits</p>
-              </div>
-            </div>
+            </motion.div>
+            <motion.div
+              {...staggerContainer}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            >
+              {[
+                { title: "Quantum Systems Design", level: "Level 400 • 12 Credits", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBJuyKGrUdfPP3j40KR_T3cfGYhnqObEEzgHOIKe0WXci4u-KeOW21Jw0Q7S7gEe6ITn5ZioCsSvpTd-HZXjcETps4_svgvTWlDpFnS_8C2yFchKyl05KEfKUS9VrRZDg2e4PcNNmcGb1vl005zXJt5ZlMLZly6lKNDiR7x1CSWSMqYB7U66uK3OJd7w-kNv3S5oF6X9rzcjReBoj9Hys4A42QndQrhiu8wLKtfdSpsDwhK6WRTVxjX5y5rhcaRTvdruiISZf4UXzE" },
+                { title: "Algorithmic Ethics", level: "Level 300 • 8 Credits", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDExOURvciBR3gc2mvKthcE8HbV3zOqA-IRbnKvpQ8X6z7essWKskt7zoRekZoK8rubJulZVIfDD5QRjQ3GQJ6WDcQsmniBMrttDppvk1DBW4OOCzxQCCMRAmey_ND5q45klNLsRKJYNsnT0xpGiLJPGjYmga5k_VNbFAdm3n7C6U7ZBu0NWQa0dKTQIrMw8XNZzGclSHgA6KUrnotioBtUq3v1Fh8HN2JyK18ZnUuRCY74O7HFYw1OXCZfg9sL22GXgjp03GwBLq0" },
+                { title: "Orbital Economics", level: "Level 500 • 15 Credits", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuD8MBspROSwHgN0KPkgkV0vi0KX3eWPTiVKVJ_iG8o8hLQAg0dCI7dTLhLOHaxDanCESAmK6ML8hToB0HPsLyFWQlxj2d5c8Bp9QO_n21L-9mbAV2LyYxHWPeMpv_HH3uV2RKX6KOV2VU_0CZGYrNhZCwjN0yWj78JvAkAiPW-ymKcx_wLpOh-sqLFdkHTJ8-8xQ_3dpPR91JuUltHAzxet-ZuCqfPZPxvODApZuiT6XOJfYozaFLVLXhPg4MrQy5gZDYU1gii5OUQ" },
+              ].map((course) => (
+                <motion.div
+                  key={course.title}
+                  {...staggerItem}
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="group cursor-pointer hover:shadow-xl hover:shadow-black/20 rounded-xl transition-shadow duration-300"
+                >
+                  <div className="aspect-[16/10] bg-surface-container-low rounded-xl overflow-hidden mb-4 ghost-border">
+                    <img alt="Course Thumbnail" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={course.src} />
+                  </div>
+                  <h3 className="text-xl font-bold mb-1">{course.title}</h3>
+                  <p className="text-sm text-on-surface-variant">{course.level}</p>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
 
-          {/* Facilities: Side-by-Side Asymmetric */}
+          {/* Facilities */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-5 space-y-6">
-              <h2 className="text-3xl font-bold tracking-tight text-white">Facilities engineered for the future</h2>
+            <motion.div
+              {...fadeUp}
+              className="lg:col-span-5 space-y-6"
+            >
+              <h2 className="text-3xl font-bold tracking-tight text-white font-satoshi">Facilities engineered for the future</h2>
               <p className="text-on-surface-variant leading-relaxed">
                 Our campus is a collection of high-performance environments, from zero-latency labs to bioclimatic social hubs, all connected via the Nex network.
               </p>
@@ -260,101 +323,93 @@ const Home = () => {
                   <p className="text-[10px] text-outline uppercase tracking-widest">Smart Hubs</p>
                 </div>
               </div>
-              <button className="bg-surface-container-high text-white px-6 py-3 rounded-lg font-bold ghost-border w-full hover:bg-surface-variant transition-all">Explore Campus Map</button>
-            </div>
-            <div className="lg:col-span-7">
+              <button className="bg-surface-container-high text-white px-6 py-3 rounded-lg font-bold ghost-border w-full hover:bg-surface-variant hover:scale-[1.02] transition-all duration-200">Explore Campus Map</button>
+            </motion.div>
+            <motion.div
+              {...fadeUp}
+              transition={{ duration: 0.7, delay: 0.15 }}
+              className="lg:col-span-7"
+            >
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4 pt-12">
-                  <img alt="Library" className="rounded-xl ghost-border w-full aspect-[3/4] object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBzUqpGQAQXQQLDqMDTRr9x7mG57L7Vsw4jFwaTH0ZbaUUbu-jEkhN_rorOgcxVaD1N15akyHFYl36okrIW5lhNbr9_KI7b5Q-BAvCwQoYUMk3IHcoHE2j1by6PjnJboa9i9gW9tpn94-4J8klK0f5wGaanmswzqOoRVV-BiO_KwFAf_nR1jMSDYYkXS8yGa869FJAv-DZIXj1diKqOQAlLg76udxLYgLoI_5ClslExiEFMZYB9unHJRBfbsh-NLpU0H_XuKrKZk8"/>
-                  <img alt="Engineering Lab" className="rounded-xl ghost-border w-full aspect-video object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyXVbyaqQGheduA_MhGOWZ8ph_djwNlGUXOBeowCMVA6I25CqZ_22HgFIvxt5Z_b4IX--MSWPs02tVY5TORhaxI9SGOhnkzJYZQ5JJY8DT2QDIEFFxNND5SGggeQRlbmtyXIDbvoejBBGxmCX9msIibkGbhXZeFaA6fn6EteXUm_EVyHnAyqqCG6p7VdP-MQ5_Z3P5lkfWKqcbJD-emWBkfLDPSm43m96WrpgJt0CWzu-sRX1d29ZbVSVouo0khbF3DZv0KbcAQc8"/>
+                  <img alt="Library" className="rounded-xl ghost-border w-full aspect-[3/4] object-cover hover:scale-[1.02] transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBzUqpGQAQXQQLDqMDTRr9x7mG57L7Vsw4jFwaTH0ZbaUUbu-jEkhN_rorOgcxVaD1N15akyHFYl36okrIW5lhNbr9_KI7b5Q-BAvCwQoYUMk3IHcoHE2j1by6PjnJboa9i9gW9tpn94-4J8klK0f5wGaanmswzqOoRVV-BiO_KwFAf_nR1jMSDYYkXS8yGa869FJAv-DZIXj1diKqOQAlLg76udxLYgLoI_5ClslExiEFMZYB9unHJRBfbsh-NLpU0H_XuKrKZk8" />
+                  <img alt="Engineering Lab" className="rounded-xl ghost-border w-full aspect-video object-cover hover:scale-[1.02] transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyXVbyaqQGheduA_MhGOWZ8ph_djwNlGUXOBeowCMVA6I25CqZ_22HgFIvxt5Z_b4IX--MSWPs02tVY5TORhaxI9SGOhnkzJYZQ5JJY8DT2QDIEFFxNND5SGggeQRlbmtyXIDbvoejBBGxmCX9msIibkGbhXZeFaA6fn6EteXUm_EVyHnAyqqCG6p7VdP-MQ5_Z3P5lkfWKqcbJD-emWBkfLDPSm43m96WrpgJt0CWzu-sRX1d29ZbVSVouo0khbF3DZv0KbcAQc8" />
                 </div>
                 <div className="space-y-4">
-                  <img alt="Social Hub" className="rounded-xl ghost-border w-full aspect-square object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLK09EwdE4QjWDA52SA7bacRwF2M9zAbXsMoImClAAlc6j-cniRP4NOvyTrNErDaDweUoL433ErXErPT-nBBWn796OuBbSUsOcXyJNj9ytf-jK3Hal7UufEzHD1TrQGc4tYFlebrD-Va6VksSyxzFbiWqX56kIMW_41IJ9TpAFIQ3rdpUMQPkcp3k7Cr1ladQPe9cG4yTthZ5NTMqWqOjZfDZ0MUBb1rX39bgj1s32qNLTlMFk4sBkx7lJ0mogOhjoCWUGYhzBS8M"/>
-                  <img alt="Data Center" className="rounded-xl ghost-border w-full aspect-[3/4] object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClv4Di6ppD1zK66m1YvRfRdjqNaV-HIiKqmlbbXj8qaLTAU9f9hyg94LfLOZGUqlihxyGdPWN0gM7hkgV6m7VGg0ErHSQRIVnUkQ5JyAiATzW0Qmv5yTDGlXjYBAitguQiyTU60_GPH2JcR-3D3Znhp0kX6wcd-DDqZa3GIC3pCjdh8uHIUw9657KiaQfhahaX-PzRTkg0zJLHho_6eT9-BcJoqiM25TovFUr00FUf2SGoeNy3NLyuNH8bsMFAU0DAOYc-nDtM1YI"/>
+                  <img alt="Social Hub" className="rounded-xl ghost-border w-full aspect-square object-cover hover:scale-[1.02] transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLK09EwdE4QjWDA52SA7bacRwF2M9zAbXsMoImClAAlc6j-cniRP4NOvyTrNErDaDweUoL433ErXErPT-nBBWn796OuBbSUsOcXyJNj9ytf-jK3Hal7UufEzHD1TrQGc4tYFlebrD-Va6VksSyxzFbiWqX56kIMW_41IJ9TpAFIQ3rdpUMQPkcp3k7Cr1ladQPe9cG4yTthZ5NTMqWqOjZfDZ0MUBb1rX39bgj1s32qNLTlMFk4sBkx7lJ0mogOhjoCWUGYhzBS8M" />
+                  <img alt="Data Center" className="rounded-xl ghost-border w-full aspect-[3/4] object-cover hover:scale-[1.02] transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClv4Di6ppD1zK66m1YvRfRdjqNaV-HIiKqmlbbXj8qaLTAU9f9hyg94LfLOZGUqlihxyGdPWN0gM7hkgV6m7VGg0ErHSQRIVnUkQ5JyAiATzW0Qmv5yTDGlXjYBAitguQiyTU60_GPH2JcR-3D3Znhp0kX6wcd-DDqZa3GIC3pCjdh8uHIUw9657KiaQfhahaX-PzRTkg0zJLHho_6eT9-BcJoqiM25TovFUr00FUf2SGoeNy3NLyuNH8bsMFAU0DAOYc-nDtM1YI" />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Events: Full Width Horizontal Scroller */}
+      {/* ─── Events Horizontal Scroller ─── */}
       <section className="px-6 py-24 pb-0 max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold tracking-tight text-white mb-12">Upcoming Events</h2>
-        <div className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide no-scrollbar">
-          <div className="flex-shrink-0 w-80 bg-surface-container-high rounded-xl overflow-hidden ghost-border group">
-            <div className="h-40 relative">
-              <img alt="Event" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK485cEVVNJXpEYfuL7WZK8eEzfxHu4EzD93FJf3xJ51x90gZreReNdI36-uBVX099I_7QDLbc28I-kq6Ekcbl9kpONegoNxWTDPL6m5xWEuBDbgKv9tA2XXkUP_gM9SF0t-PAQBbuZyrFPK2LOC6Q7ph3BxwTi1n6Wah3EJcDwjjbJO1WewR63SOMeG5lG6fr_W8jqMSvzY4B5t1N1-pwfNoRmp63iSLcVv-nZXaKR0xTmZk1CiBTysE_KkLgVdXk05OhQFC2HeM"/>
-              <div className="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-berkeley-mono px-2 py-1 rounded">OCT 24</div>
-            </div>
-            <div className="p-6">
-              <h3 className="text-lg font-bold mb-2">Nex Summit 2024</h3>
-              <p className="text-sm text-on-surface-variant mb-4">The annual gathering of campus innovators and developers.</p>
-              <div className="flex items-center gap-2 text-[10px] font-berkeley-mono text-outline">
-                <span className="material-symbols-outlined text-sm">location_on</span>
-                GREAT HALL • 09:00 AM
+        <motion.h2
+          {...fadeUp}
+          className="text-3xl font-bold tracking-tight text-white mb-12 font-satoshi"
+        >
+          Upcoming Events
+        </motion.h2>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide no-scrollbar"
+        >
+          {[
+            { date: "OCT 24", title: "Nex Summit 2024", desc: "The annual gathering of campus innovators and developers.", loc: "GREAT HALL • 09:00 AM", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBK485cEVVNJXpEYfuL7WZK8eEzfxHu4EzD93FJf3xJ51x90gZreReNdI36-uBVX099I_7QDLbc28I-kq6Ekcbl9kpONegoNxWTDPL6m5xWEuBDbgKv9tA2XXkUP_gM9SF0t-PAQBbuZyrFPK2LOC6Q7ph3BxwTi1n6Wah3EJcDwjjbJO1WewR63SOMeG5lG6fr_W8jqMSvzY4B5t1N1-pwfNoRmp63iSLcVv-nZXaKR0xTmZk1CiBTysE_KkLgVdXk05OhQFC2HeM" },
+            { date: "OCT 28", title: "Cyber Security Hackathon", desc: "48 hours of intense perimeter testing and offensive security.", loc: "NODE LAB • 06:00 PM", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDK_5LwPvVet91yTvIYUzi6I8WbYwLbJvDJS87GxE5HU8yqGfb4oRL_sWiVy2z6CRXdfLW3loKF8CoqD5E8bJPZWxzYgplljCfphUbFXXWlYku9swJUV1P5XV1XqhN9QEw4mvpCYKNsVisa6hVfZN6wu_dFXOT99eZNKbdesvjvjtQQ78NaoimXKWXbp-BgNuvnKvvzmZjEvIN81P2rL7p4PnJ69NyHL0FIWxAxXkvIm0X_0A1jHnZt2L_MrcF3Z1Mos-znK9TV6yM" },
+            { date: "NOV 02", title: "Social Design Workshop", desc: "Redefining human interaction in the digital age.", loc: "PLAZA HUB • 02:00 PM", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDI_DqMg5FTxRRH89rX0FmrKm7wF3GzQsHcLBV1aPfpD4Nx37IsrZmhEjxQEkhx-VufHjT0VpgJpxiXJY9Rub9HIzmmRcvsB88emOYeAixo5fZ-JXwR1Gv5-myCs91jtHxNhzQb8f6PZlM-jL8IRTLApK2Eh3C38u2eyQspfI3IBn9debzzWLYiDU6WGlYrIJ_u9xvSmJ6QUpfC9Wikvwn495VBcH7q3TPvW91iSKfiOj4pi4xTi1tisQNvFpXnJhowAmhRMGUjwLDk" },
+            { date: "NOV 05", title: "Alumni Networking", desc: "Connect with the Nex pioneers shaping global industries.", loc: "VIRTUAL HUB • 07:00 PM", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCBqFnnCWrH5AwAW1w8bjc4-Nt7cVwpqGEgq2967NznbNzGp9nvUAzWqCa7o_6d3Qd363cJIaFFKppTiCqICpz9Gb5HvjfRXnIMpZArzXR3A56ct13LSnN5crAkUryiqoVr3yISKY6L1WSHpkSjrH4qrG6OVaHBqfiYgmijFWGgqcc5bwC_d_P-XvCJqsAb8-k61nNCMHqO-uwtYYKh0Yk7N7MUlgDeL-h0XhVdB_z85_gQ8pqtXe-IAca4hnL6Nq7guWiZ4SeRAqA" },
+          ].map((event, i) => (
+            <motion.div
+              key={event.title}
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              whileHover={{ y: -4 }}
+              className="flex-shrink-0 w-80 bg-surface-container-high rounded-xl overflow-hidden ghost-border group cursor-pointer hover:shadow-xl hover:shadow-black/30 transition-shadow duration-300"
+            >
+              <div className="h-40 relative overflow-hidden">
+                <img alt="Event" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" src={event.src} />
+                <div className="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-berkeley-mono px-2 py-1 rounded">{event.date}</div>
               </div>
-            </div>
-          </div>
-          <div className="flex-shrink-0 w-80 bg-surface-container-high rounded-xl overflow-hidden ghost-border group">
-            <div className="h-40 relative">
-              <img alt="Event" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK_5LwPvVet91yTvIYUzi6I8WbYwLbJvDJS87GxE5HU8yqGfb4oRL_sWiVy2z6CRXdfLW3loKF8CoqD5E8bJPZWxzYgplljCfphUbFXXWlYku9swJUV1P5XV1XqhN9QEw4mvpCYKNsVisa6hVfZN6wu_dFXOT99eZNKbdesvjvjtQQ78NaoimXKWXbp-BgNuvnKvvzmZjEvIN81P2rL7p4PnJ69NyHL0FIWxAxXkvIm0X_0A1jHnZt2L_MrcF3Z1Mos-znK9TV6yM"/>
-              <div className="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-berkeley-mono px-2 py-1 rounded">OCT 28</div>
-            </div>
-            <div className="p-6">
-              <h3 className="text-lg font-bold mb-2">Cyber Security Hackathon</h3>
-              <p className="text-sm text-on-surface-variant mb-4">48 hours of intense perimeter testing and offensive security.</p>
-              <div className="flex items-center gap-2 text-[10px] font-berkeley-mono text-outline">
-                <span className="material-symbols-outlined text-sm">location_on</span>
-                NODE LAB • 06:00 PM
+              <div className="p-6">
+                <h3 className="text-lg font-bold mb-2">{event.title}</h3>
+                <p className="text-sm text-on-surface-variant mb-4">{event.desc}</p>
+                <div className="flex items-center gap-2 text-[10px] font-berkeley-mono text-outline">
+                  <span className="material-symbols-outlined text-sm">location_on</span>
+                  {event.loc}
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="flex-shrink-0 w-80 bg-surface-container-high rounded-xl overflow-hidden ghost-border group">
-            <div className="h-40 relative">
-              <img alt="Event" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDI_DqMg5FTxRRH89rX0FmrKm7wF3GzQsHcLBV1aPfpD4Nx37IsrZmhEjxQEkhx-VufHjT0VpgJxiXJY9Rub9HIzmmRcvsB88emOYeAixo5fZ-JXwR1Gv5-myCs91jtHxNhzQb8f6PZlM-jL8IRTLApK2Eh3C38u2eyQspfI3IBn9debzzWLYiDU6WGlYrIJ_u9xvSmJ6QUpfC9Wikvwn495VBcH7q3TPvW91iSKfiOj4pi4xTi1tisQNvFpXnJhowAmhRMGUjwLDk"/>
-              <div className="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-berkeley-mono px-2 py-1 rounded">NOV 02</div>
-            </div>
-            <div className="p-6">
-              <h3 className="text-lg font-bold mb-2">Social Design Workshop</h3>
-              <p className="text-sm text-on-surface-variant mb-4">Redefining human interaction in the digital age.</p>
-              <div className="flex items-center gap-2 text-[10px] font-berkeley-mono text-outline">
-                <span className="material-symbols-outlined text-sm">location_on</span>
-                PLAZA HUB • 02:00 PM
-              </div>
-            </div>
-          </div>
-          <div className="flex-shrink-0 w-80 bg-surface-container-high rounded-xl overflow-hidden ghost-border group">
-            <div className="h-40 relative">
-              <img alt="Event" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBqFnnCWrH5AwAW1w8bjc4-Nt7cVwpqGEgq2967NznbNzGp9nvUAzWqCa7o_6d3Qd363cJIaFFKppTiCqICpz9Gb5HvjfRXnIMpZArzXR3A56ct13LSnN5crAkUryiqoVr3yISKY6L1WSHpkSjrH4qrG6OVaHBqfiYgmijFWGgqcc5bwC_d_P-XvCJqsAb8-k61nNCMHqO-uwtYYKh0Yk7N7MUlgDeL-h0XhVdB_z85_gQ8pqtXe-IAca4hnL6Nq7guWiZ4SeRAqA"/>
-              <div className="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-berkeley-mono px-2 py-1 rounded">NOV 05</div>
-            </div>
-            <div className="p-6">
-              <h3 className="text-lg font-bold mb-2">Alumni Networking</h3>
-              <p className="text-sm text-on-surface-variant mb-4">Connect with the Nex pioneers shaping global industries.</p>
-              <div className="flex items-center gap-2 text-[10px] font-berkeley-mono text-outline">
-                <span className="material-symbols-outlined text-sm">location_on</span>
-                VIRTUAL HUB • 07:00 PM
-              </div>
-            </div>
-          </div>
-        </div>
+            </motion.div>
+          ))}
+        </motion.div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 px-6">
+      {/* ─── CTA Section ─── */}
+      <motion.section
+        {...fadeUp}
+        className="py-24 px-6"
+      >
         <div className="max-w-5xl mx-auto glass-panel rounded-2xl p-12 text-center ghost-border relative overflow-hidden">
-          <div className="absolute -top-24 -left-24 w-64 h-64 bg-primary/20 blur-[80px] rounded-full"></div>
+          <div className="absolute -top-24 -left-24 w-64 h-64 bg-primary/20 blur-[80px] rounded-full pointer-events-none"></div>
+          <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-secondary/10 blur-[80px] rounded-full pointer-events-none"></div>
           <div className="relative z-10">
-            <h2 className="text-4xl font-bold tracking-tighter text-white mb-6">Ready to upgrade your campus experience?</h2>
+            <h2 className="text-4xl font-bold tracking-tighter text-white mb-6 font-satoshi">Ready to upgrade your campus experience?</h2>
             <p className="text-on-surface-variant text-lg mb-10 max-w-2xl mx-auto">Join thousands of students and faculty members who are already navigating the future of education on Nex Campus.</p>
-            <div className="flex justify-center gap-4">
-              <button className="bg-primary text-on-primary px-8 py-3 rounded-lg font-bold hover:scale-105 transition-transform">Get Started Free</button>
-              <button className="bg-surface-container-high text-white px-8 py-3 rounded-lg font-bold ghost-border hover:bg-surface-variant transition-all">Request Demo</button>
+            <div className="flex justify-center gap-4 flex-wrap">
+              <button className="bg-primary text-on-primary px-8 py-3 rounded-lg font-bold hover:scale-[1.02] hover:brightness-110 transition-all duration-200">Get Started Free</button>
+              <button className="bg-surface-container-high text-white px-8 py-3 rounded-lg font-bold ghost-border hover:bg-surface-variant hover:scale-[1.02] transition-all duration-200">Request Demo</button>
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
     </motion.main>
   );
 };

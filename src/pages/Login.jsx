@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion';
+import { pageTransition } from '../lib/animations';
 
 const Login = () => {
     return (
         <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            {...pageTransition}
             className="antialiased overflow-hidden min-h-screen bg-background text-on-surface"
         >
             <main className="min-h-screen flex flex-col md:flex-row">
@@ -24,7 +23,7 @@ const Login = () => {
                             </div>
                             <span className="text-xl font-bold tracking-tighter text-white">Nex Campus</span>
                         </div>
-                        <h1 className="text-4xl md:text-6xl font-semibold tracking-tighter text-white leading-[1.1] mb-6">
+                        <h1 className="text-4xl md:text-6xl font-semibold tracking-tighter text-white leading-[1.1] mb-6 font-satoshi">
                             Welcome back to Nex Campus.
                         </h1>
                         <p className="text-on-surface-variant text-lg max-w-md font-normal leading-relaxed">
@@ -87,7 +86,7 @@ const Login = () => {
                             </div>
                             
                             {/* Primary Action */}
-                            <button className="w-full bg-[#3B82F6] hover:bg-primary-container text-on-primary-container font-semibold py-3.5 rounded-md transition-all duration-200 transform active:scale-[0.98] shadow-lg shadow-blue-500/10" type="submit">
+                            <button className="w-full bg-[#3B82F6] hover:bg-primary-container text-on-primary-container font-semibold py-3.5 rounded-md transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/10" type="submit">
                                 Sign In
                             </button>
                         </form>

@@ -3,15 +3,47 @@
 @tailwind utilities;
 
 @layer base {
-  @font-face {
-    font-family: 'Berkeley Mono';
-    src: local('JetBrains Mono'), local('Courier New');
-    /* Used as a fallback if the paid Berkeley Mono isn't available */
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
     -webkit-font-smoothing: antialiased;
-    scroll-behavior: smooth;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Satoshi', sans-serif;
+  }
+
+  /* Global background grain at ~3.5% opacity */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    opacity: 0.035;
+    pointer-events: none;
+    z-index: 9998;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  /* Thin custom scrollbar — 6px */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0d1322;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #424754;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #5a6070;
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #424754 #0d1322;
   }
 }
 
@@ -20,32 +52,21 @@
     font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
     vertical-align: middle;
   }
-  
+
   .glass-panel {
     background: rgba(36, 42, 58, 0.4);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
   }
-  
+
   .glass-nav {
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     background: rgba(13, 19, 34, 0.8);
   }
 
   .ghost-border {
     outline: 1px solid rgba(66, 71, 84, 0.15);
-  }
-
-  /* Custom scrollbar for webkit */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #0d1322;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #2f3445;
-    border-radius: 4px;
   }
 
   .hide-scrollbar::-webkit-scrollbar {
@@ -57,14 +78,29 @@
     background-size: 40px 40px;
   }
 
-  /* bg-noise class adds a subtle CSS grain */
-  .bg-noise {
+  /* Animated underline for nav links */
+  .nav-link {
     position: relative;
   }
-  .bg-noise::before {
-    content: "";
-    @apply absolute inset-0 opacity-[0.03] pointer-events-none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    z-index: 50;
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: currentColor;
+    transition: width 0.25s ease;
+  }
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  /* Gradient text utility */
+  .gradient-text {
+    background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
