@@ -1,0 +1,48 @@
+import express from 'express';
+import Support from '../models/Support.js';
+import { protect, authorize } from '../middleware/auth.js';
+import { asyncHandler } from '../middleware/errorHandler.js';
+
+const router = express.Router();
+
+// ── POST /api/support  (public) ───────────────────────────────────────────────
+router.post(
+  '/',
+  asyncHandler(async (req, res) => {
+    const { name, email, phone, usn, message } = req.body;
+    if (!name || !email || !message) {
+      return res.status(400).json({ success: false, message: 'Name, email, and message are required' });
+    }
+    const ticket = await Support.create({ name, email, phone, usn, message });
+    res.status(201).json({ success: true, data: ticket });
+  })
+);
+
+// ── GET /api/support  (admin only) ───────────────────────────────────────────
+router.get(
+  '/',
+  protect,
+  authorize('admin'),
+  asyncHandler(async (req, res) => {
+    const tickets = await Support.find({}).sort('-createdAt');
+    res.status(200).json({ success: true, data: tickets });
+  })
+);
+
+// ── PATCH /api/support/:id/resolve  (admin only) ─────────────────────────────
+router.patch(
+  '/:id/resolve',
+  protect,
+  authorize('admin'),
+  asyncHandler(async (req, res) => {
+    const ticket = await Support.findByIdAndUpdate(
+      req.params.id,
+      { status: 'resolved' },
+      { new: true }
+    );
+    if (!ticket) return res.status(404).json({ success: false, message: 'Ticket not found' });
+    res.status(200).json({ success: true, data: ticket });
+  })
+);
+
+export default router;

@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import App from './App.jsx'
 import LoadingScreen from './components/LoadingScreen.jsx'
+import { AuthProvider } from './context/AuthContext.jsx'
 import './index.css'
 
 function Root() {
@@ -16,10 +17,12 @@ function Root() {
 
   return (
     <BrowserRouter>
-      <App />
-      <AnimatePresence>
-        {loading && <LoadingScreen key="loader" />}
-      </AnimatePresence>
+      <AuthProvider>
+        <App />
+        <AnimatePresence>
+          {loading && <LoadingScreen key="loader" />}
+        </AnimatePresence>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

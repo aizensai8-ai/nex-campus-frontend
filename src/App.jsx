@@ -9,6 +9,9 @@ import Events from './pages/Events';
 import Facilities from './pages/Facilities';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Admin from './pages/Admin';
+import Support from './pages/Support';
+import EditProfile from './pages/EditProfile';
 
 function App() {
   const location = useLocation();
@@ -23,6 +26,9 @@ function App() {
           <Route path="/courses" element={<Courses />} />
           <Route path="/events" element={<Events />} />
           <Route path="/facilities" element={<Facilities />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="/profile" element={<EditProfile />} />
         </Route>
 
         {/* Standalone routes for Auth */}

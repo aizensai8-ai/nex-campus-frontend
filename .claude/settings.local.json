@@ -3,7 +3,14 @@
     "allow": [
       "Bash(npm install:*)",
       "Bash(npm search:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(node -e ':*)",
+      "Bash(node utils/seedData.js)",
+      "Bash(curl -s http://localhost:5000/api/courses)",
+      "Bash(node -e \"const d=JSON.parse\\(require\\('fs'\\).readFileSync\\('/dev/stdin','utf8'\\)\\); console.log\\('success:', d.success, '| count:', d.data?.length ?? 'N/A', '| first:', d.data?.[0]?.name\\)\")",
+      "Bash(node server/utils/seedData.js)",
+      "Bash(node:*)",
+      "Bash(npx --yes vite build --mode development)"
     ]
   }
 }

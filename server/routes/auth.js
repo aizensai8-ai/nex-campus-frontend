@@ -1,0 +1,207 @@
+import express from 'express';
+import { body, validationResult } from 'express-validator';
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import User from '../models/User.js';
+import { protect } from '../middleware/auth.js';
+import { asyncHandler } from '../middleware/errorHandler.js';
+
+const router = express.Router();
+
+// ── Helper: send JWT in cookie + JSON ─────────────────────────────────────────
+const sendTokenResponse = (user, statusCode, res) => {
+  const token = user.getSignedJwtToken();
+
+  const cookieOptions = {
+    expires: new Date(Date.now() + parseInt(process.env.JWT_COOKIE_EXPIRE || 30) * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+  };
+
+  res
+    .status(statusCode)
+    .cookie('token', token, cookieOptions)
+    .json({
+      success: true,
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        usn: user.usn,
+        semester: user.semester,
+        section: user.section,
+        avatar: user.avatar,
+      },
+    });
+};
+
+// ── Validation rules ──────────────────────────────────────────────────────────
+const registerRules = [
+  body('name').trim().notEmpty().withMessage('Name is required').isLength({ max: 100 }),
+  body('email').isEmail().normalizeEmail().withMessage('Valid email required'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  body('usn')
+    .optional()
+    .trim()
+    .toUpperCase()
+    .matches(/^[A-Z0-9]+$/)
+    .withMessage('USN must be alphanumeric'),
+  body('role').optional().isIn(['student', 'faculty']).withMessage('Role must be student or faculty'),
+];
+
+const loginRules = [
+  body('email').isEmail().normalizeEmail().withMessage('Valid email required'),
+  body('password').notEmpty().withMessage('Password is required'),
+];
+
+// ── POST /api/auth/register ───────────────────────────────────────────────────
+router.post(
+  '/register',
+  registerRules,
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
+    const { name, email, password, usn, role, section, semester } = req.body;
+
+    // Gmail-only policy
+    if (!email.toLowerCase().endsWith('@gmail.com')) {
+      return res.status(400).json({ success: false, message: 'Only Gmail addresses are allowed' });
+    }
+
+    // Section required, must be {1-8}{A-E} format (e.g. 4C, 6B)
+    if (!section || !/^[1-8][A-E]$/.test(section)) {
+      return res.status(400).json({ success: false, message: 'Section is required (e.g. 4C, 6B, 1A)' });
+    }
+
+    // Prevent self-promoting to admin via registration
+    const safeRole = role === 'admin' ? 'student' : role || 'student';
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ success: false, message: 'Email already registered' });
+    }
+
+    const semNum = semester ? parseInt(semester) : parseInt(section[0]);
+    const user = await User.create({ name, email, password, usn, role: safeRole, section, semester: semNum });
+    sendTokenResponse(user, 201, res);
+  })
+);
+
+// ── POST /api/auth/login ──────────────────────────────────────────────────────
+router.post(
+  '/login',
+  loginRules,
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email }).select('+password');
+    if (!user || !user.password) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+
+    const isMatch = await user.matchPassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+
+    sendTokenResponse(user, 200, res);
+  })
+);
+
+// ── GET /api/auth/logout ──────────────────────────────────────────────────────
+router.get('/logout', (req, res) => {
+  res.cookie('token', 'none', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({ success: true, message: 'Logged out successfully' });
+});
+
+// ── GET /api/auth/me ──────────────────────────────────────────────────────────
+router.get(
+  '/me',
+  protect,
+  asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id)
+      .populate('enrolledCourses', 'code name credits department')
+      .populate('registeredEvents', 'title date location status');
+
+    res.status(200).json({ success: true, data: user });
+  })
+);
+
+// ── Google OAuth ──────────────────────────────────────────────────────────────
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      },
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+          let user = await User.findOne({ googleId: profile.id });
+
+          if (!user) {
+            // Check if email already exists (link accounts)
+            user = await User.findOne({ email: profile.emails[0].value });
+            if (user) {
+              user.googleId = profile.id;
+              if (!user.avatar) user.avatar = profile.photos[0]?.value || '';
+              await user.save({ validateBeforeSave: false });
+            } else {
+              user = await User.create({
+                googleId: profile.id,
+                name: profile.displayName,
+                email: profile.emails[0].value,
+                avatar: profile.photos[0]?.value || '',
+                role: 'student',
+              });
+            }
+          }
+
+          return done(null, user);
+        } catch (err) {
+          return done(err, null);
+        }
+      }
+    )
+  );
+
+  // GET /api/auth/google
+  router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
+
+  // GET /api/auth/google/callback
+  router.get(
+    '/google/callback',
+    passport.authenticate('google', { session: false, failureRedirect: `${process.env.CLIENT_URL}/login?error=oauth_failed` }),
+    (req, res) => {
+      const token = req.user.getSignedJwtToken();
+      // Redirect to frontend with token in query (frontend stores it)
+      const clientUrl = process.env.NODE_ENV === 'production' ? process.env.CLIENT_URL : process.env.CLIENT_URL_DEV;
+      res.redirect(`${clientUrl}/portal?token=${token}`);
+    }
+  );
+} else {
+  // Stub routes when OAuth env vars are not set
+  router.get('/google', (req, res) => {
+    res.status(503).json({ success: false, message: 'Google OAuth is not configured' });
+  });
+  router.get('/google/callback', (req, res) => {
+    res.status(503).json({ success: false, message: 'Google OAuth is not configured' });
+  });
+}
+
+export default router;

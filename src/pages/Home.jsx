@@ -1,7 +1,33 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { fadeUp, staggerContainer, staggerItem, pageTransition } from '../lib/animations';
+import api from '../lib/api';
+
+const CATEGORY_ICON = {
+  hackathon: 'code', workshop: 'build', keynote: 'mic', symposium: 'groups',
+  networking: 'hub', sports: 'sports_soccer', cultural: 'celebration',
+  academic: 'school', 'open-house': 'home', other: 'event',
+};
+
+const CATEGORY_GRADIENT = {
+  hackathon: 'from-blue-900/50 to-blue-900/20',
+  workshop: 'from-purple-900/50 to-purple-900/20',
+  keynote: 'from-amber-900/50 to-amber-900/20',
+  sports: 'from-green-900/50 to-green-900/20',
+  cultural: 'from-pink-900/50 to-pink-900/20',
+  academic: 'from-indigo-900/50 to-indigo-900/20',
+};
 
 const Home = () => {
+  const navigate = useNavigate();
+  const [featuredCourses, setFeaturedCourses] = useState([]);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+
+  useEffect(() => {
+    api.get('/api/courses').then((r) => setFeaturedCourses(Array.isArray(r.data) ? r.data.slice(0, 3) : [])).catch(() => {});
+    api.get('/api/events').then((r) => setUpcomingEvents(Array.isArray(r.data) ? r.data.slice(0, 4) : [])).catch(() => {});
+  }, []);
   return (
     <motion.main
       {...pageTransition}
@@ -43,11 +69,11 @@ const Home = () => {
               transition={{ duration: 0.5, delay: 0.5 }}
               className="flex flex-wrap gap-4"
             >
-              <button className="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold text-lg hover:brightness-110 hover:scale-[1.02] transition-all duration-200 flex items-center gap-2">
+              <button onClick={() => navigate('/portal')} className="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold text-lg hover:brightness-110 hover:scale-[1.02] transition-all duration-200 flex items-center gap-2">
                 Enter the Portal
                 <span className="material-symbols-outlined">arrow_forward</span>
               </button>
-              <button className="bg-surface-container-high text-on-surface px-8 py-4 rounded-xl font-bold text-lg ghost-border hover:bg-surface-variant hover:scale-[1.02] transition-all duration-200">
+              <button onClick={() => navigate('/courses')} className="bg-surface-container-high text-on-surface px-8 py-4 rounded-xl font-bold text-lg ghost-border hover:bg-surface-variant hover:scale-[1.02] transition-all duration-200">
                 View Documentation
               </button>
             </motion.div>
@@ -193,7 +219,7 @@ const Home = () => {
                 <p className="text-on-primary/80 max-w-xs">Track progress, manage courses, and facilitate research in one fluid view.</p>
               </div>
               <span className="material-symbols-outlined text-8xl opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:rotate-0 transition-transform duration-500" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
-              <button className="relative z-10 bg-on-primary text-primary px-6 py-3 rounded-lg font-bold hover:bg-white hover:scale-[1.02] transition-all duration-200">Launch Core</button>
+              <button onClick={() => navigate('/portal')} className="relative z-10 bg-on-primary text-primary px-6 py-3 rounded-lg font-bold hover:bg-white hover:scale-[1.02] transition-all duration-200">Launch Core</button>
             </motion.div>
           </motion.div>
         </div>
@@ -272,7 +298,7 @@ const Home = () => {
                 <h2 className="text-3xl font-bold tracking-tight text-white mb-2 font-satoshi">Featured Courses</h2>
                 <p className="text-on-surface-variant">The frontiers of knowledge, delivered via the OS.</p>
               </div>
-              <button className="text-primary hover:underline font-semibold flex items-center gap-1 hover:scale-[1.02] transition-transform duration-200">
+              <button onClick={() => navigate('/courses')} className="text-primary hover:underline font-semibold flex items-center gap-1 hover:scale-[1.02] transition-transform duration-200">
                 Explore Catalog
                 <span className="material-symbols-outlined">chevron_right</span>
               </button>
@@ -281,23 +307,31 @@ const Home = () => {
               {...staggerContainer}
               className="grid grid-cols-1 md:grid-cols-3 gap-6"
             >
-              {[
-                { title: "Quantum Systems Design", level: "Level 400 • 12 Credits", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBJuyKGrUdfPP3j40KR_T3cfGYhnqObEEzgHOIKe0WXci4u-KeOW21Jw0Q7S7gEe6ITn5ZioCsSvpTd-HZXjcETps4_svgvTWlDpFnS_8C2yFchKyl05KEfKUS9VrRZDg2e4PcNNmcGb1vl005zXJt5ZlMLZly6lKNDiR7x1CSWSMqYB7U66uK3OJd7w-kNv3S5oF6X9rzcjReBoj9Hys4A42QndQrhiu8wLKtfdSpsDwhK6WRTVxjX5y5rhcaRTvdruiISZf4UXzE" },
-                { title: "Algorithmic Ethics", level: "Level 300 • 8 Credits", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDExOURvciBR3gc2mvKthcE8HbV3zOqA-IRbnKvpQ8X6z7essWKskt7zoRekZoK8rubJulZVIfDD5QRjQ3GQJ6WDcQsmniBMrttDppvk1DBW4OOCzxQCCMRAmey_ND5q45klNLsRKJYNsnT0xpGiLJPGjYmga5k_VNbFAdm3n7C6U7ZBu0NWQa0dKTQIrMw8XNZzGclSHgA6KUrnotioBtUq3v1Fh8HN2JyK18ZnUuRCY74O7HFYw1OXCZfg9sL22GXgjp03GwBLq0" },
-                { title: "Orbital Economics", level: "Level 500 • 15 Credits", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuD8MBspROSwHgN0KPkgkV0vi0KX3eWPTiVKVJ_iG8o8hLQAg0dCI7dTLhLOHaxDanCESAmK6ML8hToB0HPsLyFWQlxj2d5c8Bp9QO_n21L-9mbAV2LyYxHWPeMpv_HH3uV2RKX6KOV2VU_0CZGYrNhZCwjN0yWj78JvAkAiPW-ymKcx_wLpOh-sqLFdkHTJ8-8xQ_3dpPR91JuUltHAzxet-ZuCqfPZPxvODApZuiT6XOJfYozaFLVLXhPg4MrQy5gZDYU1gii5OUQ" },
-              ].map((course) => (
+              {featuredCourses.length === 0
+                ? Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="rounded-xl animate-pulse">
+                    <div className="aspect-[16/10] bg-surface-container-low rounded-xl mb-4"></div>
+                    <div className="h-5 w-2/3 bg-surface-container-high rounded mb-2"></div>
+                    <div className="h-3 w-1/3 bg-surface-container-high rounded"></div>
+                  </div>
+                ))
+                : featuredCourses.map((course) => (
                 <motion.div
-                  key={course.title}
+                  key={course._id}
                   {...staggerItem}
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
                   className="group cursor-pointer hover:shadow-xl hover:shadow-black/20 rounded-xl transition-shadow duration-300"
+                  onClick={() => navigate('/courses')}
                 >
-                  <div className="aspect-[16/10] bg-surface-container-low rounded-xl overflow-hidden mb-4 ghost-border">
-                    <img alt="Course Thumbnail" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={course.src} />
+                  <div className="aspect-[16/10] bg-surface-container-low rounded-xl overflow-hidden mb-4 ghost-border flex items-center justify-center relative">
+                    <span className="material-symbols-outlined text-outline text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
+                    <div className="absolute top-3 left-3">
+                      <span className="font-mono text-[10px] text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded">{course.code}</span>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold mb-1">{course.title}</h3>
-                  <p className="text-sm text-on-surface-variant">{course.level}</p>
+                  <h3 className="text-xl font-bold mb-1 group-hover:text-primary transition-colors">{course.title}</h3>
+                  <p className="text-sm text-on-surface-variant">{course.instructor} · {course.credits} Credits</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -323,7 +357,7 @@ const Home = () => {
                   <p className="text-[10px] text-outline uppercase tracking-widest">Smart Hubs</p>
                 </div>
               </div>
-              <button className="bg-surface-container-high text-white px-6 py-3 rounded-lg font-bold ghost-border w-full hover:bg-surface-variant hover:scale-[1.02] transition-all duration-200">Explore Campus Map</button>
+              <button onClick={() => navigate('/facilities')} className="bg-surface-container-high text-white px-6 py-3 rounded-lg font-bold ghost-border w-full hover:bg-surface-variant hover:scale-[1.02] transition-all duration-200">Explore Campus Map</button>
             </motion.div>
             <motion.div
               {...fadeUp}
@@ -332,12 +366,12 @@ const Home = () => {
             >
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4 pt-12">
-                  <img alt="Library" className="rounded-xl ghost-border w-full aspect-[3/4] object-cover hover:scale-[1.02] transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBzUqpGQAQXQQLDqMDTRr9x7mG57L7Vsw4jFwaTH0ZbaUUbu-jEkhN_rorOgcxVaD1N15akyHFYl36okrIW5lhNbr9_KI7b5Q-BAvCwQoYUMk3IHcoHE2j1by6PjnJboa9i9gW9tpn94-4J8klK0f5wGaanmswzqOoRVV-BiO_KwFAf_nR1jMSDYYkXS8yGa869FJAv-DZIXj1diKqOQAlLg76udxLYgLoI_5ClslExiEFMZYB9unHJRBfbsh-NLpU0H_XuKrKZk8" />
-                  <img alt="Engineering Lab" className="rounded-xl ghost-border w-full aspect-video object-cover hover:scale-[1.02] transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyXVbyaqQGheduA_MhGOWZ8ph_djwNlGUXOBeowCMVA6I25CqZ_22HgFIvxt5Z_b4IX--MSWPs02tVY5TORhaxI9SGOhnkzJYZQ5JJY8DT2QDIEFFxNND5SGggeQRlbmtyXIDbvoejBBGxmCX9msIibkGbhXZeFaA6fn6EteXUm_EVyHnAyqqCG6p7VdP-MQ5_Z3P5lkfWKqcbJD-emWBkfLDPSm43m96WrpgJt0CWzu-sRX1d29ZbVSVouo0khbF3DZv0KbcAQc8" />
+                  <img alt="Library" className="rounded-xl ghost-border w-full aspect-[3/4] object-cover grayscale hover:grayscale-0 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 ease-in-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBzUqpGQAQXQQLDqMDTRr9x7mG57L7Vsw4jFwaTH0ZbaUUbu-jEkhN_rorOgcxVaD1N15akyHFYl36okrIW5lhNbr9_KI7b5Q-BAvCwQoYUMk3IHcoHE2j1by6PjnJboa9i9gW9tpn94-4J8klK0f5wGaanmswzqOoRVV-BiO_KwFAf_nR1jMSDYYkXS8yGa869FJAv-DZIXj1diKqOQAlLg76udxLYgLoI_5ClslExiEFMZYB9unHJRBfbsh-NLpU0H_XuKrKZk8" />
+                  <img alt="Engineering Lab" className="rounded-xl ghost-border w-full aspect-video object-cover grayscale hover:grayscale-0 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 ease-in-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyXVbyaqQGheduA_MhGOWZ8ph_djwNlGUXOBeowCMVA6I25CqZ_22HgFIvxt5Z_b4IX--MSWPs02tVY5TORhaxI9SGOhnkzJYZQ5JJY8DT2QDIEFFxNND5SGggeQRlbmtyXIDbvoejBBGxmCX9msIibkGbhXZeFaA6fn6EteXUm_EVyHnAyqqCG6p7VdP-MQ5_Z3P5lkfWKqcbJD-emWBkfLDPSm43m96WrpgJt0CWzu-sRX1d29ZbVSVouo0khbF3DZv0KbcAQc8" />
                 </div>
                 <div className="space-y-4">
-                  <img alt="Social Hub" className="rounded-xl ghost-border w-full aspect-square object-cover hover:scale-[1.02] transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLK09EwdE4QjWDA52SA7bacRwF2M9zAbXsMoImClAAlc6j-cniRP4NOvyTrNErDaDweUoL433ErXErPT-nBBWn796OuBbSUsOcXyJNj9ytf-jK3Hal7UufEzHD1TrQGc4tYFlebrD-Va6VksSyxzFbiWqX56kIMW_41IJ9TpAFIQ3rdpUMQPkcp3k7Cr1ladQPe9cG4yTthZ5NTMqWqOjZfDZ0MUBb1rX39bgj1s32qNLTlMFk4sBkx7lJ0mogOhjoCWUGYhzBS8M" />
-                  <img alt="Data Center" className="rounded-xl ghost-border w-full aspect-[3/4] object-cover hover:scale-[1.02] transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClv4Di6ppD1zK66m1YvRfRdjqNaV-HIiKqmlbbXj8qaLTAU9f9hyg94LfLOZGUqlihxyGdPWN0gM7hkgV6m7VGg0ErHSQRIVnUkQ5JyAiATzW0Qmv5yTDGlXjYBAitguQiyTU60_GPH2JcR-3D3Znhp0kX6wcd-DDqZa3GIC3pCjdh8uHIUw9657KiaQfhahaX-PzRTkg0zJLHho_6eT9-BcJoqiM25TovFUr00FUf2SGoeNy3NLyuNH8bsMFAU0DAOYc-nDtM1YI" />
+                  <img alt="Social Hub" className="rounded-xl ghost-border w-full aspect-square object-cover grayscale hover:grayscale-0 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 ease-in-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLK09EwdE4QjWDA52SA7bacRwF2M9zAbXsMoImClAAlc6j-cniRP4NOvyTrNErDaDweUoL433ErXErPT-nBBWn796OuBbSUsOcXyJNj9ytf-jK3Hal7UufEzHD1TrQGc4tYFlebrD-Va6VksSyxzFbiWqX56kIMW_41IJ9TpAFIQ3rdpUMQPkcp3k7Cr1ladQPe9cG4yTthZ5NTMqWqOjZfDZ0MUBb1rX39bgj1s32qNLTlMFk4sBkx7lJ0mogOhjoCWUGYhzBS8M" />
+                  <img alt="Data Center" className="rounded-xl ghost-border w-full aspect-[3/4] object-cover grayscale hover:grayscale-0 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 ease-in-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClv4Di6ppD1zK66m1YvRfRdjqNaV-HIiKqmlbbXj8qaLTAU9f9hyg94LfLOZGUqlihxyGdPWN0gM7hkgV6m7VGg0ErHSQRIVnUkQ5JyAiATzW0Qmv5yTDGlXjYBAitguQiyTU60_GPH2JcR-3D3Znhp0kX6wcd-DDqZa3GIC3pCjdh8uHIUw9657KiaQfhahaX-PzRTkg0zJLHho_6eT9-BcJoqiM25TovFUr00FUf2SGoeNy3NLyuNH8bsMFAU0DAOYc-nDtM1YI" />
                 </div>
               </div>
             </motion.div>
@@ -360,35 +394,50 @@ const Home = () => {
           transition={{ duration: 0.6 }}
           className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide no-scrollbar"
         >
-          {[
-            { date: "OCT 24", title: "Nex Summit 2024", desc: "The annual gathering of campus innovators and developers.", loc: "GREAT HALL • 09:00 AM", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBK485cEVVNJXpEYfuL7WZK8eEzfxHu4EzD93FJf3xJ51x90gZreReNdI36-uBVX099I_7QDLbc28I-kq6Ekcbl9kpONegoNxWTDPL6m5xWEuBDbgKv9tA2XXkUP_gM9SF0t-PAQBbuZyrFPK2LOC6Q7ph3BxwTi1n6Wah3EJcDwjjbJO1WewR63SOMeG5lG6fr_W8jqMSvzY4B5t1N1-pwfNoRmp63iSLcVv-nZXaKR0xTmZk1CiBTysE_KkLgVdXk05OhQFC2HeM" },
-            { date: "OCT 28", title: "Cyber Security Hackathon", desc: "48 hours of intense perimeter testing and offensive security.", loc: "NODE LAB • 06:00 PM", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDK_5LwPvVet91yTvIYUzi6I8WbYwLbJvDJS87GxE5HU8yqGfb4oRL_sWiVy2z6CRXdfLW3loKF8CoqD5E8bJPZWxzYgplljCfphUbFXXWlYku9swJUV1P5XV1XqhN9QEw4mvpCYKNsVisa6hVfZN6wu_dFXOT99eZNKbdesvjvjtQQ78NaoimXKWXbp-BgNuvnKvvzmZjEvIN81P2rL7p4PnJ69NyHL0FIWxAxXkvIm0X_0A1jHnZt2L_MrcF3Z1Mos-znK9TV6yM" },
-            { date: "NOV 02", title: "Social Design Workshop", desc: "Redefining human interaction in the digital age.", loc: "PLAZA HUB • 02:00 PM", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDI_DqMg5FTxRRH89rX0FmrKm7wF3GzQsHcLBV1aPfpD4Nx37IsrZmhEjxQEkhx-VufHjT0VpgJpxiXJY9Rub9HIzmmRcvsB88emOYeAixo5fZ-JXwR1Gv5-myCs91jtHxNhzQb8f6PZlM-jL8IRTLApK2Eh3C38u2eyQspfI3IBn9debzzWLYiDU6WGlYrIJ_u9xvSmJ6QUpfC9Wikvwn495VBcH7q3TPvW91iSKfiOj4pi4xTi1tisQNvFpXnJhowAmhRMGUjwLDk" },
-            { date: "NOV 05", title: "Alumni Networking", desc: "Connect with the Nex pioneers shaping global industries.", loc: "VIRTUAL HUB • 07:00 PM", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCBqFnnCWrH5AwAW1w8bjc4-Nt7cVwpqGEgq2967NznbNzGp9nvUAzWqCa7o_6d3Qd363cJIaFFKppTiCqICpz9Gb5HvjfRXnIMpZArzXR3A56ct13LSnN5crAkUryiqoVr3yISKY6L1WSHpkSjrH4qrG6OVaHBqfiYgmijFWGgqcc5bwC_d_P-XvCJqsAb8-k61nNCMHqO-uwtYYKh0Yk7N7MUlgDeL-h0XhVdB_z85_gQ8pqtXe-IAca4hnL6Nq7guWiZ4SeRAqA" },
-          ].map((event, i) => (
+          {upcomingEvents.length === 0
+            ? Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex-shrink-0 w-80 bg-surface-container-high rounded-xl overflow-hidden ghost-border animate-pulse">
+                <div className="h-40 bg-surface-container-highest"></div>
+                <div className="p-6 space-y-3">
+                  <div className="h-5 w-2/3 bg-surface-container-highest rounded"></div>
+                  <div className="h-3 w-full bg-surface-container-highest rounded"></div>
+                  <div className="h-3 w-1/2 bg-surface-container-highest rounded"></div>
+                </div>
+              </div>
+            ))
+            : upcomingEvents.map((event, i) => {
+              const d = event.date ? new Date(event.date) : null;
+              const dateLabel = d ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase() : '';
+              const icon = CATEGORY_ICON[event.category] || 'event';
+              const gradient = CATEGORY_GRADIENT[event.category] || 'from-primary/20 to-primary/5';
+              return (
             <motion.div
-              key={event.title}
+              key={event._id}
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
-              whileHover={{ y: -4 }}
-              className="flex-shrink-0 w-80 bg-surface-container-high rounded-xl overflow-hidden ghost-border group cursor-pointer hover:shadow-xl hover:shadow-black/30 transition-shadow duration-300"
+              whileHover={{ y: -8 }}
+              className="flex-shrink-0 w-80 bg-surface-container-high rounded-xl overflow-hidden ghost-border group cursor-pointer hover:shadow-2xl hover:shadow-black/30 transition-shadow duration-500"
+              onClick={() => navigate('/events')}
             >
-              <div className="h-40 relative overflow-hidden">
-                <img alt="Event" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105" src={event.src} />
-                <div className="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-berkeley-mono px-2 py-1 rounded">{event.date}</div>
+              <div className={`h-40 relative overflow-hidden bg-gradient-to-br ${gradient} flex items-center justify-center grayscale group-hover:grayscale-0 transition-all duration-500 ease-in-out`}>
+                <span className="material-symbols-outlined text-white/20 text-8xl" style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
+                <div className="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-berkeley-mono px-2 py-1 rounded">{dateLabel}</div>
+                {event.status === 'past' && (
+                  <div className="absolute top-4 right-4 bg-surface-container-high/80 text-outline text-[10px] font-mono px-2 py-0.5 rounded uppercase">Past</div>
+                )}
               </div>
               <div className="p-6">
-                <h3 className="text-lg font-bold mb-2">{event.title}</h3>
-                <p className="text-sm text-on-surface-variant mb-4">{event.desc}</p>
+                <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors">{event.title}</h3>
+                <p className="text-sm text-on-surface-variant mb-4 line-clamp-2">{event.description}</p>
                 <div className="flex items-center gap-2 text-[10px] font-berkeley-mono text-outline">
                   <span className="material-symbols-outlined text-sm">location_on</span>
-                  {event.loc}
+                  {event.location || 'CBIT Kolar'}
                 </div>
               </div>
             </motion.div>
-          ))}
+            );})}
         </motion.div>
       </section>
 
@@ -404,8 +453,8 @@ const Home = () => {
             <h2 className="text-4xl font-bold tracking-tighter text-white mb-6 font-satoshi">Ready to upgrade your campus experience?</h2>
             <p className="text-on-surface-variant text-lg mb-10 max-w-2xl mx-auto">Join thousands of students and faculty members who are already navigating the future of education on Nex Campus.</p>
             <div className="flex justify-center gap-4 flex-wrap">
-              <button className="bg-primary text-on-primary px-8 py-3 rounded-lg font-bold hover:scale-[1.02] hover:brightness-110 transition-all duration-200">Get Started Free</button>
-              <button className="bg-surface-container-high text-white px-8 py-3 rounded-lg font-bold ghost-border hover:bg-surface-variant hover:scale-[1.02] transition-all duration-200">Request Demo</button>
+              <button onClick={() => navigate('/signup')} className="bg-primary text-on-primary px-8 py-3 rounded-lg font-bold hover:scale-[1.02] hover:brightness-110 transition-all duration-200">Get Started Free</button>
+              <button onClick={() => navigate('/portal')} className="bg-surface-container-high text-white px-8 py-3 rounded-lg font-bold ghost-border hover:bg-surface-variant hover:scale-[1.02] transition-all duration-200">Request Demo</button>
             </div>
           </div>
         </div>
