@@ -12,6 +12,7 @@ import Signup from './pages/Signup';
 import Admin from './pages/Admin';
 import Support from './pages/Support';
 import EditProfile from './pages/EditProfile';
+import NotFound from './pages/NotFound';
 
 function App() {
   const location = useLocation();
@@ -29,6 +30,7 @@ function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/support" element={<Support />} />
           <Route path="/profile" element={<EditProfile />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
 
         {/* Standalone routes for Auth */}

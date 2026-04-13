@@ -17,11 +17,13 @@ const CARD_GRADIENTS = [
 const cardGradient = (idx) => CARD_GRADIENTS[idx % CARD_GRADIENTS.length];
 
 const SkeletonCard = ({ className = '' }) => (
-  <div className={`bg-surface-container-low rounded-xl border border-outline-variant/5 p-6 animate-pulse ${className}`}>
-    <div className="h-32 bg-surface-container-high rounded-lg mb-4"></div>
-    <div className="h-5 w-2/3 bg-surface-container-high rounded mb-2"></div>
-    <div className="h-3 w-1/3 bg-surface-container-high rounded mb-3"></div>
-    <div className="h-3 w-full bg-surface-container-high rounded"></div>
+  <div className={`bg-surface-container-low rounded-xl border border-outline-variant/5 overflow-hidden ${className}`}>
+    <div className="h-32 skeleton-shimmer"></div>
+    <div className="p-5 space-y-3">
+      <div className="h-5 w-2/3 skeleton-shimmer rounded-lg"></div>
+      <div className="h-3 w-1/3 skeleton-shimmer rounded-lg"></div>
+      <div className="h-3 w-full skeleton-shimmer rounded-lg"></div>
+    </div>
   </div>
 );
 
@@ -159,8 +161,8 @@ const Facilities = () => {
                       <span className="text-sm font-semibold">{featured.capacity}</span>
                     </div>
                   )}
-                  <button className="ml-auto flex items-center justify-center h-12 w-12 rounded-full bg-white text-background hover:scale-110 transition-transform duration-200">
-                    <span className="material-symbols-outlined">arrow_forward</span>
+                  <button aria-label={`View details for ${featured.name}`} className="ml-auto flex items-center justify-center h-12 w-12 rounded-full bg-white text-background hover:scale-110 active:scale-95 transition-transform duration-200">
+                    <span className="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
                   </button>
                 </div>
               </div>

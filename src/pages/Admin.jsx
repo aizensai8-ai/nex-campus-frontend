@@ -37,7 +37,7 @@ const CONFIGS = {
       { name: 'credits',      label: 'Credits',       type: 'number', required: true },
       { name: 'section',      label: 'Section',       type: 'select', options: ['A', 'B', 'C', 'D', 'E'] },
       { name: 'totalClasses', label: 'Total Classes', type: 'number', placeholder: '0' },
-      { name: 'department',   label: 'Department',    type: 'select', required: true, options: ['Computer Science', 'Data Science', 'Artificial Intelligence', 'Physics & Math', 'Creative Technology', 'Engineering', 'Business', 'General', 'Other'] },
+      { name: 'department',   label: 'Department',    type: 'select', required: true, options: ['Computer Science', 'General'] },
       { name: 'difficulty',   label: 'Difficulty',    type: 'select', options: ['beginner', 'intermediate', 'advanced'] },
       { name: 'status',       label: 'Status',        type: 'select', options: ['active', 'new', 'popular', 'archived'] },
       { name: 'capacity',     label: 'Capacity',      type: 'number' },

@@ -3,9 +3,11 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { pageTransition } from '../lib/animations';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 const Signup = () => {
     const { register } = useAuth();
+    const { showToast } = useToast();
     const navigate = useNavigate();
     const [form, setForm] = useState({ name: '', email: '', usn: '', password: '', semester: '', sectionLetter: '' });
     const [agreed, setAgreed] = useState(false);
@@ -27,6 +29,7 @@ const Signup = () => {
         setLoading(true);
         try {
             await register({ name: form.name, email: form.email, usn: form.usn, password: form.password, section, semester: parseInt(form.semester) });
+            showToast({ message: 'Account created! Welcome to Nex Campus.', type: 'success' });
             navigate('/portal');
         } catch (err) {
             setError(err.response?.data?.message || 'Registration failed. Please try again.');

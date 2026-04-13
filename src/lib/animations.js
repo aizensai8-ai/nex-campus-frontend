@@ -1,35 +1,44 @@
-// Shared framer-motion animation variants
+// Apple-style easing curve — smooth deceleration
+const APPLE = [0.22, 1, 0.36, 1];
 
 export const fadeUp = {
-  initial: { opacity: 0, y: 40 },
+  initial: { opacity: 0, y: 32 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-80px" },
-  transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] },
+  viewport: { once: true, margin: '-100px' },
+  transition: { duration: 0.65, ease: APPLE },
+};
+
+// For headings: blur reveals
+export const fadeUpBlur = {
+  initial: { opacity: 0, y: 24, filter: 'blur(10px)' },
+  whileInView: { opacity: 1, y: 0, filter: 'blur(0px)' },
+  viewport: { once: true, margin: '-100px' },
+  transition: { duration: 0.7, ease: APPLE },
 };
 
 export const staggerContainer = {
-  initial: "hidden",
-  whileInView: "visible",
-  viewport: { once: true, margin: "-80px" },
+  initial: 'hidden',
+  whileInView: 'visible',
+  viewport: { once: true, margin: '-100px' },
   variants: {
     hidden: {},
-    visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
+    visible: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
   },
 };
 
 export const staggerItem = {
   variants: {
-    hidden: { opacity: 0, y: 40 },
+    hidden: { opacity: 0, y: 32 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
+      transition: { duration: 0.6, ease: APPLE },
     },
   },
 };
 
 export const pageTransition = {
   initial: { opacity: 0, y: 24 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.25, 0.1, 0.25, 1] } },
-  exit: { opacity: 0, y: -12, transition: { duration: 0.25, ease: [0.25, 0.1, 0.25, 1] } },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: APPLE } },
+  exit:    { opacity: 0, y: -12, transition: { duration: 0.2, ease: APPLE } },
 };

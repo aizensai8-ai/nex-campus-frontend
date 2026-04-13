@@ -21,8 +21,11 @@ const Navbar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [navHidden, setNavHidden] = useState(false);
   const dropdownRef = useRef(null);
   const searchRef = useRef(null);
+  const lastScrollY = useRef(0);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -33,6 +36,26 @@ const Navbar = () => {
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // Scroll hide/show
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      const delta = currentY - lastScrollY.current;
+      if (Math.abs(delta) < 5) return;
+      if (currentY < 100) {
+        setNavHidden(false);
+      } else if (delta > 0) {
+        setNavHidden(true);
+        setDropdownOpen(false);
+      } else {
+        setNavHidden(false);
+      }
+      lastScrollY.current = currentY;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Focus search input when opened
@@ -49,14 +72,24 @@ const Navbar = () => {
     }
   };
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
   const handleLogout = () => {
     logout();
     setDropdownOpen(false);
+    setMobileOpen(false);
     navigate('/');
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/5 backdrop-blur-xl bg-[#0d1322]/80">
+    <>
+    <motion.header
+      animate={{ y: navHidden ? '-100%' : '0%' }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      className="sticky top-0 z-50 border-b border-white/5 backdrop-blur-xl bg-[#0d1322]/80">
       <nav className="flex justify-between items-center w-full px-6 py-3 max-w-[1440px] mx-auto">
         <div className="flex items-center gap-8">
           <Link to="/" className="text-xl font-bold tracking-tighter text-white font-satoshi hover:opacity-90 transition-opacity">
@@ -91,6 +124,17 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setMobileOpen((v) => !v)}
+            className="md:hidden flex items-center justify-center w-8 h-8 rounded-lg text-on-surface-variant hover:text-white hover:bg-surface-container-high transition-colors"
+            aria-label="Toggle mobile menu"
+          >
+            <span className="material-symbols-outlined text-xl">
+              {mobileOpen ? 'close' : 'menu'}
+            </span>
+          </button>
+
           {/* Search */}
           <AnimatePresence>
             {searchOpen ? (
@@ -116,6 +160,7 @@ const Navbar = () => {
               <button
                 key="searchicon"
                 onClick={() => setSearchOpen(true)}
+                aria-label="Open search"
                 className="material-symbols-outlined hidden lg:block text-on-surface-variant hover:text-white transition-all duration-200 p-2 rounded-lg hover:scale-[1.05] active:scale-95"
               >
                 search
@@ -138,6 +183,8 @@ const Navbar = () => {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen((v) => !v)}
+              aria-label={dropdownOpen ? 'Close account menu' : 'Open account menu'}
+              aria-expanded={dropdownOpen}
               className="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/15 hover:ring-2 hover:ring-primary/30 transition-all duration-200 cursor-pointer flex items-center justify-center"
             >
               {user ? (
@@ -224,7 +271,111 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-    </header>
+    </motion.header>
+
+    {/* ── Mobile slide-out menu ─────────────────────────────────── */}
+    <AnimatePresence>
+      {mobileOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            key="mobile-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+            onClick={() => setMobileOpen(false)}
+          />
+          {/* Panel */}
+          <motion.div
+            key="mobile-panel"
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="fixed top-0 left-0 bottom-0 z-50 w-72 bg-[#0d1322] border-r border-white/5 flex flex-col md:hidden"
+          >
+            {/* Panel header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
+              <span className="text-xl font-bold tracking-tighter text-white font-satoshi">Nex Campus</span>
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-white hover:bg-surface-container-high transition-colors"
+              >
+                <span className="material-symbols-outlined text-xl">close</span>
+              </button>
+            </div>
+
+            {/* Nav links */}
+            <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+              {NAV_ITEMS.map((item) => {
+                const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={cn(
+                      'flex items-center gap-3 px-4 py-3 rounded-xl font-satoshi font-semibold text-sm transition-colors',
+                      isActive
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-on-surface-variant hover:bg-surface-container-high hover:text-white'
+                    )}
+                  >
+                    {item.label}
+                    {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary"></span>}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Bottom user section */}
+            <div className="px-3 py-4 border-t border-white/5">
+              {user ? (
+                <>
+                  <div className="px-4 py-3 mb-2">
+                    <p className="text-white text-sm font-semibold truncate">{user.name}</p>
+                    <p className="text-outline text-xs truncate">{user.email}</p>
+                  </div>
+                  <Link
+                    to="/profile"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container-high hover:text-white transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-sm">manage_accounts</span>
+                    Edit Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-red-400 hover:bg-surface-container-high transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-sm">logout</span>
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <div className="space-y-2">
+                  <Link
+                    to="/login"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container-high hover:text-white transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-sm">login</span>
+                    Log In
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-primary hover:bg-surface-container-high transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-sm">person_add</span>
+                    Sign Up
+                  </Link>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+    </>
   );
 };
 

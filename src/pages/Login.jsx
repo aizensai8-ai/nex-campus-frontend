@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { pageTransition } from '../lib/animations';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 const Login = () => {
     const { login } = useAuth();
+    const { showToast } = useToast();
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -19,6 +21,7 @@ const Login = () => {
         setLoading(true);
         try {
             await login(email, password);
+            showToast({ message: 'Welcome back! Signed in successfully.', type: 'success' });
             navigate('/portal');
         } catch (err) {
             setError(err.response?.data?.message || 'Invalid credentials. Please try again.');

@@ -96,11 +96,124 @@
     width: 100%;
   }
 
-  /* Gradient text utility */
+  /* Gradient text — static */
   .gradient-text {
     background: linear-gradient(135deg, #3B82F6, #8B5CF6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* Gradient text — shimmer animation */
+  @keyframes gradient-shift {
+    0%   { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+  .gradient-text-animated {
+    background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 33%, #3B82F6 66%, #8B5CF6 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-shift 8s linear infinite;
+  }
+
+  /* Skeleton shimmer */
+  @keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position:  200% center; }
+  }
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(22, 27, 41, 1) 25%,
+      rgba(32, 39, 57, 1) 50%,
+      rgba(22, 27, 41, 1) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+  }
+
+  /* Toast progress bar shrink */
+  @keyframes toast-shrink {
+    from { width: 100%; }
+    to   { width: 0%; }
+  }
+
+  /* Skip to content */
+  .skip-to-content {
+    position: fixed;
+    left: 16px;
+    top: -100px;
+    z-index: 99999;
+    padding: 10px 20px;
+    background: #3B82F6;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 0 0 8px 8px;
+    transition: top 0.2s ease;
+    text-decoration: none;
+  }
+  .skip-to-content:focus {
+    top: 0;
+    outline: none;
+  }
+
+  /* Button ripple */
+  @keyframes ripple-out {
+    0%   { transform: scale(0); opacity: 0.3; }
+    100% { transform: scale(4); opacity: 0; }
+  }
+  .btn-ripple {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-ripple::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    width: 100px;
+    height: 100px;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    transform: scale(0);
+    opacity: 0;
+  }
+  .btn-ripple:active::after {
+    animation: ripple-out 0.55s ease-out;
+  }
+
+  /* Footer animated underline links */
+  .footer-link {
+    position: relative;
+    display: inline-block;
+    transition: color 0.2s ease;
+  }
+  .footer-link::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #adc6ff;
+    transition: width 0.25s ease;
+  }
+  .footer-link:hover::after {
+    width: 100%;
+  }
+
+  /* Global focus-visible ring */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, 0.5);
+    outline-offset: 2px;
   }
 }

@@ -3,9 +3,11 @@ import { motion } from 'framer-motion';
 import { pageTransition, fadeUp, staggerContainer, staggerItem } from '../lib/animations';
 import api from '../lib/api';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 const Support = () => {
   const { user } = useAuth();
+  const { showToast } = useToast();
   const [form, setForm] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -25,6 +27,7 @@ const Support = () => {
     setLoading(true);
     try {
       await api.post('/api/support', form);
+      showToast({ message: 'Message sent! We\'ll get back to you soon.', type: 'success' });
       setSubmitted(true);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit. Please try again.');
