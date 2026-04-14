@@ -39,6 +39,23 @@ const ADMIN = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// MODULE HELPER
+// ─────────────────────────────────────────────────────────────────────────────
+const makeModules = (folder, titles) =>
+  titles.map((title, i) => ({
+    number: i + 1,
+    title,
+    pdfUrl: `/pdfs/${folder}/module${i + 1}.pdf`,
+  }));
+
+const COURSE_MODULES = {
+  BCS401:  makeModules('ada',    ['Introduction to Algorithm Analysis', 'Divide & Conquer Strategies', 'Greedy Algorithms', 'Dynamic Programming', 'Graph Algorithms & NP-Completeness']),
+  BCS402:  makeModules('mc',     ['8051 Architecture & Programming', 'Instruction Set & Assembly Language', 'Timers, Interrupts & Serial Communication', 'ARM Architecture & Cortex-M', 'Peripheral Interfacing & Embedded Design']),
+  BCS403:  makeModules('dbms',   ['Relational Model & ER Diagrams', 'SQL & Relational Algebra', 'Normalization (1NF–BCNF)', 'Transaction Management & Concurrency Control', 'NoSQL & Advanced Databases']),
+  BCS405A: makeModules('maths',  ['Logic, Proofs & Set Theory', 'Relations & Functions', 'Graph Theory & Trees', 'Algebraic Structures (Groups, Rings)', 'Combinatorics & Counting Principles']),
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // COURSES — 4C (4th Semester, CSE, Section 4C)
 // ─────────────────────────────────────────────────────────────────────────────
 const courses4C = [
@@ -591,6 +608,7 @@ const facilities = [
     status: 'open',
     type: 'library',
     featured: true,
+    image: '/images/library.jpg',
     amenities: ['Study Zones', 'Digital Catalog', 'Photocopier', 'Reference Section', 'Journals'],
   },
   {
@@ -602,7 +620,112 @@ const facilities = [
     currentOccupancy: 0,
     status: 'open',
     type: 'lab',
+    image: '/images/cs-lab.jpg',
     amenities: ['Desktop PCs', 'JDK', 'Eclipse IDE', 'Wi-Fi', 'Projector'],
+  },
+  {
+    name: 'Physics Lab',
+    description: 'General physics laboratory for engineering physics practicals and experiments.',
+    location: 'Science Block, Ground Floor',
+    hours: '9:00 AM – 4:00 PM',
+    capacity: 40,
+    currentOccupancy: 0,
+    status: 'open',
+    type: 'lab',
+    image: '/images/physics-lab.jpg',
+    amenities: ['Optical Instruments', 'Measurement Tools', 'Experiment Kits'],
+  },
+  {
+    name: 'Chemistry Lab',
+    description: 'Chemistry laboratory for engineering chemistry practicals including volumetric analysis, spectroscopy, and material testing.',
+    location: 'Science Block, First Floor',
+    hours: '9:00 AM – 4:00 PM',
+    capacity: 40,
+    currentOccupancy: 0,
+    status: 'open',
+    type: 'lab',
+    image: '/images/chemistry-lab.jpg',
+    amenities: ['Fume Hood', 'Spectrophotometer', 'Chemical Reagents', 'Safety Equipment'],
+  },
+  {
+    name: 'Campus Canteen',
+    description: 'Main canteen serving breakfast, lunch, and snacks. Affordable meals for students and staff. Special thali available on weekdays.',
+    location: 'Central Campus',
+    hours: '8:00 AM – 6:00 PM',
+    capacity: 150,
+    currentOccupancy: 40,
+    status: 'open',
+    type: 'canteen',
+    image: '/images/canteen.jpg',
+    amenities: ['Hot Meals', 'Snacks', 'Beverages', 'Outdoor Seating'],
+    menuItems: [
+      { name: 'Parota Plate', price: 40, description: '2 parotas served hot' },
+      { name: 'Rice & Sambar Plate', price: 50, description: 'Full plate rice with sambar' },
+      { name: 'Veg Thali', price: 60, description: 'Rice, dal, sabzi, roti, pickle' },
+      { name: 'Tea / Coffee', price: 10, description: 'Fresh brewed hot beverages' },
+      { name: 'Biscuits & Snacks', price: 15, description: 'Packaged biscuits and chips' },
+    ],
+  },
+  {
+    name: 'College Auditorium',
+    description: 'Main auditorium for events, seminars, guest lectures, national day celebrations, and cultural programs. Fully air-conditioned. Seats 500+ students.',
+    location: 'Main Building, Ground Floor',
+    hours: 'By Reservation',
+    capacity: 500,
+    currentOccupancy: 0,
+    status: 'open',
+    type: 'auditorium',
+    image: '/images/auditorium.jpg',
+    bookingRequired: true,
+    amenities: ['AC', 'Stage', 'PA System', 'Projector Screen', 'Green Room'],
+  },
+  {
+    name: 'Sports Ground',
+    description: 'Large open ground with cricket pitch, football field, volleyball court, and outdoor exercise equipment.',
+    location: 'Behind Hostel Block',
+    hours: '6:00 AM – 7:00 PM',
+    capacity: 300,
+    currentOccupancy: 30,
+    status: 'open',
+    type: 'sports',
+    image: '/images/sports-ground.jpg',
+    amenities: ['Cricket Pitch', 'Football Field', 'Volleyball Court', 'Outdoor Gym'],
+  },
+  {
+    name: 'Campus Stationery',
+    description: 'Buy record books, assignment books, lab manuals, pens, and other stationery. Record books and assignment books are mandatory for all lab courses.',
+    location: 'Near Main Gate',
+    hours: '8:30 AM – 4:30 PM',
+    capacity: 10,
+    currentOccupancy: 0,
+    status: 'open',
+    type: 'shop',
+    image: '/images/stationery.jpg',
+    amenities: ['Record Books', 'Assignment Books', 'Lab Manuals', 'Pens', 'Graph Sheets'],
+  },
+  {
+    name: 'Boys Hostel',
+    description: 'On-campus hostel facility for male students. Includes mess hall, common study rooms, recreational area, and 24/7 security.',
+    location: 'East Campus',
+    hours: '24/7',
+    capacity: 200,
+    currentOccupancy: 160,
+    status: 'open',
+    type: 'hostel',
+    image: '/images/hostel.jpg',
+    amenities: ['Mess Hall', 'Study Rooms', 'Wi-Fi', 'Laundry', '24/7 Security'],
+  },
+  {
+    name: 'Campus Garden Seating',
+    description: 'Open-air seating area with brick-shaped benches near the mango tree clusters. Popular hangout spot for students between classes.',
+    location: 'Central Campus, Near Mango Trees',
+    hours: 'Open 24/7',
+    capacity: 100,
+    currentOccupancy: 20,
+    status: 'open',
+    type: 'recreation',
+    image: '/images/garden.jpg',
+    amenities: ['Benches', 'Shade', 'Open Air', 'Wi-Fi (partial)'],
   },
   {
     name: 'Data Structures & Algorithms Lab',
@@ -625,102 +748,6 @@ const facilities = [
     status: 'open',
     type: 'lab',
     amenities: ['TeX Live', 'Overleaf Access', 'TeXstudio', 'Wi-Fi'],
-  },
-  {
-    name: 'Physics Lab',
-    description: 'General physics laboratory for engineering physics practicals and experiments.',
-    location: 'Science Block, Ground Floor',
-    hours: '9:00 AM – 4:00 PM',
-    capacity: 40,
-    currentOccupancy: 0,
-    status: 'open',
-    type: 'lab',
-    amenities: ['Optical Instruments', 'Measurement Tools', 'Experiment Kits'],
-  },
-  {
-    name: 'Chemistry Lab',
-    description: 'Chemistry laboratory for engineering chemistry practicals including volumetric analysis, spectroscopy, and material testing.',
-    location: 'Science Block, First Floor',
-    hours: '9:00 AM – 4:00 PM',
-    capacity: 40,
-    currentOccupancy: 0,
-    status: 'open',
-    type: 'lab',
-    amenities: ['Fume Hood', 'Spectrophotometer', 'Chemical Reagents', 'Safety Equipment'],
-  },
-  {
-    name: 'Campus Canteen',
-    description: 'Main canteen serving breakfast, lunch, and snacks. Affordable meals for students and staff. Special thali available on weekdays.',
-    location: 'Central Campus',
-    hours: '8:00 AM – 6:00 PM',
-    capacity: 150,
-    currentOccupancy: 40,
-    status: 'open',
-    type: 'canteen',
-    amenities: ['Hot Meals', 'Snacks', 'Beverages', 'Outdoor Seating'],
-    menuItems: [
-      { name: 'Parota Plate', price: 40, description: '2 parotas served hot' },
-      { name: 'Rice & Sambar Plate', price: 50, description: 'Full plate rice with sambar' },
-      { name: 'Veg Thali', price: 60, description: 'Rice, dal, sabzi, roti, pickle' },
-      { name: 'Tea / Coffee', price: 10, description: 'Fresh brewed hot beverages' },
-      { name: 'Biscuits & Snacks', price: 15, description: 'Packaged biscuits and chips' },
-    ],
-  },
-  {
-    name: 'College Auditorium',
-    description: 'Main auditorium for events, seminars, guest lectures, national day celebrations, and cultural programs. Fully air-conditioned. Seats 500+ students.',
-    location: 'Main Building, Ground Floor',
-    hours: 'By Reservation',
-    capacity: 500,
-    currentOccupancy: 0,
-    status: 'open',
-    type: 'auditorium',
-    bookingRequired: true,
-    amenities: ['AC', 'Stage', 'PA System', 'Projector Screen', 'Green Room'],
-  },
-  {
-    name: 'Sports Ground',
-    description: 'Large open ground with cricket pitch, football field, volleyball court, and outdoor exercise equipment.',
-    location: 'Behind Hostel Block',
-    hours: '6:00 AM – 7:00 PM',
-    capacity: 300,
-    currentOccupancy: 30,
-    status: 'open',
-    type: 'sports',
-    amenities: ['Cricket Pitch', 'Football Field', 'Volleyball Court', 'Outdoor Gym'],
-  },
-  {
-    name: 'Campus Garden Seating',
-    description: 'Open-air seating area with brick-shaped benches near the mango tree clusters. Popular hangout spot for students between classes.',
-    location: 'Central Campus, Near Mango Trees',
-    hours: 'Open 24/7',
-    capacity: 100,
-    currentOccupancy: 20,
-    status: 'open',
-    type: 'recreation',
-    amenities: ['Benches', 'Shade', 'Open Air', 'Wi-Fi (partial)'],
-  },
-  {
-    name: 'Boys Hostel',
-    description: 'On-campus hostel facility for male students. Includes mess hall, common study rooms, recreational area, and 24/7 security.',
-    location: 'East Campus',
-    hours: '24/7',
-    capacity: 200,
-    currentOccupancy: 160,
-    status: 'open',
-    type: 'hostel',
-    amenities: ['Mess Hall', 'Study Rooms', 'Wi-Fi', 'Laundry', '24/7 Security'],
-  },
-  {
-    name: 'Campus Stationery',
-    description: 'Buy record books, assignment books, lab manuals, pens, and other stationery. Record books and assignment books are mandatory for all lab courses.',
-    location: 'Near Main Gate',
-    hours: '8:30 AM – 4:30 PM',
-    capacity: 10,
-    currentOccupancy: 0,
-    status: 'open',
-    type: 'shop',
-    amenities: ['Record Books', 'Assignment Books', 'Lab Manuals', 'Pens', 'Graph Sheets'],
   },
 ];
 
@@ -819,7 +846,10 @@ const seed = async () => {
     const admin = await User.findOne({ email: ADMIN.email });
 
     // ── Insert all data ───────────────────────────────────────────────────────
-    const allCourses = [...courses4C, ...courses4B, ...courses6B];
+    const addModules = (courses) =>
+      courses.map((c) => ({ ...c, modules: COURSE_MODULES[c.code] || [] }));
+
+    const allCourses = [...addModules(courses4C), ...addModules(courses4B), ...courses6B];
     const [c, e, f, a] = await Promise.all([
       Course.insertMany(allCourses),
       Event.insertMany(events),

@@ -77,7 +77,7 @@ router.post(
     body('date').isISO8601().withMessage('Valid date is required'),
     body('category')
       .optional()
-      .isIn(['keynote', 'hackathon', 'workshop', 'symposium', 'networking', 'open-house', 'other'])
+      .isIn(['keynote', 'hackathon', 'workshop', 'symposium', 'networking', 'open-house', 'sports', 'cultural', 'academic', 'other'])
       .withMessage('Invalid category'),
   ],
   asyncHandler(async (req, res) => {

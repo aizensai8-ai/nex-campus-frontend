@@ -305,7 +305,7 @@ function AttendanceAdminPanel({ showToast }) {
     return (
       <div className="p-6 space-y-3">
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="h-16 bg-surface-container-high rounded-xl animate-pulse" style={{ opacity: 1 - i * 0.15 }} />
+          <div key={i} className="h-16 rounded-xl skeleton-shimmer" />
         ))}
       </div>
     );
@@ -435,7 +435,7 @@ function SupportAdminPanel({ showToast }) {
     return (
       <div className="p-6 space-y-3">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="h-20 bg-surface-container-high rounded-xl animate-pulse" style={{ opacity: 1 - i * 0.2 }} />
+          <div key={i} className="h-20 rounded-xl skeleton-shimmer" />
         ))}
       </div>
     );
@@ -545,7 +545,7 @@ function ParticipantsModal({ event, onClose }) {
         {loading ? (
           <div className="space-y-3 flex-1">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-12 bg-surface-container-high rounded-lg animate-pulse" />
+              <div key={i} className="h-12 rounded-lg skeleton-shimmer" />
             ))}
           </div>
         ) : error ? (
@@ -830,7 +830,7 @@ const Admin = () => {
         ) : loadingItems ? (
           <div className="p-6 space-y-3">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-16 bg-surface-container-high rounded-xl animate-pulse" style={{ opacity: 1 - i * 0.15 }} />
+              <div key={i} className="h-16 rounded-xl skeleton-shimmer" />
             ))}
           </div>
         ) : items.length === 0 ? (

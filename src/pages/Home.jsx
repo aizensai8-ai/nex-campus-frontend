@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { fadeUp, fadeUpBlur, staggerContainer, staggerItem, pageTransition } from '../lib/animations';
+import { fadeUpBlur, staggerContainer, staggerItem, pageTransition } from '../lib/animations';
 import api from '../lib/api';
+import { useAuth } from '../context/AuthContext';
 
 const APPLE = [0.22, 1, 0.36, 1];
 
@@ -55,32 +56,37 @@ const FacilitiesStats = ({ stats }) => (
   </div>
 );
 
-// ── Spotlight card wrapper ────────────────────────────────────────────────
-const SpotlightCard = ({ children, className = '', ...props }) => {
+// ── Spotlight card — motion.div drop-in with mouse-follow glow ────────────
+const SpotlightCard = ({ children, className = '', onMouseMove: outerMove, onMouseLeave: outerLeave, ...rest }) => {
   const [spot, setSpot] = useState(null);
   const ref = useRef(null);
   return (
-    <div
+    <motion.div
       ref={ref}
       className={`relative ${className}`}
       onMouseMove={(e) => {
         const r = ref.current?.getBoundingClientRect();
         if (r) setSpot({ x: e.clientX - r.left, y: e.clientY - r.top });
+        outerMove?.(e);
       }}
-      onMouseLeave={() => setSpot(null)}
-      {...props}
+      onMouseLeave={(e) => {
+        setSpot(null);
+        outerLeave?.(e);
+      }}
+      {...rest}
     >
       <div
-        className="pointer-events-none absolute inset-0 rounded-[inherit] z-0 transition-opacity duration-300"
+        className="pointer-events-none absolute inset-0 rounded-[inherit] z-0"
         style={{
           opacity: spot ? 1 : 0,
+          transition: 'opacity 0.3s ease',
           background: spot
-            ? `radial-gradient(350px circle at ${spot.x}px ${spot.y}px, rgba(59,130,246,0.07), transparent 70%)`
+            ? `radial-gradient(350px circle at ${spot.x}px ${spot.y}px, rgba(59,130,246,0.09), transparent 70%)`
             : 'none',
         }}
       />
       {children}
-    </div>
+    </motion.div>
   );
 };
 
@@ -99,15 +105,91 @@ const CATEGORY_GRADIENT = {
   academic: 'from-indigo-900/50 to-indigo-900/20',
 };
 
+const TerminalWidget = ({ stats }) => {
+  const [lines, setLines] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentCharIndex, setCurrentCharIndex] = useState(0);
+
+  const fullLines = [
+    '$ nex status',
+    '✓ Portal: online',
+    `✓ Courses: ${stats.courses !== null ? stats.courses : '-'} active`,
+    `✓ Events: ${stats.events !== null ? stats.events : '-'} scheduled`,
+    `✓ Facilities: ${stats.facilities !== null ? stats.facilities : '-'} operational`,
+    '✓ Students: connected'
+  ];
+
+  useEffect(() => {
+    if (currentIndex >= fullLines.length) return;
+
+    const currentLine = fullLines[currentIndex];
+
+    // If we've finished the current line
+    if (currentCharIndex > currentLine.length) {
+      const timer = setTimeout(() => {
+        setCurrentIndex(c => c + 1);
+        setCurrentCharIndex(0);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+
+    // Type the current line character by character
+    const timer = setTimeout(() => {
+      setLines(prev => {
+        const newLines = [...prev];
+        newLines[currentIndex] = currentLine.substring(0, currentCharIndex);
+        return newLines;
+      });
+      setCurrentCharIndex(c => c + 1);
+    }, 80);
+
+    return () => clearTimeout(timer);
+  }, [currentIndex, currentCharIndex, fullLines]);
+
+  return (
+    <div className="bg-[#000000] border border-outline-variant/30 rounded-xl p-6 shadow-2xl relative z-10 w-full min-h-[250px] font-mono text-sm leading-8">
+      {/* Mac window dots */}
+      <div className="flex gap-2 mb-4">
+        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+        <div className="w-3 h-3 rounded-full bg-green-500"></div>
+      </div>
+      <div className="text-primary font-berkeley-mono">
+        {lines.map((line, i) => (
+          <div key={i} className="min-h-[32px]">
+            {line}
+            {i === currentIndex && <span className="animate-pulse">_</span>}
+          </div>
+        ))}
+        {currentIndex >= fullLines.length && <span className="animate-pulse">_</span>}
+      </div>
+    </div>
+  );
+};
+
 const Home = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [featuredCourses, setFeaturedCourses] = useState([]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [stats, setStats] = useState({ courses: null, events: null, facilities: null });
+  const [attendanceStr, setAttendanceStr] = useState('95%+');
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const heroRef = useRef(null);
 
   useEffect(() => {
+    // If logged in, fetch actual attendance. Else fetch generic stats.
+    if (user) {
+      api.get('/api/attendance/summary').then(res => {
+         const att = Array.isArray(res.data) ? res.data : [];
+         const withPct = att.filter(s => s.percent !== null);
+         if (withPct.length > 0) {
+            const avg = Math.round(withPct.reduce((a, s) => a + s.percent, 0) / withPct.length);
+            setAttendanceStr(avg + '%');
+         }
+      }).catch(() => {});
+    }
+
     Promise.all([
       api.get('/api/courses').catch(() => ({ data: [] })),
       api.get('/api/events').catch(() => ({ data: [] })),
@@ -153,7 +235,7 @@ const Home = () => {
               className="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-low ghost-border rounded-full text-primary text-xs font-berkeley-mono uppercase tracking-widest"
             >
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-              Nex Campus OS v2.4 Now Live
+              CBIT KOLAR · APRIL 14, 2026
             </motion.div>
 
             {/* Word-by-word heading */}
@@ -184,7 +266,7 @@ const Home = () => {
               transition={{ duration: 0.6, delay: 0.35 }}
               className="text-xl text-on-surface-variant max-w-xl leading-relaxed"
             >
-              The product development system for teams and agents. Integrate campus operations, academic tracking, and facility management into a monolithic intelligent workspace.
+              Smart campus platform for CBIT Kolar. Track attendance, view timetables, access study materials, and stay connected with campus life.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -202,49 +284,12 @@ const Home = () => {
             </motion.div>
           </div>
           <div className="lg:col-span-5 relative">
-            <motion.div
+             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-              className="glass-panel ghost-border rounded-xl p-6 shadow-2xl relative z-10"
             >
-              <div className="flex justify-between items-center mb-8">
-                <div>
-                  <p className="text-xs font-berkeley-mono text-outline mb-1 uppercase tracking-widest">Live Campus Pulse</p>
-                  <h3 className="text-2xl font-bold tracking-tighter">CBIT Kolar</h3>
-                </div>
-                <div className="text-right">
-                  <p className="text-primary font-berkeley-mono text-xl font-bold">
-                    {stats.facilities !== null ? stats.facilities : '—'}
-                  </p>
-                  <p className="text-[10px] text-outline">FACILITIES</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="h-24 w-full bg-surface-container-lowest rounded-lg overflow-hidden flex items-end gap-1 p-2">
-                  <div className="bg-primary/20 w-full h-[40%] rounded-t-sm"></div>
-                  <div className="bg-primary/30 w-full h-[60%] rounded-t-sm"></div>
-                  <div className="bg-primary/40 w-full h-[55%] rounded-t-sm"></div>
-                  <div className="bg-primary/50 w-full h-[80%] rounded-t-sm"></div>
-                  <div className="bg-primary w-full h-[95%] rounded-t-sm"></div>
-                  <div className="bg-primary/70 w-full h-[70%] rounded-t-sm"></div>
-                  <div className="bg-primary/40 w-full h-[45%] rounded-t-sm"></div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-3 bg-surface-container-lowest rounded-lg ghost-border">
-                    <p className="text-[10px] text-outline font-berkeley-mono uppercase">Courses</p>
-                    <p className="text-lg font-bold text-secondary">
-                      {stats.courses !== null ? stats.courses : '—'}
-                    </p>
-                  </div>
-                  <div className="p-3 bg-surface-container-lowest rounded-lg ghost-border">
-                    <p className="text-[10px] text-outline font-berkeley-mono uppercase">Events</p>
-                    <p className="text-lg font-bold">
-                      {stats.events !== null ? stats.events : '—'}
-                    </p>
-                  </div>
-                </div>
-              </div>
+               <TerminalWidget stats={stats} />
             </motion.div>
             <div className="absolute -top-10 -right-10 w-64 h-64 bg-primary/10 blur-[100px] -z-10 rounded-full"></div>
             <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-secondary/10 blur-[100px] -z-10 rounded-full"></div>
@@ -261,7 +306,7 @@ const Home = () => {
             {...fadeUpBlur}
             className="mb-16 text-center max-w-3xl mx-auto"
           >
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-6 font-satoshi">A new species of campus tool</h2>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-6 font-satoshi">Everything your campus needs, in one place</h2>
             <p className="text-on-surface-variant text-lg">Engineered for high-performance universities who demand precision in every interaction.</p>
           </motion.div>
           <motion.div
@@ -269,16 +314,25 @@ const Home = () => {
             className="grid grid-cols-1 md:grid-cols-12 grid-rows-2 gap-6 h-auto lg:h-[700px]"
           >
             {/* Large Bento Item */}
-            <motion.div
+            <SpotlightCard
               {...staggerItem}
               whileHover={{ y: -6, scale: 1.01 }}
               transition={{ duration: 0.25, ease: APPLE }}
-              className="md:col-span-8 bg-surface-container-lowest rounded-xl overflow-hidden ghost-border flex flex-col hover:shadow-2xl hover:shadow-black/40 hover:border-primary/10 transition-all duration-300"
+              className="relative md:col-span-8 bg-surface-container-lowest rounded-xl overflow-hidden ghost-border flex flex-col hover:shadow-2xl hover:shadow-black/40 hover:border-primary/50 transition-all duration-300"
             >
-              <div className="p-8">
-                <span className="material-symbols-outlined text-primary mb-4 text-3xl">architecture</span>
-                <h3 className="text-2xl font-bold tracking-tight mb-2">Unified Infrastructure</h3>
-                <p className="text-on-surface-variant max-w-md">Real-time synchronization across every department, facility, and student touchpoint.</p>
+              <div
+                className="pointer-events-none absolute inset-0 z-[1]"
+                style={{
+                  backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(173,198,255,0.1) 1px, transparent 0)',
+                  backgroundSize: '24px 24px',
+                  maskImage: 'linear-gradient(to bottom, black 40%, transparent 100%)',
+                  WebkitMaskImage: 'linear-gradient(to bottom, black 40%, transparent 100%)'
+                }}
+              />
+              <div className="p-10 relative z-10 flex-1">
+                <span className="material-symbols-outlined text-primary mb-6 text-4xl">architecture</span>
+                <h3 className="text-3xl font-bold tracking-tight mb-4 text-white">Unified Infrastructure</h3>
+                <p className="text-on-surface-variant text-lg max-w-md">Real-time synchronization across every department, facility, and student touchpoint.</p>
               </div>
               <div className="mt-auto flex-1 bg-gradient-to-t from-primary/5 to-transparent flex items-end justify-center px-8 pb-6 pt-2 gap-3">
                 {[{ label: 'Courses', val: stats.courses, color: 'text-secondary', icon: 'school' },
@@ -292,16 +346,16 @@ const Home = () => {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </SpotlightCard>
 
             {/* Vertical Bento Item */}
-            <motion.div
+            <SpotlightCard
               {...staggerItem}
               whileHover={{ y: -6, scale: 1.01 }}
               transition={{ duration: 0.25, ease: APPLE }}
-              className="md:col-span-4 bg-surface-container-high rounded-xl p-8 ghost-border relative overflow-hidden hover:shadow-2xl hover:shadow-black/40 hover:border-primary/10 transition-all duration-300"
+              className="md:col-span-4 bg-surface-container-high rounded-xl p-8 ghost-border overflow-hidden hover:shadow-2xl hover:shadow-black/40 hover:border-primary/10 transition-all duration-300"
             >
-              <div className="relative z-10 h-full flex flex-col">
+              <div className="relative z-[1] h-full flex flex-col">
                 <span className="material-symbols-outlined text-secondary mb-4 text-3xl">bolt</span>
                 <h3 className="text-2xl font-bold tracking-tight mb-2">Instant Operations</h3>
                 <p className="text-on-surface-variant mb-8">Deploy resources with zero latency. If it happens on campus, it happens in Nex.</p>
@@ -329,10 +383,10 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </SpotlightCard>
 
             {/* Horizontal Bento Item 1 */}
-            <motion.div
+            <SpotlightCard
               {...staggerItem}
               whileHover={{ y: -6, scale: 1.01 }}
               transition={{ duration: 0.25, ease: APPLE }}
@@ -345,22 +399,22 @@ const Home = () => {
               <div className="w-1/2 h-32 bg-gradient-to-br from-emerald-900/60 to-teal-900/30 rounded-lg overflow-hidden flex items-center justify-center">
                 <span className="material-symbols-outlined text-white/20 text-6xl" style={{ fontVariationSettings: "'FILL' 1" }}>domain</span>
               </div>
-            </motion.div>
+            </SpotlightCard>
 
             {/* Horizontal Bento Item 2 */}
-            <motion.div
+            <SpotlightCard
               {...staggerItem}
               whileHover={{ y: -6, scale: 1.01 }}
               transition={{ duration: 0.25, ease: APPLE }}
-              className="md:col-span-7 bg-primary text-on-primary rounded-xl p-8 flex justify-between items-center relative overflow-hidden group hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300"
+              className="md:col-span-7 bg-primary text-on-primary rounded-xl p-8 flex justify-between items-center overflow-hidden group hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300"
             >
               <div className="relative z-10">
                 <h3 className="text-2xl font-bold tracking-tight mb-2">Academic Core</h3>
                 <p className="text-on-primary/80 max-w-xs">Track progress, manage courses, and facilitate research in one fluid view.</p>
               </div>
               <span className="material-symbols-outlined text-8xl opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:rotate-0 transition-transform duration-500" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
-              <button onClick={() => navigate('/portal')} className="relative z-10 bg-on-primary text-primary px-6 py-3 rounded-lg font-bold hover:bg-white hover:scale-[1.02] transition-all duration-200">Launch Core</button>
-            </motion.div>
+              <button onClick={() => navigate('/portal')} className="btn-ripple relative z-[1] bg-on-primary text-primary px-6 py-3 rounded-lg font-bold hover:bg-white hover:scale-[1.02] active:scale-[0.97] transition-all duration-200">Launch Core</button>
+            </SpotlightCard>
           </motion.div>
         </div>
       </section>
@@ -371,8 +425,8 @@ const Home = () => {
       <section className="py-24 px-6 overflow-hidden">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div
-            {...fadeUp}
-            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+            {...fadeUpBlur}
+            transition={{ duration: 0.7, ease: APPLE }}
             className="order-2 lg:order-1"
           >
             <div className="relative w-full aspect-square max-w-lg mx-auto">
@@ -381,8 +435,8 @@ const Home = () => {
               <div className="absolute inset-24 border-[1px] border-primary/10 rounded-full"></div>
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="glass-panel p-8 rounded-full ghost-border flex flex-col items-center">
-                  <span className="text-4xl font-berkeley-mono font-bold text-white mb-2">99.8%</span>
-                  <span className="text-[10px] font-berkeley-mono text-outline tracking-[0.2em] uppercase">Autonomous</span>
+                  <span className="text-4xl font-berkeley-mono font-bold text-white mb-2">{attendanceStr}</span>
+                  <span className="text-[10px] font-berkeley-mono text-outline tracking-[0.2em] uppercase">{user ? 'Your Attendance' : 'Avg. Attendance'}</span>
                 </div>
               </div>
               <div className="absolute top-0 right-10 bg-surface-container-high ghost-border px-4 py-2 rounded-lg text-xs font-berkeley-mono text-primary shadow-xl">
@@ -398,9 +452,9 @@ const Home = () => {
             transition={{ duration: 0.7, delay: 0.15, ease: APPLE }}
             className="order-1 lg:order-2 space-y-8"
           >
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white font-satoshi">Make campus operations self-driving</h2>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white font-satoshi">Built for students who value their time</h2>
             <p className="text-on-surface-variant text-xl leading-relaxed">
-              Nex Campus employs advanced algorithmic agents to handle scheduling, energy optimization, and security protocols automatically.
+              Nex Campus seamlessly manages the heavy lifting—from tracking dynamic attendance records to synchronizing module PDFs and daily timetables.
             </p>
             <ul className="space-y-6">
               <li className="flex gap-4">
@@ -408,8 +462,8 @@ const Home = () => {
                   <span className="material-symbols-outlined">auto_graph</span>
                 </div>
                 <div>
-                  <h4 className="font-bold text-white mb-1">Predictive Resource Loading</h4>
-                  <p className="text-on-surface-variant text-sm">Anticipate student needs before bottlenecks occur using historical flow data.</p>
+                  <h4 className="font-bold text-white mb-1">Instant Attendance Sync</h4>
+                  <p className="text-on-surface-variant text-sm">Save time with auto-updated attendance tracking that reflects changes in real-time.</p>
                 </div>
               </li>
               <li className="flex gap-4">
@@ -417,8 +471,8 @@ const Home = () => {
                   <span className="material-symbols-outlined">psychology</span>
                 </div>
                 <div>
-                  <h4 className="font-bold text-white mb-1">Neural Academic Routing</h4>
-                  <p className="text-on-surface-variant text-sm">Match students with optimal learning resources based on individual progress maps.</p>
+                  <h4 className="font-bold text-white mb-1">Centralized Study Materials</h4>
+                  <p className="text-on-surface-variant text-sm">Access module PDFs and timetables immediately without navigating scattered portals.</p>
                 </div>
               </li>
             </ul>
@@ -460,12 +514,12 @@ const Home = () => {
                   </div>
                 ))
                 : featuredCourses.map((course) => (
-                <motion.div
+                <SpotlightCard
                   key={course._id}
                   {...staggerItem}
-                  whileHover={{ y: -4 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="group cursor-pointer hover:shadow-xl hover:shadow-black/20 rounded-xl transition-all duration-300"
+                  whileHover={{ y: -6, scale: 1.01 }}
+                  transition={{ duration: 0.25, ease: APPLE }}
+                  className="group cursor-pointer hover:shadow-xl hover:shadow-black/30 rounded-xl transition-all duration-300"
                   onClick={() => navigate('/courses')}
                 >
                   <div className="aspect-[16/10] bg-surface-container-low rounded-xl overflow-hidden mb-4 ghost-border flex items-center justify-center relative">
@@ -476,7 +530,7 @@ const Home = () => {
                   </div>
                   <h3 className="text-xl font-bold mb-1 group-hover:text-primary transition-colors">{course.title}</h3>
                   <p className="text-sm text-on-surface-variant">{course.instructor} · {course.credits} Credits</p>
-                </motion.div>
+                </SpotlightCard>
               ))}
             </motion.div>
           </div>
@@ -496,8 +550,8 @@ const Home = () => {
               <button onClick={() => navigate('/facilities')} className="bg-surface-container-high text-white px-6 py-3 rounded-lg font-bold ghost-border w-full hover:bg-surface-variant hover:scale-[1.02] transition-all duration-200">Explore Campus Map</button>
             </motion.div>
             <motion.div
-              {...fadeUp}
-              transition={{ duration: 0.7, delay: 0.15 }}
+              {...fadeUpBlur}
+              transition={{ duration: 0.7, delay: 0.15, ease: APPLE }}
               className="lg:col-span-7"
             >
               <div className="grid grid-cols-2 gap-4">
@@ -561,12 +615,12 @@ const Home = () => {
               const icon = CATEGORY_ICON[event.category] || 'event';
               const gradient = CATEGORY_GRADIENT[event.category] || 'from-primary/20 to-primary/5';
               return (
-            <motion.div
+            <SpotlightCard
               key={event._id}
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
+              transition={{ duration: 0.5, delay: i * 0.08, ease: APPLE }}
               whileHover={{ y: -6, scale: 1.01 }}
               className="flex-shrink-0 w-80 bg-surface-container-high rounded-xl overflow-hidden ghost-border group cursor-pointer hover:shadow-2xl hover:shadow-black/30 hover:border-primary/10 transition-all duration-300"
               onClick={() => navigate('/events')}
@@ -586,7 +640,7 @@ const Home = () => {
                   {event.location || 'CBIT Kolar'}
                 </div>
               </div>
-            </motion.div>
+            </SpotlightCard>
             );})}
         </motion.div>
       </section>

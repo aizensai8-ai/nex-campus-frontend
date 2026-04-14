@@ -23,9 +23,29 @@ const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [navHidden, setNavHidden] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
   const dropdownRef = useRef(null);
   const searchRef = useRef(null);
   const lastScrollY = useRef(0);
+  
+  // PWA Install Prompt
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null);
+    }
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -234,6 +254,15 @@ const Navbar = () => {
                           <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
                           Admin Panel
                         </Link>
+                      )}
+                      {deferredPrompt && (
+                        <button
+                          onClick={handleInstallClick}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#adc6ff] hover:bg-surface-container-high transition-colors"
+                        >
+                          <span className="material-symbols-outlined text-sm">download</span>
+                          Install App
+                        </button>
                       )}
                       <div className="border-t border-outline-variant/10">
                         <button

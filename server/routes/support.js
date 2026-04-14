@@ -5,6 +5,8 @@ import { asyncHandler } from '../middleware/errorHandler.js';
 
 const router = express.Router();
 
+import { sendSupportEmail } from '../utils/mailer.js';
+
 // ── POST /api/support  (public) ───────────────────────────────────────────────
 router.post(
   '/',
@@ -14,6 +16,10 @@ router.post(
       return res.status(400).json({ success: false, message: 'Name, email, and message are required' });
     }
     const ticket = await Support.create({ name, email, phone, usn, message });
+    
+    // Send email notification silently
+    sendSupportEmail(ticket);
+
     res.status(201).json({ success: true, data: ticket });
   })
 );

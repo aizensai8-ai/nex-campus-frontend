@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { pageTransition, fadeUp, staggerContainer, staggerItem } from '../lib/animations';
+import { pageTransition, fadeUpBlur, staggerContainer, staggerItem } from '../lib/animations';
 import api from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -40,7 +40,7 @@ const Support = () => {
     <motion.main {...pageTransition} className="min-h-screen pt-24 pb-20 px-6 max-w-[1440px] mx-auto">
 
       {/* Header */}
-      <motion.section {...fadeUp} className="mb-16 max-w-2xl">
+      <motion.section {...fadeUpBlur} className="mb-16 max-w-2xl">
         <h1 className="text-5xl md:text-6xl font-bold tracking-tighter text-white mb-4 font-satoshi">
           Support Center
         </h1>
@@ -53,7 +53,7 @@ const Support = () => {
 
         {/* Contact Form */}
         <motion.div
-          {...fadeUp}
+          {...fadeUpBlur}
           transition={{ delay: 0.1 }}
           className="lg:col-span-7"
         >

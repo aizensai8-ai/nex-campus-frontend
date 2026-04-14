@@ -38,9 +38,11 @@ const Login = () => {
             <main className="min-h-screen flex flex-col md:flex-row">
                 {/* Left Side: Branding & Image */}
                 <section className="relative w-full md:w-1/2 h-64 md:h-screen flex items-center justify-center overflow-hidden">
-                    <div className="absolute inset-0 z-0">
-                        <img className="w-full h-full object-cover grayscale opacity-40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbb6eQ8lpTaxofVpka5xdq0Aia0VM3Vvjlp_-o3sZKWtQB7REFv8cpWGkmcjq0mmLNnMDhcKaRzlo87B6LV1haZ430z68AzSRhGJEUDL7zEIRYf69V540wljX2GEO6rn61ilqUXZ4m7RNRT0cgKEZzBTJGeVZUvBpFwTB7zMS79gXWPW6Cg9xRi0itBTiLk-dEbgPwcYG33vCvqyTFjwLk07PpE7PkOtU15nKCMtU6Zoofo06Ucirr2ckr1NMbjqWgCC7dFzE5cF8" alt="Campus" />
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#0d1322] via-[#0d1322]/80 to-transparent"></div>
+                    <div className="absolute inset-0 z-0 bg-surface-container-low">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-[#0d1322]/60 to-secondary/5" />
+                        <div className="absolute top-0 left-0 w-full h-full opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(#adc6ff 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+                        <div className="absolute bottom-0 right-0 w-72 h-72 bg-primary/8 rounded-full blur-3xl" />
+                        <div className="absolute top-1/3 left-1/4 w-48 h-48 bg-secondary/5 rounded-full blur-3xl" />
                     </div>
                     <div className="relative z-10 p-8 md:p-20 w-full max-w-2xl">
                         <div className="mb-12 flex items-center gap-3">
@@ -57,9 +59,9 @@ const Login = () => {
                         </p>
                         <div className="mt-12 flex items-center gap-6">
                             <div className="flex -space-x-3">
-                                <img className="w-10 h-10 rounded-full border-2 border-background object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdqNRg6SEsYX888Ac5AC6QBl-N7VbCYCpIvlmg7gKntteK1nhOak_JKs51q3_3YZm_zPlICm0MY1El_ttRGt8seFw54BYJVY5tNo2ZgzqTCe1g-XSi94gLlCBuTeHJFJ7l8UeoFQPUnGswa73zrtuBhuxUgri25ixG_K6QXaxZ8sTqxpXNxKA6Ks32oTjiVb38_EckzeQYn_Ws28tnh-rlt8MoTKQHqcD6xk7zr_4ZWVyg_A_QSyfHqdHT9IhkSZmp1sKuWbn7S8k" alt="Student" />
-                                <img className="w-10 h-10 rounded-full border-2 border-background object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNhyYi9vfendAgehQ3iT2t0UCD42AkzTRsV2Fz7BmbEFFD09tu0NyGSvEiMP5VBCrzgw982pJr9xz0SDI6OZvD_7CUJarrhiRyVY3XlsQ6ln6HXWXGCs9_qkwQh7QhUdQ26zBHG9Eeku35CTPvVsTUDbZFAB2YLcO20iUEqw5O326y_aBUKINaDmzrICo-96a2DvFocfdjVc6_A1FjFlV2EUKMNh2XqePTOfThh2L7YK6h0UN8dNdj-B7odekTrSsF8zrp2jTFggo" alt="Professor" />
-                                <img className="w-10 h-10 rounded-full border-2 border-background object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFXAOhLG1lZj0pNfbM9lM0nYeA-ZsDwcujr8Dq637-duBxpRsBZkCbz7g9GKxs0tHAwDY3PeQZZUgUlgsDF-7Pb3nFxQs7ygI07Zh_qzU8Nskyss-Lwpj101wkEl5X2ZOvw0c4u3zAKurZ8wOiZf3VYRYPkK6rA6vXKsOWC1GpJf-ypjiobtrycVQLWXcgQmQXPitK0-bXtv16erb_P5aenPSQkO7QoP0ofOWXZWrZ4ljXhR1_1780GMtphPC7Dkk-Lm8gg1Rcyik" alt="Researcher" />
+                                <div className="w-10 h-10 rounded-full border-2 border-background bg-primary/30 flex items-center justify-center text-xs font-bold text-primary">SK</div>
+                                <div className="w-10 h-10 rounded-full border-2 border-background bg-secondary/30 flex items-center justify-center text-xs font-bold text-secondary">PL</div>
+                                <div className="w-10 h-10 rounded-full border-2 border-background bg-tertiary/30 flex items-center justify-center text-xs font-bold text-tertiary">MJ</div>
                             </div>
                             <span className="font-mono text-xs tracking-widest text-outline uppercase">Join 4.2k+ Campus Users</span>
                         </div>
@@ -101,7 +103,10 @@ const Login = () => {
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center px-1">
                                     <label className="text-xs font-mono tracking-widest text-outline uppercase" htmlFor="password">Password</label>
-                                    <a className="text-xs text-primary hover:text-white transition-colors" href="#">Forgot?</a>
+                                    <a className="text-xs text-primary hover:text-white transition-colors cursor-pointer" onClick={(e) => {
+                                        e.preventDefault();
+                                        navigate('/forgot-password');
+                                    }}>Forgot?</a>
                                 </div>
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">

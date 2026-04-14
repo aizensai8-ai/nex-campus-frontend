@@ -1,24 +1,56 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fadeUp, staggerContainer, staggerItem, pageTransition } from '../lib/animations';
+import { fadeUpBlur, staggerContainer, staggerItem, pageTransition } from '../lib/animations';
+
+const APPLE = [0.22, 1, 0.36, 1];
+
+const SpotlightCard = ({ children, className = '', ...rest }) => {
+  const [spot, setSpot] = useState(null);
+  const ref = useRef(null);
+  return (
+    <motion.div
+      ref={ref}
+      className={`relative ${className}`}
+      onMouseMove={(e) => {
+        const r = ref.current?.getBoundingClientRect();
+        if (r) setSpot({ x: e.clientX - r.left, y: e.clientY - r.top });
+      }}
+      onMouseLeave={() => setSpot(null)}
+      {...rest}
+    >
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] z-0"
+        style={{
+          opacity: spot ? 1 : 0,
+          transition: 'opacity 0.3s ease',
+          background: spot
+            ? `radial-gradient(300px circle at ${spot.x}px ${spot.y}px, rgba(59,130,246,0.08), transparent 70%)`
+            : 'none',
+        }}
+      />
+      {children}
+    </motion.div>
+  );
+};
 import api from '../lib/api';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 const SkeletonRow = () => (
-  <div className="grid grid-cols-1 md:grid-cols-12 items-center bg-surface-container-low py-8 animate-pulse">
+  <div className="grid grid-cols-1 md:grid-cols-12 items-center bg-surface-container-low py-8 rounded-xl px-4 overflow-hidden">
     <div className="md:col-span-2 flex flex-col md:items-center mb-4 md:mb-0 gap-2">
-      <div className="h-3 w-12 bg-surface-container-high rounded"></div>
-      <div className="h-5 w-16 bg-surface-container-high rounded"></div>
+      <div className="h-3 w-12 skeleton-shimmer rounded-lg"></div>
+      <div className="h-5 w-16 skeleton-shimmer rounded-lg"></div>
     </div>
     <div className="md:col-span-6 space-y-2">
-      <div className="h-5 w-2/3 bg-surface-container-high rounded"></div>
-      <div className="h-3 w-1/2 bg-surface-container-high rounded"></div>
+      <div className="h-5 w-2/3 skeleton-shimmer rounded-lg"></div>
+      <div className="h-3 w-1/2 skeleton-shimmer rounded-lg"></div>
     </div>
     <div className="md:col-span-2">
-      <div className="h-3 w-20 bg-surface-container-high rounded"></div>
+      <div className="h-3 w-20 skeleton-shimmer rounded-lg"></div>
     </div>
     <div className="md:col-span-2 flex md:justify-end">
-      <div className="h-8 w-24 bg-surface-container-high rounded"></div>
+      <div className="h-8 w-24 skeleton-shimmer rounded-lg"></div>
     </div>
   </div>
 );
@@ -131,6 +163,7 @@ function RegisterModal({ event, user, onClose, onSuccess }) {
 
 const Events = () => {
   const { user } = useAuth();
+  const { showToast } = useToast();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -155,6 +188,7 @@ const Events = () => {
     setSuccessId(eventId);
     setRegisterModal(null);
     setTimeout(() => setSuccessId(null), 3000);
+    showToast({ message: 'Registered successfully! See you there.', type: 'success' });
   };
 
   const canRegister = (event) => event.status !== 'past' && event.status !== 'cancelled';
@@ -164,7 +198,7 @@ const Events = () => {
       {...pageTransition}
       className="pt-24 pb-20 max-w-[1440px] mx-auto px-6"
     >
-      <motion.section {...fadeUp} className="mb-16">
+      <motion.section {...fadeUpBlur} className="mb-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-4 font-satoshi">Campus Events</h1>
@@ -185,21 +219,6 @@ const Events = () => {
           {error}
         </div>
       )}
-
-      {/* Success toast */}
-      <AnimatePresence>
-        {successId && (
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 24 }}
-            className="fixed bottom-6 right-6 px-5 py-3 rounded-xl shadow-2xl text-sm font-medium flex items-center gap-2 z-[200] bg-surface-container-high border border-outline-variant/20 text-white"
-          >
-            <span className="material-symbols-outlined text-sm text-green-400">check_circle</span>
-            Registered successfully!
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <motion.div
         initial={{ opacity: 0, y: 40 }}
@@ -228,21 +247,21 @@ const Events = () => {
         <div className="md:col-span-11 bg-surface-container-low p-8 md:p-12">
           {/* Featured Event */}
           {loading ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16 animate-pulse">
-              <div className="rounded-xl bg-surface-container-high aspect-[4/3]"></div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+              <div className="rounded-xl skeleton-shimmer aspect-[4/3]"></div>
               <div className="flex flex-col justify-center space-y-4">
-                <div className="h-3 w-24 bg-surface-container-high rounded"></div>
-                <div className="h-8 w-3/4 bg-surface-container-high rounded"></div>
-                <div className="h-4 w-full bg-surface-container-high rounded"></div>
-                <div className="h-4 w-2/3 bg-surface-container-high rounded"></div>
+                <div className="h-3 w-24 skeleton-shimmer rounded-lg"></div>
+                <div className="h-8 w-3/4 skeleton-shimmer rounded-lg"></div>
+                <div className="h-4 w-full skeleton-shimmer rounded-lg"></div>
+                <div className="h-4 w-2/3 skeleton-shimmer rounded-lg"></div>
               </div>
             </div>
           ) : featured ? (
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              viewport={{ once: true, margin: '-100px' }}
+              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
               className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16"
             >
               <div className="relative group cursor-pointer overflow-hidden rounded-xl aspect-[4/3] lg:aspect-auto bg-surface-container-high flex items-center justify-center">
@@ -364,18 +383,18 @@ const Events = () => {
           { icon: "campaign", title: "Host an Event", desc: "Propose your own technical seminar or workshop. Review current guidelines for venue booking.", link: "Submit Proposal →" },
           { icon: "history", title: "Past Recordings", desc: "Missed a session? Access the full archive of recorded keynotes and seminar papers.", link: "Archive Access →" },
         ].map((card) => (
-          <motion.div
+          <SpotlightCard
             key={card.title}
             {...staggerItem}
-            whileHover={{ y: -4, boxShadow: "0 20px 40px rgba(0,0,0,0.25)" }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="bg-surface-container-low p-8 rounded-xl border border-outline-variant/10 cursor-pointer"
+            whileHover={{ y: -6, scale: 1.01, boxShadow: '0 24px 48px rgba(0,0,0,0.3)' }}
+            transition={{ duration: 0.3, ease: APPLE }}
+            className="bg-surface-container-low p-8 rounded-xl border border-outline-variant/10 hover:border-primary/20 cursor-pointer"
           >
             <span className="material-symbols-outlined text-primary mb-4" style={{ fontSize: '32px' }}>{card.icon}</span>
             <h5 className="text-lg font-bold text-white mb-2">{card.title}</h5>
             <p className="text-sm text-on-surface-variant mb-6">{card.desc}</p>
             <a className="text-xs font-mono text-primary uppercase tracking-widest hover:underline" href="#">{card.link}</a>
-          </motion.div>
+          </SpotlightCard>
         ))}
       </motion.section>
 

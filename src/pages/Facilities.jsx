@@ -1,7 +1,65 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { fadeUp, staggerContainer, staggerItem, pageTransition } from '../lib/animations';
+import { fadeUpBlur, staggerContainer, staggerItem, pageTransition } from '../lib/animations';
 import api from '../lib/api';
+
+const APPLE = [0.22, 1, 0.36, 1];
+
+// Lightweight spotlight overlay hook
+function useSpotlight() {
+  const [pos, setPos] = useState(null);
+  const ref = useRef(null);
+  const handlers = {
+    onMouseMove: (e) => {
+      const r = ref.current?.getBoundingClientRect();
+      if (r) setPos({ x: e.clientX - r.left, y: e.clientY - r.top });
+    },
+    onMouseLeave: () => setPos(null),
+  };
+  const overlay = (
+    <div
+      className="pointer-events-none absolute inset-0 rounded-[inherit] z-0"
+      style={{
+        opacity: pos ? 1 : 0,
+        transition: 'opacity 0.3s ease',
+        background: pos
+          ? `radial-gradient(300px circle at ${pos.x}px ${pos.y}px, rgba(59,130,246,0.08), transparent 70%)`
+          : 'none',
+      }}
+    />
+  );
+  return { ref, handlers, overlay };
+}
+
+// Spotlight wrapper — drop-in for motion.div in map() loops
+const SpotlightCard = ({ children, className = '', ...rest }) => {
+  const [spot, setSpot] = useState(null);
+  const ref = useRef(null);
+  return (
+    <motion.div
+      ref={ref}
+      className={`relative ${className}`}
+      onMouseMove={(e) => {
+        const r = ref.current?.getBoundingClientRect();
+        if (r) setSpot({ x: e.clientX - r.left, y: e.clientY - r.top });
+      }}
+      onMouseLeave={() => setSpot(null)}
+      {...rest}
+    >
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] z-0"
+        style={{
+          opacity: spot ? 1 : 0,
+          transition: 'opacity 0.3s ease',
+          background: spot
+            ? `radial-gradient(300px circle at ${spot.x}px ${spot.y}px, rgba(59,130,246,0.08), transparent 70%)`
+            : 'none',
+        }}
+      />
+      {children}
+    </motion.div>
+  );
+};
 
 // Cycle through these gradients for cards without images
 const CARD_GRADIENTS = [
@@ -62,13 +120,14 @@ const Facilities = () => {
   const featured   = facilities[0];
   const secondary  = facilities.slice(1, 3);
   const tier3      = facilities.slice(3);
+  const featuredSpot = useSpotlight();
 
   return (
     <motion.main
       {...pageTransition}
       className="max-w-[1440px] mx-auto px-6 py-12"
     >
-      <motion.section {...fadeUp} className="mb-16">
+      <motion.section {...fadeUpBlur} className="mb-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <h1 className="text-5xl md:text-6xl font-bold tracking-tighter text-white mb-4 font-satoshi">Campus Infrastructure.</h1>
@@ -115,11 +174,14 @@ const Facilities = () => {
           {/* ── Featured card ─────────────────────────────────────────────── */}
           {featured && (
             <motion.div
+              ref={featuredSpot.ref}
+              {...featuredSpot.handlers}
               {...staggerItem}
-              whileHover={{ y: -4 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
+              whileHover={{ y: -6, scale: 1.01, boxShadow: '0 32px 64px rgba(0,0,0,0.4)' }}
+              transition={{ duration: 0.3, ease: APPLE }}
               className="md:col-span-8 group relative overflow-hidden bg-surface-container-low rounded-xl border border-outline-variant/5 hover:border-primary/20 hover:shadow-2xl hover:shadow-black/30 transition-all duration-500"
             >
+              {featuredSpot.overlay}
               <div className="aspect-[16/9] w-full overflow-hidden">
                 {featured.image ? (
                   <img
@@ -172,12 +234,12 @@ const Facilities = () => {
           {/* ── Secondary cards ────────────────────────────────────────────── */}
           <div className="md:col-span-4 flex flex-col gap-6">
             {secondary.map((card, idx) => (
-              <motion.div
+              <SpotlightCard
                 key={card._id ?? card.name}
                 {...staggerItem}
-                whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(0,0,0,0.25)' }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
-                className="flex-1 bg-surface-container-low rounded-xl border border-outline-variant/5 flex flex-col hover:bg-surface-container-high transition-colors duration-300 cursor-pointer group overflow-hidden"
+                whileHover={{ y: -6, scale: 1.01, boxShadow: '0 24px 48px rgba(0,0,0,0.3)' }}
+                transition={{ duration: 0.3, ease: APPLE }}
+                className="flex-1 bg-surface-container-low rounded-xl border border-outline-variant/5 flex flex-col hover:bg-surface-container-high hover:border-primary/20 transition-colors duration-300 cursor-pointer group overflow-hidden"
               >
                 {/* Image / gradient header */}
                 <div className="w-full h-28 overflow-hidden flex-shrink-0">
@@ -221,18 +283,18 @@ const Facilities = () => {
                   </div>
                   {card.type === 'canteen' && <CanteenMenu items={card.menuItems} />}
                 </div>
-              </motion.div>
+              </SpotlightCard>
             ))}
           </div>
 
           {/* ── Tier-3 cards ───────────────────────────────────────────────── */}
           {tier3.map((item, idx) => (
-            <motion.div
+            <SpotlightCard
               key={item._id ?? item.name}
               {...staggerItem}
-              whileHover={{ y: -4, boxShadow: '0 16px 32px rgba(0,0,0,0.2)' }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="md:col-span-3 bg-surface-container-low p-5 rounded-xl border border-outline-variant/5 group cursor-pointer"
+              whileHover={{ y: -6, scale: 1.01, boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}
+              transition={{ duration: 0.3, ease: APPLE }}
+              className="md:col-span-3 bg-surface-container-low p-5 rounded-xl border border-outline-variant/5 hover:border-primary/20 group cursor-pointer"
             >
               <div className="w-full h-32 rounded-lg bg-surface-container-highest mb-4 overflow-hidden">
                 {item.image ? (
@@ -259,7 +321,7 @@ const Facilities = () => {
               </div>
               <p className="text-xs text-on-surface-variant leading-relaxed">{item.description}</p>
               {item.type === 'canteen' && <CanteenMenu items={item.menuItems} />}
-            </motion.div>
+            </SpotlightCard>
           ))}
 
         </motion.div>

@@ -86,6 +86,13 @@ const courseSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    modules: [
+      {
+        number: { type: Number },
+        title: { type: String },
+        pdfUrl: { type: String },
+      },
+    ],
   },
   {
     timestamps: true,

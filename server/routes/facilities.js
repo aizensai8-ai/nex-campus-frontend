@@ -58,7 +58,7 @@ router.post(
     body('name').trim().notEmpty().withMessage('Facility name is required'),
     body('type')
       .notEmpty()
-      .isIn(['library', 'lab', 'gym', 'dining', 'auditorium', 'studio', 'center', 'other'])
+      .isIn(['library', 'lab', 'gym', 'dining', 'auditorium', 'studio', 'center', 'canteen', 'sports', 'recreation', 'hostel', 'shop', 'other'])
       .withMessage('Valid facility type is required'),
   ],
   asyncHandler(async (req, res) => {

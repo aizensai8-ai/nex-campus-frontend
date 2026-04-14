@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { pageTransition, fadeUp } from '../lib/animations';
+import { pageTransition, fadeUpBlur } from '../lib/animations';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import api from '../lib/api';
@@ -26,6 +26,13 @@ const EditProfile = () => {
 
   const [saving,  setSaving]  = useState(false);
   const [error,   setError]   = useState('');
+
+  // Password state
+  const [pwdForm, setPwdForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [pwdSaving, setPwdSaving] = useState(false);
+  const [pwdError, setPwdError] = useState('');
+  const [pwdSuccess, setPwdSuccess] = useState('');
+  const [showPwd, setShowPwd] = useState(false);
 
   // Keep form in sync if user context loads after mount (e.g. hard-reload)
   useEffect(() => {
@@ -78,6 +85,33 @@ const EditProfile = () => {
     }
   };
 
+  const handlePwdChange = (e) => setPwdForm(f => ({ ...f, [e.target.name]: e.target.value }));
+
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    setPwdError('');
+    setPwdSuccess('');
+
+    if (pwdForm.newPassword !== pwdForm.confirmPassword) {
+        return setPwdError('New passwords do not match.');
+    }
+
+    setPwdSaving(true);
+    try {
+        await api.put('/api/users/password', {
+            currentPassword: pwdForm.currentPassword,
+            newPassword: pwdForm.newPassword,
+        });
+        setPwdSuccess('Password updated successfully');
+        showToast({ message: 'Password updated successfully!', type: 'success' });
+        setPwdForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (err) {
+        setPwdError(err.response?.data?.message || 'Failed to update password.');
+    } finally {
+        setPwdSaving(false);
+    }
+  };
+
   const currentSection =
     form.semester && form.sectionLetter
       ? `${form.semester}${form.sectionLetter}`
@@ -89,7 +123,7 @@ const EditProfile = () => {
       className="pt-24 pb-20 max-w-[1440px] mx-auto px-6"
     >
       {/* ── Header ── */}
-      <motion.section {...fadeUp} className="mb-10">
+      <motion.section {...fadeUpBlur} className="mb-10">
         <div className="flex items-center gap-3 mb-2">
           <Link
             to="/portal"
@@ -112,7 +146,7 @@ const EditProfile = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* ── Form ── */}
         <motion.div
-          {...fadeUp}
+          {...fadeUpBlur}
           transition={{ delay: 0.05 }}
           className="lg:col-span-2"
         >
@@ -251,11 +285,103 @@ const EditProfile = () => {
               </button>
             </form>
           </div>
+
+          {/* ── Change Password Form ── */}
+          {!user?.googleId && (
+          <div className="bg-surface-container-low rounded-xl p-8 ring-1 ring-outline-variant/15 shadow-2xl mt-8">
+            <h2 className="text-xl font-bold tracking-tighter text-white mb-6">Change Password</h2>
+
+            {pwdError && (
+              <div className="mb-6 p-4 rounded-lg bg-error/10 border border-error/30 text-red-400 text-sm flex items-center gap-2">
+                <span className="material-symbols-outlined text-sm">error</span>
+                {pwdError}
+              </div>
+            )}
+            {pwdSuccess && (
+              <div className="mb-6 p-4 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-sm flex items-center gap-2">
+                <span className="material-symbols-outlined text-sm">check_circle</span>
+                {pwdSuccess}
+              </div>
+            )}
+
+            <form onSubmit={handlePasswordSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-xs font-mono tracking-widest text-outline uppercase ml-1">Current Password</label>
+                <div className="relative group">
+                  <input
+                    name="currentPassword"
+                    type={showPwd ? 'text' : 'password'}
+                    value={pwdForm.currentPassword}
+                    onChange={handlePwdChange}
+                    required
+                    className="w-full bg-surface-container-highest border-none rounded-lg py-3.5 px-4 pr-11 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary-container transition-all outline-none"
+                    placeholder="••••••••"
+                  />
+                  <div className="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer" onClick={() => setShowPwd(v => !v)}>
+                    <span className="material-symbols-outlined text-outline hover:text-white transition-colors text-[18px]">
+                        {showPwd ? 'visibility_off' : 'visibility'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-mono tracking-widest text-outline uppercase ml-1">New Password</label>
+                  <input
+                    name="newPassword"
+                    type={showPwd ? 'text' : 'password'}
+                    value={pwdForm.newPassword}
+                    onChange={handlePwdChange}
+                    required
+                    minLength={6}
+                    className="w-full bg-surface-container-highest border-none rounded-lg py-3.5 px-4 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary-container transition-all outline-none"
+                    placeholder="••••••••"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-mono tracking-widest text-outline uppercase ml-1">Confirm New</label>
+                  <input
+                    name="confirmPassword"
+                    type={showPwd ? 'text' : 'password'}
+                    value={pwdForm.confirmPassword}
+                    onChange={handlePwdChange}
+                    required
+                    minLength={6}
+                    className="w-full bg-surface-container-highest border-none rounded-lg py-3.5 px-4 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary-container transition-all outline-none"
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={pwdSaving}
+                className="w-full bg-surface-container-high border border-outline-variant/30 text-white font-semibold py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container-highest transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {pwdSaving ? (
+                  <>
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Updating...
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-[18px]">key</span>
+                    Update Password
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+          )}
         </motion.div>
 
         {/* ── Info panel ── */}
         <motion.div
-          {...fadeUp}
+          {...fadeUpBlur}
           transition={{ delay: 0.12 }}
           className="space-y-4"
         >

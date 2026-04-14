@@ -4,7 +4,9 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import User from '../models/User.js';
 import { protect } from '../middleware/auth.js';
+import crypto from 'crypto';
 import { asyncHandler } from '../middleware/errorHandler.js';
+import { sendResetEmail } from '../utils/mailer.js';
 
 const router = express.Router();
 
@@ -127,6 +129,82 @@ router.get('/logout', (req, res) => {
   });
   res.status(200).json({ success: true, message: 'Logged out successfully' });
 });
+
+// ── POST /api/auth/forgot-password ────────────────────────────────────────────
+router.post(
+  '/forgot-password',
+  [body('email').isEmail().normalizeEmail().withMessage('Valid email required')],
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      // Return 200 even if user not found to prevent email enumeration
+      return res.status(200).json({ success: true, message: 'Reset link sent to your email' });
+    }
+
+    if (!user.password && user.googleId) {
+       return res.status(400).json({ success: false, message: 'This account uses Google sign-in. Password reset is not available.' });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    
+    // Hash token and set to resetPasswordToken field
+    user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    
+    // Set expire (10 mins)
+    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+    
+    await user.save({ validateBeforeSave: false });
+
+    // Send email
+    const clientUrl = process.env.NODE_ENV === 'production' ? process.env.CLIENT_URL : process.env.CLIENT_URL_DEV;
+    const resetUrl = `${clientUrl}/reset-password/${resetToken}`;
+
+    await sendResetEmail(user.email, resetUrl);
+
+    res.status(200).json({ success: true, message: 'Reset link sent to your email' });
+  })
+);
+
+// ── POST /api/auth/reset-password/:token ──────────────────────────────────────
+router.post(
+  '/reset-password/:token',
+  [body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters')],
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
+    // Get hashed token
+    const resetPasswordToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired reset token' });
+    }
+
+    // Set new password
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Password reset successful' });
+  })
+);
 
 // ── GET /api/auth/me ──────────────────────────────────────────────────────────
 router.get(

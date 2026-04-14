@@ -13,11 +13,12 @@ router.get(
   '/',
   optionalAuth,
   asyncHandler(async (req, res) => {
-    const { department, status, search, sort = '-createdAt', page = 1, limit = 20 } = req.query;
+    const { department, status, search, section, sort = '-createdAt', page = 1, limit = 20 } = req.query;
 
     const filter = {};
     if (department) filter.department = department;
     if (status) filter.status = status;
+    if (section) filter.section = section;
     if (search) filter.$text = { $search: search };
 
     const skip = (parseInt(page) - 1) * parseInt(limit);

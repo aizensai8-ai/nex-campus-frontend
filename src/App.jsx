@@ -12,6 +12,8 @@ import Signup from './pages/Signup';
 import Admin from './pages/Admin';
 import Support from './pages/Support';
 import EditProfile from './pages/EditProfile';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -36,6 +38,8 @@ function App() {
         {/* Standalone routes for Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
     </AnimatePresence>
   );

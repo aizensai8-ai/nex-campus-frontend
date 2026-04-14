@@ -1,9 +1,40 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fadeUp, staggerContainer, staggerItem, pageTransition } from '../lib/animations';
+import { fadeUpBlur, staggerContainer, staggerItem, pageTransition } from '../lib/animations';
 import { useAuth } from '../context/AuthContext';
 import api from '../lib/api';
+
+const APPLE = [0.22, 1, 0.36, 1];
+
+const SpotlightCard = ({ children, className = '', ...rest }) => {
+  const [spot, setSpot] = useState(null);
+  const ref = useRef(null);
+  return (
+    <motion.div
+      ref={ref}
+      className={`relative ${className}`}
+      onMouseMove={(e) => {
+        const r = ref.current?.getBoundingClientRect();
+        if (r) setSpot({ x: e.clientX - r.left, y: e.clientY - r.top });
+      }}
+      onMouseLeave={() => setSpot(null)}
+      {...rest}
+    >
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] z-0"
+        style={{
+          opacity: spot ? 1 : 0,
+          transition: 'opacity 0.3s ease',
+          background: spot
+            ? `radial-gradient(350px circle at ${spot.x}px ${spot.y}px, rgba(59,130,246,0.08), transparent 70%)`
+            : 'none',
+        }}
+      />
+      {children}
+    </motion.div>
+  );
+};
 
 // ── Timetable data ────────────────────────────────────────────────────────────
 const TIMETABLE_4C = {
@@ -438,7 +469,7 @@ const AttendanceTracker = () => {
     return (
       <div className="space-y-3">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-24 bg-surface-container-high rounded-xl animate-pulse" />
+          <div key={i} className="h-24 rounded-xl skeleton-shimmer" />
         ))}
       </div>
     );
@@ -628,16 +659,18 @@ const Portal = () => {
   return (
     <motion.main {...pageTransition} className="pt-24 pb-20">
       {/* ── Hero ── */}
-      <motion.section {...fadeUp} className="max-w-[1440px] mx-auto px-6 mb-16">
+      <motion.section {...fadeUpBlur} className="max-w-[1440px] mx-auto px-6 mb-16">
         <div className="relative overflow-hidden rounded-xl bg-surface-container-low min-h-[400px] flex flex-col justify-center items-center text-center p-8">
-          <div className="absolute inset-0 opacity-20 pointer-events-none">
-            <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFK-JOIqRc96iV4q-x7SAButIXxoVj0u9yDVgsSS6xsGilQvXDwRYL_7Ed6Bjn-hvfLNjSekf1p3QbOSYzOAjcsGmUfK4VNw5BnHD60StvQqzher_mOQlhAGsvWW60DCd-Zpodd-ejuE1hX1PJ7_Wx8f-aQCCPsT7Ce0R3gSOx8CCV82zPpBOhHzQ76NVfk6abM4-MoINcHmTVQTlQG2eeFV9UktNweBbovqfF5lFmhheFmP2OPm-vg0Wve9x6Zm-Z5PbQD8GDxJM" alt="Network visualization" />
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/5" />
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-secondary/5 rounded-full blur-3xl" />
           </div>
 
           {authLoading ? (
-            <div className="animate-pulse space-y-4 w-full max-w-md">
-              <div className="h-8 bg-surface-container-high rounded w-3/4 mx-auto"></div>
-              <div className="h-4 bg-surface-container-high rounded w-1/2 mx-auto"></div>
+            <div className="space-y-4 w-full max-w-md">
+              <div className="h-8 skeleton-shimmer rounded-lg w-3/4 mx-auto"></div>
+              <div className="h-4 skeleton-shimmer rounded-lg w-1/2 mx-auto"></div>
             </div>
           ) : user ? (
             <>
@@ -810,11 +843,11 @@ const Portal = () => {
       {/* ── Bento Grid ── */}
       <section className="max-w-[1440px] mx-auto px-6 mb-16">
         <motion.div {...staggerContainer} className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          <motion.div
+          <SpotlightCard
             {...staggerItem}
-            whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(0,0,0,0.25)' }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="md:col-span-8 bg-surface-container-low ghost-border rounded-xl p-8 flex flex-col justify-between group cursor-pointer hover:bg-surface-container transition-colors duration-200"
+            whileHover={{ y: -6, scale: 1.01, boxShadow: '0 24px 48px rgba(0,0,0,0.3)' }}
+            transition={{ duration: 0.3, ease: APPLE }}
+            className="md:col-span-8 bg-surface-container-low ghost-border rounded-xl p-8 flex flex-col justify-between group cursor-pointer hover:bg-surface-container hover:border-primary/20 transition-colors duration-300"
           >
             <div>
               <div className="flex items-center gap-3 mb-6">
@@ -828,13 +861,13 @@ const Portal = () => {
               <span className="text-4xl font-bold text-primary opacity-20 group-hover:opacity-100 transition-opacity duration-300">01</span>
               <span className="material-symbols-outlined text-white">arrow_forward</span>
             </div>
-          </motion.div>
+          </SpotlightCard>
 
-          <motion.div
+          <SpotlightCard
             {...staggerItem}
-            whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(0,0,0,0.25)' }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="md:col-span-4 bg-surface-container-low ghost-border rounded-xl p-8 flex flex-col justify-between group cursor-pointer hover:bg-surface-container transition-colors duration-200"
+            whileHover={{ y: -6, scale: 1.01, boxShadow: '0 24px 48px rgba(0,0,0,0.3)' }}
+            transition={{ duration: 0.3, ease: APPLE }}
+            className="md:col-span-4 bg-surface-container-low ghost-border rounded-xl p-8 flex flex-col justify-between group cursor-pointer hover:bg-surface-container hover:border-primary/20 transition-colors duration-300"
           >
             <div>
               <span className="material-symbols-outlined text-secondary mb-6">calendar_month</span>
@@ -849,13 +882,13 @@ const Portal = () => {
                 <span className="font-berkeley-mono text-[10px] text-on-surface-variant uppercase">4th Semester CSE · Section {user?.section ?? '—'}</span>
               </div>
             </div>
-          </motion.div>
+          </SpotlightCard>
 
-          <motion.div
+          <SpotlightCard
             {...staggerItem}
-            whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(0,0,0,0.25)' }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="md:col-span-4 bg-surface-container-low ghost-border rounded-xl p-8 flex flex-col justify-between group cursor-pointer hover:bg-surface-container transition-colors duration-200"
+            whileHover={{ y: -6, scale: 1.01, boxShadow: '0 24px 48px rgba(0,0,0,0.3)' }}
+            transition={{ duration: 0.3, ease: APPLE }}
+            className="md:col-span-4 bg-surface-container-low ghost-border rounded-xl p-8 flex flex-col justify-between group cursor-pointer hover:bg-surface-container hover:border-primary/20 transition-colors duration-300"
           >
             <div>
               <span className="material-symbols-outlined text-tertiary mb-6">campaign</span>
@@ -867,13 +900,13 @@ const Portal = () => {
               <div className="w-8 h-8 rounded-full bg-tertiary border-2 border-surface-container-low"></div>
               <div className="w-8 h-8 rounded-full bg-surface-variant border-2 border-surface-container-low flex items-center justify-center text-[10px]">+12</div>
             </div>
-          </motion.div>
+          </SpotlightCard>
 
-          <motion.div
+          <SpotlightCard
             {...staggerItem}
-            whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(0,0,0,0.25)' }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="md:col-span-8 bg-surface-container-low ghost-border rounded-xl p-8 flex items-center gap-8 group cursor-pointer hover:bg-surface-container transition-colors duration-200 overflow-hidden"
+            whileHover={{ y: -6, scale: 1.01, boxShadow: '0 24px 48px rgba(0,0,0,0.3)' }}
+            transition={{ duration: 0.3, ease: APPLE }}
+            className="md:col-span-8 bg-surface-container-low ghost-border rounded-xl p-8 flex items-center gap-8 group cursor-pointer hover:bg-surface-container hover:border-primary/20 transition-colors duration-300 overflow-hidden"
           >
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-4">
@@ -883,15 +916,15 @@ const Portal = () => {
               <h3 className="text-2xl font-bold text-white mb-2">Campus support</h3>
               <p className="text-on-surface-variant">Direct line to academic advisors and technical support teams for immediate assistance.</p>
             </div>
-            <div className="hidden lg:block w-48 h-48 relative">
-              <img className="absolute inset-0 w-full h-full object-cover rounded-xl grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYB3PbAClabbSeyeYt8cbrLZREHl7wVDDVnTZig7mZipc7Gn01LgZ0QWfL_rz1SrCTMoEN-tErZv0aRTTenWRhU2_dIUT_1KZG-_ns9mNE-pbTdey7EdO0mvNNoSCgN0o9u1XtNWuaNc4XnU9A__i8e06L_Qv5K_0VFVHiQFg2ahof-BNKvRgCu0iGXN-FITRtgB28lhW6B1yOT3RIrlPsFqBfIotLqtVwEWYb5hrZrZ8NrZAykKpgQAf7l60xagFNh7QfW8EaD8Y" alt="Support" />
+            <div className="hidden lg:flex w-48 h-48 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/10 border border-primary/10 items-center justify-center flex-shrink-0 group-hover:from-primary/30 group-hover:to-secondary/20 transition-all duration-500">
+              <span className="material-symbols-outlined text-primary/40 group-hover:text-primary/70 transition-colors duration-500" style={{ fontSize: '72px', fontVariationSettings: "'FILL' 1" }}>support_agent</span>
             </div>
-          </motion.div>
+          </SpotlightCard>
         </motion.div>
       </section>
 
       {/* ── Content Sections ── */}
-      <motion.section {...fadeUp} className="max-w-[1440px] mx-auto px-6">
+      <motion.section {...fadeUpBlur} className="max-w-[1440px] mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div>
             <div className="flex items-center justify-between mb-8">
@@ -938,17 +971,17 @@ const Portal = () => {
                 { icon: 'restaurant', title: 'Campus Canteen', desc: 'Live menu and table availability.' },
                 { icon: 'store', title: 'Stationery Shop', desc: 'Record books, lab manuals, and supplies.' },
               ].map((service) => (
-                <motion.div
+                <SpotlightCard
                   key={service.title}
                   {...staggerItem}
-                  whileHover={{ y: -4, boxShadow: '0 16px 32px rgba(0,0,0,0.2)' }}
-                  transition={{ duration: 0.2, ease: 'easeOut' }}
-                  className="bg-surface-container-low p-6 rounded-xl ghost-border hover:bg-surface-container-high transition-colors cursor-pointer"
+                  whileHover={{ y: -6, scale: 1.01, boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}
+                  transition={{ duration: 0.3, ease: APPLE }}
+                  className="bg-surface-container-low p-6 rounded-xl ghost-border hover:bg-surface-container-high hover:border-primary/20 transition-colors cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-on-surface-variant mb-4">{service.icon}</span>
                   <h4 className="text-white font-semibold mb-1">{service.title}</h4>
                   <p className="text-on-surface-variant text-xs">{service.desc}</p>
-                </motion.div>
+                </SpotlightCard>
               ))}
             </motion.div>
           </div>

@@ -223,11 +223,10 @@ const Footer = () => {
 
         {/* Bottom bar */}
         <div className="max-w-7xl mx-auto px-8 py-5 border-t border-outline-variant/10 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-[#8c909f]">© 2025 Nex Campus · Precision in Education</p>
+          <p className="text-xs text-[#8c909f]">© 2026 Nex Campus · Precision in Education</p>
           <p className="text-xs text-[#8c909f]">
-            Built with{' '}
-            <span className="text-red-400" aria-label="love">♥</span>
-            {' '}at CBIT Kolar
+            Built for{' '}
+            <span className="text-primary font-semibold">CBIT Kolar</span>
           </p>
         </div>
       </footer>
