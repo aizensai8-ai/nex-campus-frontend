@@ -22,14 +22,29 @@ import announcementRoutes from './routes/announcements.js';
 import userRoutes from './routes/users.js';
 import attendanceRoutes from './routes/attendance.js';
 import supportRoutes from './routes/support.js';
+import timetableRoutes from './routes/timetables.js';
+import transportRoutes from './routes/transport.js';
+import resourceRoutes from './routes/resources.js';
+import gradeRoutes from './routes/grades.js';
+import { seedTimetables } from './utils/seedTimetables.js';
+import { claimPort } from './utils/portManager.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Connect to MongoDB
 // ─────────────────────────────────────────────────────────────────────────────
-connectDB().catch((err) => {
-  console.error('❌  MongoDB connection failed:', err.message);
-  process.exit(1);
-});
+connectDB()
+  .then(() => {
+    seedTimetables();
+  })
+  .catch((err) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('⚠️  MongoDB unavailable; continuing in degraded local mode.');
+      return;
+    }
+
+    console.error('❌  MongoDB connection failed:', err.message);
+    process.exit(1);
+  });
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Express app
@@ -55,6 +70,8 @@ app.use(
     origin: (origin, callback) => {
       // Allow requests with no origin (curl, Postman, same-origin)
       if (!origin) return callback(null, true);
+      // Allow any ngrok domains dynamically
+      if (origin.includes('ngrok')) return callback(null, true);
       if (allowedOrigins.includes(origin)) return callback(null, true);
       callback(new Error(`CORS: origin '${origin}' not allowed`));
     },
@@ -89,12 +106,15 @@ app.use(passport.initialize());
 // ─────────────────────────────────────────────────────────────────────────────
 // Rate Limiters
 // ─────────────────────────────────────────────────────────────────────────────
+const isDev = process.env.NODE_ENV === 'development';
+
 const globalLimiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 min
-  max: parseInt(process.env.RATE_LIMIT_MAX) || 100,
+  max: parseInt(process.env.RATE_LIMIT_MAX) || 500,
   standardHeaders: true,
   legacyHeaders: false,
   message: { success: false, message: 'Too many requests — please try again later' },
+  skip: () => isDev,
 });
 
 const authLimiter = rateLimit({
@@ -104,6 +124,7 @@ const authLimiter = rateLimit({
   legacyHeaders: false,
   message: { success: false, message: 'Too many auth attempts — please wait 15 minutes' },
   skipSuccessfulRequests: true,
+  skip: () => isDev,
 });
 
 app.use('/api/', globalLimiter);
@@ -121,6 +142,10 @@ app.use('/api/announcements', announcementRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/support', supportRoutes);
+app.use('/api/timetables', timetableRoutes);
+app.use('/api/transport', transportRoutes);
+app.use('/api/resources', resourceRoutes);
+app.use('/api/grades', gradeRoutes);
 
 // ── Health check ──────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
@@ -143,12 +168,15 @@ app.use(errorHandler);
 // ─────────────────────────────────────────────────────────────────────────────
 // Start server
 // ─────────────────────────────────────────────────────────────────────────────
-const PORT = process.env.PORT || 5000;
+const DESIRED_PORT = parseInt(process.env.PORT, 10) || 5001;
+
+const PORT = await claimPort(DESIRED_PORT);
 
 const server = app.listen(PORT, () => {
+  const isOriginal = PORT === DESIRED_PORT;
   console.log(`\n🚀  Nex Campus API`);
-  console.log(`   Mode : ${process.env.NODE_ENV || 'development'}`);
-  console.log(`   Port : ${PORT}`);
+  console.log(`   Mode  : ${process.env.NODE_ENV || 'development'}`);
+  console.log(`   Port  : ${PORT}${isOriginal ? '' : `  (${DESIRED_PORT} was busy → auto-selected)`}`);
   console.log(`   Health: http://localhost:${PORT}/api/health\n`);
 });
 

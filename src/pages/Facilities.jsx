@@ -237,15 +237,15 @@ const Facilities = () => {
               <SpotlightCard
                 key={card._id ?? card.name}
                 {...staggerItem}
-                whileHover={{ y: -6, scale: 1.01, boxShadow: '0 24px 48px rgba(0,0,0,0.3)' }}
-                transition={{ duration: 0.3, ease: APPLE }}
-                className="flex-1 bg-surface-container-low rounded-xl border border-outline-variant/5 flex flex-col hover:bg-surface-container-high hover:border-primary/20 transition-colors duration-300 cursor-pointer group overflow-hidden"
+                whileHover={{ y: -8, scale: 1.01, boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
+                transition={{ duration: 0.5, ease: APPLE }}
+                className="flex-1 bg-surface-container-low rounded-xl border border-outline-variant/5 flex flex-col hover:bg-surface-container-high hover:border-primary/20 transition-colors duration-500 cursor-pointer group overflow-hidden"
               >
                 {/* Image / gradient header */}
-                <div className="w-full h-28 overflow-hidden flex-shrink-0">
+                <div className="w-full h-28 overflow-hidden flex-shrink-0 relative">
                   {card.image ? (
                     <img
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 ease-in-out group-hover:scale-105"
+                      className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 ease-in-out"
                       src={card.image}
                       alt={card.name}
                     />

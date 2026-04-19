@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Added by code-review-graph
+.code-review-graph/
+
+# Runtime port negotiation file (written by server on startup)
+server/.port

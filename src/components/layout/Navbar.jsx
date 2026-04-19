@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { label: 'Events', path: '/events' },
   { label: 'Courses', path: '/courses' },
   { label: 'Facilities', path: '/facilities' },
+  { label: 'Campus Map', path: '/campus-map' },
   { label: 'Support', path: '/support' },
 ];
 

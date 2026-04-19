@@ -1,18 +1,25 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install:*)",
-      "Bash(npm search:*)",
-      "Bash(npm run:*)",
-      "Bash(node -e ':*)",
-      "Bash(node utils/seedData.js)",
-      "Bash(curl -s http://localhost:5000/api/courses)",
-      "Bash(node -e \"const d=JSON.parse\\(require\\('fs'\\).readFileSync\\('/dev/stdin','utf8'\\)\\); console.log\\('success:', d.success, '| count:', d.data?.length ?? 'N/A', '| first:', d.data?.[0]?.name\\)\")",
-      "Bash(node server/utils/seedData.js)",
-      "Bash(node:*)",
-      "Bash(npx --yes vite build --mode development)",
-      "Bash(xargs grep:*)",
-      "Bash(xargs ls:*)"
+      "Bash(npm --version)",
+      "Bash(npm run *)",
+      "Bash(node --check server.js)",
+      "Bash(node -e \"import\\('./server.js'\\).then\\(\\(\\) => console.log\\('OK'\\)\\).catch\\(e => console.error\\(e.message\\)\\)\")",
+      "Bash(kill %1)",
+      "Bash(node -e ' *)",
+      "Bash(node --check routes/auth.js)",
+      "Bash(node --check routes/users.js)",
+      "Bash(node --check routes/grades.js)",
+      "Bash(node --check routes/timetables.js)",
+      "Bash(node --check routes/transport.js)",
+      "Bash(node --check utils/seedData.js utils/seedTimetables.js utils/offlineAuth.js middleware/auth.js middleware/errorHandler.js config/db.js models/User.js models/Grade.js models/Resource.js models/Timetable.js models/Transport.js)",
+      "Bash(npx tsc *)",
+      "Bash(node --check utils/portManager.js)",
+      "Bash(node --input-type=module)",
+      "Bash(node server.js)",
+      "Bash(npx nodemon *)",
+      "Bash(echo \"exit:$?\")",
+      "Bash(git add *)"
     ]
   }
 }

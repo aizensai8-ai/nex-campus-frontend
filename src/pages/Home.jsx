@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { fadeUpBlur, staggerContainer, staggerItem, pageTransition } from '../lib/animations';
 import api from '../lib/api';
@@ -177,6 +177,12 @@ const Home = () => {
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const heroRef = useRef(null);
 
+  // Parallax scroll physics
+  const { scrollY } = useScroll();
+  const heroY = useTransform(scrollY, [0, 500], [0, 150]);
+  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const terminalY = useTransform(scrollY, [0, 500], [0, -50]);
+
   useEffect(() => {
     // If logged in, fetch actual attendance. Else fetch generic stats.
     if (user) {
@@ -211,7 +217,7 @@ const Home = () => {
       {/* ─── Hero ─── */}
       <section
         ref={heroRef}
-        className="relative pt-24 pb-32 px-6 overflow-hidden"
+        className="relative pt-32 pb-40 px-8 overflow-hidden"
         onMouseMove={(e) => {
           const r = heroRef.current?.getBoundingClientRect();
           if (r) setCursorPos({ x: e.clientX - r.left, y: e.clientY - r.top });
@@ -226,7 +232,10 @@ const Home = () => {
           aria-hidden="true"
         />
 
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+        <motion.div 
+          style={{ y: heroY, opacity: heroOpacity }}
+          className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10"
+        >
           <div className="lg:col-span-7 space-y-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -264,7 +273,7 @@ const Home = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.35 }}
-              className="text-xl text-on-surface-variant max-w-xl leading-relaxed"
+              className="text-xl text-on-surface-variant max-w-xl leading-relaxed font-body"
             >
               Smart campus platform for CBIT Kolar. Track attendance, view timetables, access study materials, and stay connected with campus life.
             </motion.p>
@@ -283,7 +292,7 @@ const Home = () => {
               </button>
             </motion.div>
           </div>
-          <div className="lg:col-span-5 relative">
+          <motion.div style={{ y: terminalY }} className="lg:col-span-5 relative">
              <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -293,8 +302,8 @@ const Home = () => {
             </motion.div>
             <div className="absolute -top-10 -right-10 w-64 h-64 bg-primary/10 blur-[100px] -z-10 rounded-full"></div>
             <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-secondary/10 blur-[100px] -z-10 rounded-full"></div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       <SectionDivider />
@@ -311,14 +320,14 @@ const Home = () => {
           </motion.div>
           <motion.div
             {...staggerContainer}
-            className="grid grid-cols-1 md:grid-cols-12 grid-rows-2 gap-6 h-auto lg:h-[700px]"
+            className="grid grid-cols-1 md:grid-cols-12 gap-6"
           >
             {/* Large Bento Item */}
             <SpotlightCard
               {...staggerItem}
               whileHover={{ y: -6, scale: 1.01 }}
               transition={{ duration: 0.25, ease: APPLE }}
-              className="relative md:col-span-8 bg-surface-container-lowest rounded-xl overflow-hidden ghost-border flex flex-col hover:shadow-2xl hover:shadow-black/40 hover:border-primary/50 transition-all duration-300"
+              className="relative md:col-span-8 bg-surface-container-high rounded-xl overflow-hidden ghost-border flex flex-col hover:shadow-2xl hover:shadow-black/40 hover:border-primary/50 transition-all duration-300"
             >
               <div
                 className="pointer-events-none absolute inset-0 z-[1]"
@@ -331,18 +340,18 @@ const Home = () => {
               />
               <div className="p-10 relative z-10 flex-1">
                 <span className="material-symbols-outlined text-primary mb-6 text-4xl">architecture</span>
-                <h3 className="text-3xl font-bold tracking-tight mb-4 text-white">Unified Infrastructure</h3>
+                <h3 className="text-4xl font-bold tracking-tight mb-4 text-white">Unified Infrastructure</h3>
                 <p className="text-on-surface-variant text-lg max-w-md">Real-time synchronization across every department, facility, and student touchpoint.</p>
               </div>
-              <div className="mt-auto flex-1 bg-gradient-to-t from-primary/5 to-transparent flex items-end justify-center px-8 pb-6 pt-2 gap-3">
+              <div className="flex-shrink-0 w-full bg-gradient-to-t from-primary/5 to-transparent flex items-end justify-center px-8 pb-8 pt-4 gap-4 z-10">
                 {[{ label: 'Courses', val: stats.courses, color: 'text-secondary', icon: 'school' },
                   { label: 'Events',  val: stats.events,  color: 'text-primary',   icon: 'event' },
                   { label: 'Facilities', val: stats.facilities, color: 'text-tertiary', icon: 'domain' },
                 ].map(({ label, val, color, icon }) => (
-                  <div key={label} className="flex-1 bg-surface-container-high rounded-xl p-4 ghost-border flex flex-col items-center gap-2">
+                  <div key={label} className="flex-1 bg-surface-container py-4 px-2 ghost-border flex flex-col items-center gap-1 rounded-xl">
                     <span className={`material-symbols-outlined ${color} text-2xl`} style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
-                    <p className={`font-berkeley-mono text-2xl font-bold ${color}`}>{val !== null ? val : '—'}</p>
-                    <p className="text-[10px] text-outline uppercase tracking-widest">{label}</p>
+                    <p className={`font-berkeley-mono text-3xl font-bold ${color} leading-none mt-1`}>{val !== null ? val : '—'}</p>
+                    <p className="text-[10px] text-outline uppercase tracking-widest mt-1">{label}</p>
                   </div>
                 ))}
               </div>
@@ -357,10 +366,10 @@ const Home = () => {
             >
               <div className="relative z-[1] h-full flex flex-col">
                 <span className="material-symbols-outlined text-secondary mb-4 text-3xl">bolt</span>
-                <h3 className="text-2xl font-bold tracking-tight mb-2">Instant Operations</h3>
-                <p className="text-on-surface-variant mb-8">Deploy resources with zero latency. If it happens on campus, it happens in Nex.</p>
+                <h3 className="text-3xl font-bold tracking-tight mb-2 text-white">Instant Operations</h3>
+                <p className="text-on-surface-variant mb-8 text-lg">Deploy resources with zero latency. If it happens on campus, it happens in Nex.</p>
                 <div className="mt-auto space-y-4">
-                  <div className="bg-surface-container-lowest p-4 rounded-lg ghost-border">
+                  <div className="bg-surface-container p-4 rounded-lg ghost-border">
                     <div className="flex justify-between mb-2">
                       <span className="text-xs font-berkeley-mono text-outline">CPU LOAD</span>
                       <span className="text-xs font-berkeley-mono text-primary">12%</span>
@@ -369,7 +378,7 @@ const Home = () => {
                       <div className="bg-primary h-full w-[12%]"></div>
                     </div>
                   </div>
-                  <div className="bg-surface-container-lowest p-4 rounded-lg ghost-border">
+                  <div className="bg-surface-container p-4 rounded-lg ghost-border">
                     <div className="flex justify-between mb-2">
                       <span className="text-xs font-berkeley-mono text-outline">NETWORK</span>
                       <span className="text-xs font-berkeley-mono text-secondary">STABLE</span>
@@ -393,8 +402,8 @@ const Home = () => {
               className="md:col-span-5 bg-surface-container-high rounded-xl p-8 ghost-border flex items-center gap-6 hover:shadow-2xl hover:shadow-black/40 hover:border-primary/10 transition-all duration-300"
             >
               <div className="w-1/2">
-                <h3 className="text-xl font-bold tracking-tight mb-2">Smart Facilities</h3>
-                <p className="text-sm text-on-surface-variant">IoT-enabled room booking and maintenance.</p>
+                <h3 className="text-3xl font-bold tracking-tight mb-2 text-white">Smart Facilities</h3>
+                <p className="text-lg text-on-surface-variant">IoT-enabled room booking and maintenance.</p>
               </div>
               <div className="w-1/2 h-32 bg-gradient-to-br from-emerald-900/60 to-teal-900/30 rounded-lg overflow-hidden flex items-center justify-center">
                 <span className="material-symbols-outlined text-white/20 text-6xl" style={{ fontVariationSettings: "'FILL' 1" }}>domain</span>
@@ -406,14 +415,14 @@ const Home = () => {
               {...staggerItem}
               whileHover={{ y: -6, scale: 1.01 }}
               transition={{ duration: 0.25, ease: APPLE }}
-              className="md:col-span-7 bg-primary text-on-primary rounded-xl p-8 flex justify-between items-center overflow-hidden group hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300"
+              className="md:col-span-7 bg-surface-container-high text-white rounded-xl p-8 flex justify-between items-center overflow-hidden ghost-border group hover:shadow-2xl hover:shadow-black/40 hover:border-primary/10 transition-all duration-300"
             >
               <div className="relative z-10">
-                <h3 className="text-2xl font-bold tracking-tight mb-2">Academic Core</h3>
-                <p className="text-on-primary/80 max-w-xs">Track progress, manage courses, and facilitate research in one fluid view.</p>
+                <h3 className="text-3xl font-bold tracking-tight mb-2 text-white">Academic Core</h3>
+                <p className="text-on-surface-variant max-w-xs text-lg">Track progress, manage courses, and facilitate research in one fluid view.</p>
               </div>
               <span className="material-symbols-outlined text-8xl opacity-10 absolute -right-4 -bottom-4 rotate-12 group-hover:rotate-0 transition-transform duration-500" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
-              <button onClick={() => navigate('/portal')} className="btn-ripple relative z-[1] bg-on-primary text-primary px-6 py-3 rounded-lg font-bold hover:bg-white hover:scale-[1.02] active:scale-[0.97] transition-all duration-200">Launch Core</button>
+              <button onClick={() => navigate('/portal')} className="btn-ripple relative z-[1] bg-primary text-on-primary px-6 py-3 rounded-lg font-bold hover:brightness-110 hover:scale-[1.02] active:scale-[0.97] transition-all duration-200">Launch Core</button>
             </SpotlightCard>
           </motion.div>
         </div>
@@ -556,23 +565,39 @@ const Home = () => {
             >
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4 pt-12">
-                  <div className="rounded-xl ghost-border w-full aspect-[3/4] bg-gradient-to-br from-blue-900/60 to-indigo-900/30 grayscale hover:grayscale-0 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 ease-in-out flex flex-col items-center justify-center gap-3">
-                    <span className="material-symbols-outlined text-white/20 text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_library</span>
-                    <p className="text-[10px] font-berkeley-mono text-white/30 uppercase tracking-widest">Library</p>
+                  <div className="rounded-xl shadow-lg relative group overflow-hidden w-full aspect-[3/4] bg-surface-container flex flex-col items-center justify-center gap-3">
+                    <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600&h=400&fit=crop" alt="Library" className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:-translate-y-2 group-hover:shadow-2xl transition-all duration-500 ease-in-out" />
+                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-500 z-10 pointer-events-none" />
+                    <div className="relative z-20 flex flex-col items-center gap-2 pointer-events-none">
+                      <span className="material-symbols-outlined text-white text-5xl drop-shadow-lg" style={{ fontVariationSettings: "'FILL' 1" }}>local_library</span>
+                      <p className="text-[10px] font-berkeley-mono text-white uppercase tracking-widest font-bold drop-shadow-md">Library</p>
+                    </div>
                   </div>
-                  <div className="rounded-xl ghost-border w-full aspect-video bg-gradient-to-br from-emerald-900/60 to-teal-900/30 grayscale hover:grayscale-0 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 ease-in-out flex flex-col items-center justify-center gap-3">
-                    <span className="material-symbols-outlined text-white/20 text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>science</span>
-                    <p className="text-[10px] font-berkeley-mono text-white/30 uppercase tracking-widest">Eng Lab</p>
+                  <div className="rounded-xl shadow-lg relative group overflow-hidden w-full aspect-video bg-surface-container flex flex-col items-center justify-center gap-3">
+                    <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop" alt="CS Lab" className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:-translate-y-2 group-hover:shadow-2xl transition-all duration-500 ease-in-out" />
+                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-500 z-10 pointer-events-none" />
+                    <div className="relative z-20 flex flex-col items-center gap-2 pointer-events-none">
+                      <span className="material-symbols-outlined text-white text-5xl drop-shadow-lg" style={{ fontVariationSettings: "'FILL' 1" }}>science</span>
+                      <p className="text-[10px] font-berkeley-mono text-white uppercase tracking-widest font-bold drop-shadow-md">CS Lab</p>
+                    </div>
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div className="rounded-xl ghost-border w-full aspect-square bg-gradient-to-br from-purple-900/60 to-violet-900/30 grayscale hover:grayscale-0 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 ease-in-out flex flex-col items-center justify-center gap-3">
-                    <span className="material-symbols-outlined text-white/20 text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
-                    <p className="text-[10px] font-berkeley-mono text-white/30 uppercase tracking-widest">Social Hub</p>
+                  <div className="rounded-xl shadow-lg relative group overflow-hidden w-full aspect-square bg-surface-container flex flex-col items-center justify-center gap-3">
+                    <img src="https://images.unsplash.com/photo-1572204292164-b35ba943fca7?w=600&h=400&fit=crop" alt="Social Hub" className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:-translate-y-2 group-hover:shadow-2xl transition-all duration-500 ease-in-out" />
+                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-500 z-10 pointer-events-none" />
+                    <div className="relative z-20 flex flex-col items-center gap-2 pointer-events-none">
+                      <span className="material-symbols-outlined text-white text-5xl drop-shadow-lg" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
+                      <p className="text-[10px] font-berkeley-mono text-white uppercase tracking-widest font-bold drop-shadow-md">Social Hub</p>
+                    </div>
                   </div>
-                  <div className="rounded-xl ghost-border w-full aspect-[3/4] bg-gradient-to-br from-amber-900/60 to-orange-900/30 grayscale hover:grayscale-0 hover:scale-105 hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 ease-in-out flex flex-col items-center justify-center gap-3">
-                    <span className="material-symbols-outlined text-white/20 text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>storage</span>
-                    <p className="text-[10px] font-berkeley-mono text-white/30 uppercase tracking-widest">Data Center</p>
+                  <div className="rounded-xl shadow-lg relative group overflow-hidden w-full aspect-[3/4] bg-surface-container flex flex-col items-center justify-center gap-3">
+                    <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&h=400&fit=crop" alt="Data Center" className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:-translate-y-2 group-hover:shadow-2xl transition-all duration-500 ease-in-out" />
+                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-500 z-10 pointer-events-none" />
+                    <div className="relative z-20 flex flex-col items-center gap-2 pointer-events-none">
+                      <span className="material-symbols-outlined text-white text-5xl drop-shadow-lg" style={{ fontVariationSettings: "'FILL' 1" }}>storage</span>
+                      <p className="text-[10px] font-berkeley-mono text-white uppercase tracking-widest font-bold drop-shadow-md">Data Center</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -596,7 +621,7 @@ const Home = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide no-scrollbar"
+          className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide no-scrollbar mask-fade-y"
         >
           {upcomingEvents.length === 0
             ? Array.from({ length: 4 }).map((_, i) => (
@@ -625,11 +650,18 @@ const Home = () => {
               className="flex-shrink-0 w-80 bg-surface-container-high rounded-xl overflow-hidden ghost-border group cursor-pointer hover:shadow-2xl hover:shadow-black/30 hover:border-primary/10 transition-all duration-300"
               onClick={() => navigate('/events')}
             >
-              <div className={`h-40 relative overflow-hidden bg-gradient-to-br ${gradient} flex items-center justify-center grayscale group-hover:grayscale-0 transition-all duration-500 ease-in-out`}>
-                <span className="material-symbols-outlined text-white/20 text-8xl" style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
-                <div className="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-berkeley-mono px-2 py-1 rounded">{dateLabel}</div>
+              <div className={`h-40 relative overflow-hidden bg-surface-container-lowest flex items-center justify-center grayscale group-hover:grayscale-0 transition-all duration-500 ease-in-out`}>
+                {event.image ? (
+                  <img src={event.image} alt={event.title} className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 ease-in-out group-hover:-translate-y-2 group-hover:shadow-2xl" />
+                ) : (
+                  <div className={`absolute inset-0 bg-gradient-to-br ${gradient} flex items-center justify-center opacity-80 backdrop-blur`}>
+                    <span className="material-symbols-outlined text-white/20 text-8xl" style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-all duration-500 z-10 pointer-events-none" />
+                <div className="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-berkeley-mono px-2 py-1 rounded shadow-lg z-20">{dateLabel}</div>
                 {event.status === 'past' && (
-                  <div className="absolute top-4 right-4 bg-surface-container-high/80 text-outline text-[10px] font-mono px-2 py-0.5 rounded uppercase">Past</div>
+                  <div className="absolute top-4 right-4 bg-surface-container-highest/90 text-on-surface-variant text-[10px] font-mono px-2 py-1 rounded-sm uppercase tracking-widest border border-outline-variant/30 backdrop-blur-sm shadow-md z-20">Past</div>
                 )}
               </div>
               <div className="p-6">

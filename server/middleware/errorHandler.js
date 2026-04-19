@@ -2,9 +2,16 @@
 const errorHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
+  const isDbUnavailable =
+    /buffering timed out/i.test(message) ||
+    /server selection timed out/i.test(message) ||
+    err.name === 'MongoNetworkError' ||
+    err.name === 'MongoServerSelectionError';
 
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' && !isDbUnavailable) {
     console.error('[ERROR]', err.stack);
+  } else if (isDbUnavailable && process.env.NODE_ENV === 'development') {
+    console.warn('[WARN] MongoDB temporarily unavailable:', message);
   }
 
   // ── Mongoose: invalid ObjectId ─────────────────────────────────────────────
@@ -38,6 +45,11 @@ const errorHandler = (err, req, res, next) => {
   if (err.name === 'TokenExpiredError') {
     statusCode = 401;
     message = 'Token expired — please log in again';
+  }
+
+  if (isDbUnavailable) {
+    statusCode = 503;
+    message = 'Database temporarily unavailable. Please try again in a moment.';
   }
 
   res.status(statusCode).json({

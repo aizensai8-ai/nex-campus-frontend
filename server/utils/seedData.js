@@ -549,6 +549,7 @@ const events = [
     featured: true,
     organizer: 'AIMAN Club',
     tags: ['Hackathon', 'Web Dev', 'AIMAN'],
+    image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&h=400&fit=crop',
   },
   {
     title: '4th Internals Examination',
@@ -563,6 +564,7 @@ const events = [
     featured: false,
     organizer: 'Examination Cell, CBIT Kolar',
     tags: ['Exams', 'Internals', 'Assessment'],
+    image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=400&fit=crop',
   },
   {
     title: 'Annual Sports Meet 2026',
@@ -577,6 +579,7 @@ const events = [
     featured: false,
     organizer: 'Physical Education Department',
     tags: ['Sports', 'Athletics', 'Inter-Department'],
+    image: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=600&h=400&fit=crop',
   },
   {
     title: 'Food Court Festival',
@@ -591,6 +594,7 @@ const events = [
     featured: false,
     organizer: 'Student Cultural Committee',
     tags: ['Food', 'Cultural', 'Festival'],
+    image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&h=400&fit=crop',
   },
 ];
 
@@ -608,7 +612,7 @@ const facilities = [
     status: 'open',
     type: 'library',
     featured: true,
-    image: '/images/library.jpg',
+    image: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600&h=400&fit=crop',
     amenities: ['Study Zones', 'Digital Catalog', 'Photocopier', 'Reference Section', 'Journals'],
   },
   {
@@ -620,7 +624,7 @@ const facilities = [
     currentOccupancy: 0,
     status: 'open',
     type: 'lab',
-    image: '/images/cs-lab.jpg',
+    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop',
     amenities: ['Desktop PCs', 'JDK', 'Eclipse IDE', 'Wi-Fi', 'Projector'],
   },
   {
@@ -632,7 +636,7 @@ const facilities = [
     currentOccupancy: 0,
     status: 'open',
     type: 'lab',
-    image: '/images/physics-lab.jpg',
+    image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&h=400&fit=crop',
     amenities: ['Optical Instruments', 'Measurement Tools', 'Experiment Kits'],
   },
   {
@@ -644,7 +648,7 @@ const facilities = [
     currentOccupancy: 0,
     status: 'open',
     type: 'lab',
-    image: '/images/chemistry-lab.jpg',
+    image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600&h=400&fit=crop',
     amenities: ['Fume Hood', 'Spectrophotometer', 'Chemical Reagents', 'Safety Equipment'],
   },
   {
@@ -656,7 +660,7 @@ const facilities = [
     currentOccupancy: 40,
     status: 'open',
     type: 'canteen',
-    image: '/images/canteen.jpg',
+    image: 'https://images.unsplash.com/photo-1567521464027-f127ff144326?w=600&h=400&fit=crop',
     amenities: ['Hot Meals', 'Snacks', 'Beverages', 'Outdoor Seating'],
     menuItems: [
       { name: 'Parota Plate', price: 40, description: '2 parotas served hot' },
@@ -675,7 +679,7 @@ const facilities = [
     currentOccupancy: 0,
     status: 'open',
     type: 'auditorium',
-    image: '/images/auditorium.jpg',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop',
     bookingRequired: true,
     amenities: ['AC', 'Stage', 'PA System', 'Projector Screen', 'Green Room'],
   },
@@ -688,7 +692,7 @@ const facilities = [
     currentOccupancy: 30,
     status: 'open',
     type: 'sports',
-    image: '/images/sports-ground.jpg',
+    image: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=400&fit=crop',
     amenities: ['Cricket Pitch', 'Football Field', 'Volleyball Court', 'Outdoor Gym'],
   },
   {
@@ -700,7 +704,7 @@ const facilities = [
     currentOccupancy: 0,
     status: 'open',
     type: 'shop',
-    image: '/images/stationery.jpg',
+    image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop',
     amenities: ['Record Books', 'Assignment Books', 'Lab Manuals', 'Pens', 'Graph Sheets'],
   },
   {
@@ -712,7 +716,7 @@ const facilities = [
     currentOccupancy: 160,
     status: 'open',
     type: 'hostel',
-    image: '/images/hostel.jpg',
+    image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=600&h=400&fit=crop',
     amenities: ['Mess Hall', 'Study Rooms', 'Wi-Fi', 'Laundry', '24/7 Security'],
   },
   {
@@ -724,7 +728,7 @@ const facilities = [
     currentOccupancy: 20,
     status: 'open',
     type: 'recreation',
-    image: '/images/garden.jpg',
+    image: 'https://images.unsplash.com/photo-1572204292164-b35ba943fca7?w=600&h=400&fit=crop',
     amenities: ['Benches', 'Shade', 'Open Air', 'Wi-Fi (partial)'],
   },
   {
@@ -736,6 +740,7 @@ const facilities = [
     currentOccupancy: 0,
     status: 'open',
     type: 'lab',
+    image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&h=400&fit=crop',
     amenities: ['Desktop PCs', 'GCC Compiler', 'Code::Blocks', 'Wi-Fi'],
   },
   {
@@ -747,6 +752,7 @@ const facilities = [
     currentOccupancy: 0,
     status: 'open',
     type: 'lab',
+    image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop',
     amenities: ['TeX Live', 'Overleaf Access', 'TeXstudio', 'Wi-Fi'],
   },
 ];

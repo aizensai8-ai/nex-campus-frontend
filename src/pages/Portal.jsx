@@ -1,9 +1,10 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fadeUpBlur, staggerContainer, staggerItem, pageTransition } from '../lib/animations';
+import { pageTransition, staggerContainer, staggerItem, fadeUpBlur } from '../lib/animations';
 import { useAuth } from '../context/AuthContext';
 import api from '../lib/api';
+import { CommuteDashboard, LibraryDashboard, AcademicsDashboard } from '../components/PortalModules';
 
 const APPLE = [0.22, 1, 0.36, 1];
 
@@ -36,229 +37,7 @@ const SpotlightCard = ({ children, className = '', ...rest }) => {
   );
 };
 
-// ── Timetable data ────────────────────────────────────────────────────────────
-const TIMETABLE_4C = {
-  Mon: [
-    { time: '9:00–9:55',   sub: 'MC' },
-    { time: '9:55–10:50',  sub: 'LATEX',    note: 'Individual' },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'DBMS' },
-    { time: '12:05–1:00',  sub: 'ADA' },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'ADA/LATEX', note: 'C1/C2' },
-    { time: '2:30–3:20',   sub: null },
-    { time: '3:20–4:10',   sub: 'PROCTOR' },
-  ],
-  Tue: [
-    { time: '9:00–9:55',   sub: 'BIO' },
-    { time: '9:55–10:50',  sub: 'DBMS' },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–1:00',  sub: 'MC/DBMS',  note: 'C1/C2', span: true },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'MATHS' },
-    { time: '2:30–3:20',   sub: 'Jargon',   note: 'Technical' },
-    { time: '3:20–4:10',   sub: 'TECHNICAL' },
-  ],
-  Wed: [
-    { time: '9:00–10:50',  sub: 'LATEX/ADA', note: 'C1/C2', span: true },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'MC' },
-    { time: '12:05–1:00',  sub: 'ADA' },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'DBMS' },
-    { time: '2:30–3:20',   sub: 'MATHS' },
-    { time: '3:20–4:10',   sub: 'LIBRARY' },
-  ],
-  Thu: [
-    { time: '9:00–9:55',   sub: 'MATHS' },
-    { time: '9:55–10:50',  sub: 'MC' },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'UHV' },
-    { time: '12:05–1:00',  sub: 'ADA',      note: 'Individual' },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'DBMS',     note: 'Individual' },
-    { time: '2:30–3:20',   sub: null },
-    { time: '3:20–4:10',   sub: 'SPORTS/CUL' },
-  ],
-  Fri: [
-    { time: '9:00–9:55',   sub: 'MC',       note: 'Individual' },
-    { time: '9:55–10:50',  sub: null },
-    { time: '10:50–11:10', sub: 'BIO' },
-    { time: '11:10–12:05', sub: 'ADA' },
-    { time: '12:05–1:00',  sub: 'MATHS' },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'DBMS/MC',  note: 'C1/C2' },
-    { time: '2:30–3:20',   sub: null },
-    { time: '3:20–4:10',   sub: 'TUTORIAL' },
-  ],
-  Sat: [
-    { time: '9:00–9:55',   sub: 'ADA' },
-    { time: '9:55–10:50',  sub: 'DBMS' },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'MATHS' },
-    { time: '12:05–1:00',  sub: 'MC' },
-  ],
-};
-
-const TIMETABLE_4B = {
-  Mon: [
-    { time: '9:00–9:55',   sub: 'MATHS' },
-    { time: '9:55–10:50',  sub: 'ADA' },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'MC' },
-    { time: '12:05–1:00',  sub: 'DBMS' },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'MC/DBMS',  note: 'B1/B2' },
-    { time: '2:30–3:20',   sub: null },
-    { time: '3:20–4:10',   sub: 'PROCTOR' },
-  ],
-  Tue: [
-    { time: '9:00–10:50',  sub: 'ADA/LATEX', note: 'B1/B2', span: true },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'DBMS' },
-    { time: '12:05–1:00',  sub: 'MATHS' },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'UHV' },
-    { time: '2:30–3:20',   sub: 'Jargon',   note: 'Technical' },
-    { time: '3:20–4:10',   sub: 'TECHNICAL' },
-  ],
-  Wed: [
-    { time: '9:00–9:55',   sub: 'MC' },
-    { time: '9:55–10:50',  sub: 'ADA' },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'BIO' },
-    { time: '12:05–1:00',  sub: 'DBMS',     note: 'Individual' },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'LATEX/ADA', note: 'B1/B2' },
-    { time: '2:30–3:20',   sub: null },
-    { time: '3:20–4:10',   sub: 'LIBRARY' },
-  ],
-  Thu: [
-    { time: '9:00–10:50',  sub: 'DBMS/MC',  note: 'B1/B2', span: true },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'BIO' },
-    { time: '12:05–1:00',  sub: 'MC' },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'MATHS' },
-    { time: '2:30–3:20',   sub: null },
-    { time: '3:20–4:10',   sub: 'SPORTS/CUL' },
-  ],
-  Fri: [
-    { time: '9:00–9:55',   sub: 'DBMS' },
-    { time: '9:55–10:50',  sub: 'ADA',      note: 'Individual' },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'MC',       note: 'Individual' },
-    { time: '12:05–1:00',  sub: 'ADA' },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'MATHS' },
-    { time: '2:30–3:20',   sub: 'LATEX',    note: 'Individual' },
-    { time: '3:20–4:10',   sub: 'TUTORIAL' },
-  ],
-  Sat: [
-    { time: '9:00–9:55',   sub: 'MC' },
-    { time: '9:55–10:50',  sub: 'MATHS' },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'ADA' },
-    { time: '12:05–1:00',  sub: 'DBMS' },
-  ],
-};
-
-const TIMETABLE_6B = {
-  Mon: [
-    { time: '9:00–10:50',  sub: 'CC/ML',    note: 'B1/B2', span: true },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'ML' },
-    { time: '12:05–1:00',  sub: 'CC' },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'ML' },
-    { time: '2:30–3:20',   sub: 'IWM' },
-    { time: '3:20–4:10',   sub: 'PROCTOR' },
-  ],
-  Tue: [
-    { time: '9:00–9:55',   sub: 'BC' },
-    { time: '9:55–10:50',  sub: 'ML',       note: 'Individual' },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'IKS' },
-    { time: '12:05–1:00',  sub: 'ML' },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'CC' },
-    { time: '2:30–3:20',   sub: null },
-    { time: '3:20–4:10',   sub: 'TECHNICAL' },
-  ],
-  Wed: [
-    { time: '9:00–9:55',   sub: 'IWM' },
-    { time: '9:55–10:50',  sub: 'ML' },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'BC' },
-    { time: '12:05–1:00',  sub: 'CC' },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'ML/DEVOPS', note: 'B1/B2' },
-    { time: '2:30–3:20',   sub: null },
-    { time: '3:20–4:10',   sub: 'LIBRARY' },
-  ],
-  Thu: [
-    { time: '9:00–10:50',  sub: 'DEVOPS/CC', note: 'B1/B2', span: true },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'CC',       note: 'Individual' },
-    { time: '12:05–1:00',  sub: 'IWM' },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'BC' },
-    { time: '2:30–3:20',   sub: null },
-    { time: '3:20–4:10',   sub: 'SPORTS/CUL' },
-  ],
-  Fri: [
-    { time: '9:00–9:55',   sub: 'ML' },
-    { time: '9:55–10:50',  sub: 'BC' },
-    { time: '10:50–11:10', sub: 'BREAK',    type: 'break' },
-    { time: '11:10–12:05', sub: 'IWM' },
-    { time: '12:05–1:00',  sub: 'DEVOPS',   note: 'Individual' },
-    { time: '1:00–1:40',   sub: 'LUNCH',    type: 'lunch' },
-    { time: '1:40–2:30',   sub: 'CC' },
-    { time: '2:30–3:20',   sub: 'Jargon',   note: 'Technical' },
-    { time: '3:20–4:10',   sub: 'TUTORIAL' },
-  ],
-  Sat: [
-    { time: '9:00–1:00',   sub: 'PROJECT',  note: 'Project Phase 1', span: true },
-  ],
-};
-
-const TIMETABLES = { '4C': TIMETABLE_4C, '4B': TIMETABLE_4B, '6B': TIMETABLE_6B };
-
-const SECTION_META = {
-  '4C': { room: 'Room 301', classTeacher: 'Prof. Pavithra L', proctor: 'Prof. Kavitha N · Prof. Ayesha Sana' },
-  '4B': { room: 'Room 311', classTeacher: 'Prof. Vanishree',   proctor: 'Prof. Vanishree' },
-  '6B': { room: 'Room TR-1', classTeacher: 'Prof. Swathi J K', proctor: 'Prof. Swathi J K · Prof. Malashree N' },
-};
-
-const SECTION_TEACHERS = {
-  '4C': {
-    ADA: 'Prof. Pavithra L',       'ADA/LATEX': 'Prof. Pavithra L (C1) / Prof. Sheela S (C2)',
-    'LATEX/ADA': 'Prof. Sheela S (C1) / Prof. Pavithra L (C2)',
-    MC:  'Prof. Nandini A',        'MC/DBMS':  'Prof. Nandini A (C1) / Prof. Manjunath Singh H (C2)',
-    DBMS:'Prof. Manjunath Singh H','DBMS/MC':  'Prof. Manjunath Singh H (C1) / Prof. Nandini A (C2)',
-    MATHS:'Prof. Pavithra H V',    LATEX: 'Prof. Sheela S',
-    BIO: 'Prof. Monica M',         UHV:   'Prof. Ayesha Sana',
-    NSS: 'Prof. Manjunath Singh H',PROCTOR:'Prof. Kavitha N, Prof. Ayesha Sana',
-  },
-  '4B': {
-    ADA: 'Dr. Vasudeva R',         'ADA/LATEX': 'Dr. Vasudeva R (B1) / Prof. Sarika C G (B2)',
-    'LATEX/ADA': 'Prof. Sarika C G (B1) / Dr. Vasudeva R (B2)',
-    MC:  'Prof. Vanishree',        'MC/DBMS':  'Prof. Vanishree (B1) / Prof. Anitha P (B2)',
-    DBMS:'Prof. Anitha P',         'DBMS/MC':  'Prof. Anitha P (B1) / Prof. Vanishree (B2)',
-    MATHS:'Prof. Nagaraj S A',     LATEX: 'Prof. Sarika C G',
-    BIO: 'Prof. Monica',           UHV:   'Prof. Anitha P',
-    NSS: 'Prof. Manjunath Singh H',PROCTOR:'Prof. Vanishree',
-  },
-  '6B': {
-    CC:  'Prof. Swathi J K',       'CC/ML':    'Prof. Swathi J K (B1) / Prof. Sagar G S (B2)',
-    ML:  'Prof. Sagar G S',        'ML/DEVOPS':'Prof. Sagar G S (B1) / Prof. Sheela S (B2)',
-    BC:  'Prof. Malashree N',      IWM:   'Prof. Arun Kumar P',
-    DEVOPS:'Prof. Sheela S',       'DEVOPS/CC':'Prof. Sheela S (B1) / Prof. Swathi J K (B2)',
-    PROJECT:'Dr. Vasudeva R & Prof. Kavitha N',
-    NSS: 'Prof. Manjunath Singh H',IKS:   'Prof. Vanishree',
-    PROCTOR:'Prof. Swathi J K, Prof. Malashree N',
-  },
-};
+// Removed static timetable definitions here as they are now loaded from the backend
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 // JS getDay(): 0=Sun,1=Mon,...,6=Sat → index 0=Mon
@@ -329,10 +108,11 @@ const Ring = ({ percent, size = 56, strokeW = 5 }) => {
 };
 
 // ── Section Timetable Component ───────────────────────────────────────────────
-const SectionTimetable = ({ timetable, sectionKey }) => {
-  const maxSlots = Math.max(...DAYS.map((d) => (timetable[d] || []).length));
-  const meta     = SECTION_META[sectionKey]     || {};
-  const teachers = SECTION_TEACHERS[sectionKey] || {};
+const SectionTimetable = ({ timetable }) => {
+  const meta = timetable?.meta || {};
+  const teachers = timetable?.teachers || {};
+  const daysData = timetable?.days || {};
+  const maxSlots = Math.max(0, ...DAYS.map((d) => (daysData[d] || []).length));
 
   return (
     <div>
@@ -356,7 +136,7 @@ const SectionTimetable = ({ timetable, sectionKey }) => {
         </div>
       )}
 
-      <div className="overflow-x-auto -mx-2 px-2">
+      <div className="overflow-x-auto pb-4 mask-fade-y hide-scrollbar">
         <table className="w-full min-w-[700px] border-collapse text-sm">
           <thead>
             <tr>
@@ -380,14 +160,23 @@ const SectionTimetable = ({ timetable, sectionKey }) => {
           </thead>
           <tbody>
             {Array.from({ length: maxSlots }).map((_, rowIdx) => {
-              const cells = DAYS.map((day) => (timetable[day] || [])[rowIdx] || null);
+              const rawCells = DAYS.map((day) => {
+                const arr = daysData[day] || [];
+                return rowIdx < arr.length ? arr[rowIdx] : undefined;
+              });
+              // Time label: use first valid cell's time at this row (skip nulls from span placeholders)
+              const timeLabel = rawCells.find((c) => c && c.time && c.time !== 'span')?.time ?? '';
               return (
                 <tr key={rowIdx}>
                   <td className="py-1.5 pr-3 font-mono text-[10px] text-outline whitespace-nowrap align-middle">
-                    {cells.find((c) => c)?.time ?? ''}
+                    {timeLabel}
                   </td>
-                  {cells.map((cell, colIdx) => {
-                    if (!cell) return <td key={colIdx} className={`py-1 px-1.5 ${colIdx === todayDayIndex ? 'bg-primary/5' : ''}`} />;
+                  {rawCells.map((cell, colIdx) => {
+                    // null/span = span placeholder from previous row → skip (rowSpan covers it)
+                    if (cell === null || (cell && cell.time === 'span')) return null;
+
+                    // undefined = no entry at all → empty cell
+                    if (cell === undefined) return <td key={colIdx} className={`py-1 px-1.5 ${colIdx === todayDayIndex ? 'bg-primary/5' : ''}`} />;
 
                     if (cell.type === 'break') return (
                       <td key={colIdx} className={`py-1 px-1.5 ${colIdx === todayDayIndex ? 'bg-primary/5' : ''}`}>
@@ -409,9 +198,9 @@ const SectionTimetable = ({ timetable, sectionKey }) => {
 
                     const teacher = teachers[cell.sub];
                     return (
-                      <td key={colIdx} className={`py-1 px-1.5 align-middle ${colIdx === todayDayIndex ? 'bg-primary/5' : ''}`}>
+                      <td key={colIdx} rowSpan={cell.span ? 2 : undefined} className={`py-1 px-1.5 align-middle ${colIdx === todayDayIndex ? 'bg-primary/5' : ''}`}>
                         <div className="relative group/tip">
-                          <div className={`rounded-md px-2 py-1.5 ${subColor(cell.sub)} ${cell.span ? 'py-3' : ''}`}>
+                          <div className={`rounded-md px-2 py-1.5 ${subColor(cell.sub)} ${cell.span ? 'py-4' : ''}`}>
                             <p className="font-bold text-[11px] leading-tight">{cell.sub}</p>
                             {cell.note && <p className="text-[9px] opacity-70 leading-tight mt-0.5">{cell.note}</p>}
                           </div>
@@ -642,7 +431,28 @@ const Portal = () => {
   const { user, loading: authLoading } = useAuth();
   const [announcements, setAnnouncements] = useState([]);
   const [annLoading, setAnnLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('timetable'); // 'timetable' | 'attendance'
+  
+  // Read tab from query initially
+  const [activeTab, setActiveTab] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('tab') || 'timetable';
+  });
+
+  // Sync state if URL changes externally
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    if (tab) setActiveTab(tab);
+  }, [window.location.search]);
+
+  // Update URL securely without rigorous reload when changing tabs
+  const handleTabChange = (key) => {
+    setActiveTab(key);
+    window.history.replaceState(null, '', `?tab=${key}`);
+  };
+  
+  const [timetableData, setTimetableData] = useState(null);
+  const [loadingTimetable, setLoadingTimetable] = useState(true);
 
   useEffect(() => {
     api.get('/api/announcements')
@@ -651,9 +461,24 @@ const Portal = () => {
       .finally(() => setAnnLoading(false));
   }, []);
 
+  useEffect(() => {
+    if (user?.section) {
+      setLoadingTimetable(true);
+      api.get(`/api/timetables/${user.section}`)
+        .then((res) => setTimetableData(res.data))
+        .catch(() => setTimetableData(null))
+        .finally(() => setLoadingTimetable(false));
+    } else {
+      setLoadingTimetable(false);
+    }
+  }, [user?.section]);
+
   const TABS = [
     { key: 'timetable', label: 'Timetable',  icon: 'calendar_month' },
     { key: 'attendance', label: 'Attendance', icon: 'fact_check' },
+    { key: 'academics', label: 'Academics', icon: 'military_tech' },
+    { key: 'library', label: 'Library', icon: 'library_books' },
+    { key: 'commute', label: 'Commute', icon: 'directions_bus' },
   ];
 
   return (
@@ -729,7 +554,7 @@ const Portal = () => {
             {TABS.map((tab) => (
               <button
                 key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
+                onClick={() => handleTabChange(tab.key)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
                   activeTab === tab.key
                     ? 'bg-primary text-on-primary shadow-lg shadow-primary/20'
@@ -754,10 +579,11 @@ const Portal = () => {
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="bg-surface-container-low rounded-xl p-6 ghost-border">
-                  <div className="flex items-center justify-between mb-5">
+                <div className="bg-surface-container-low/80 backdrop-blur-xl rounded-2xl p-8 ghost-border relative overflow-hidden">
+                  <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+                  <div className="relative z-10 flex items-center justify-between mb-8">
                     <div>
-                      <h2 className="text-xl font-bold text-white font-satoshi">Weekly Timetable</h2>
+                      <h2 className="text-2xl font-bold text-white font-satoshi mb-1">Weekly Timetable</h2>
                       <p className="text-on-surface-variant text-sm mt-0.5">
                         Section {user.section ?? '—'} · {(() => { const n = parseInt(user.section?.[0]); return n === 1 ? '1st' : n === 2 ? '2nd' : n === 3 ? '3rd' : n ? `${n}th` : '—'; })()} Semester CSE · CBIT Kolar
                       </p>
@@ -768,8 +594,15 @@ const Portal = () => {
                     </div>
                   </div>
 
-                  {TIMETABLES[user.section] ? (
-                    <SectionTimetable timetable={TIMETABLES[user.section]} sectionKey={user.section} />
+                  {loadingTimetable ? (
+                    <div className="py-12 flex justify-center">
+                      <svg className="animate-spin h-8 w-8 text-primary" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                      </svg>
+                    </div>
+                  ) : timetableData ? (
+                    <SectionTimetable timetable={timetableData} />
                   ) : (
                     <div className="py-12 text-center">
                       <span className="material-symbols-outlined text-4xl text-outline mb-3 block">calendar_today</span>
@@ -789,10 +622,11 @@ const Portal = () => {
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="bg-surface-container-low rounded-xl p-6 ghost-border">
-                  <div className="flex items-center justify-between mb-5">
+                <div className="bg-surface-container-low/80 backdrop-blur-xl rounded-2xl p-8 ghost-border relative overflow-hidden">
+                  <div className="absolute top-0 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-3xl pointer-events-none" />
+                  <div className="relative z-10 flex items-center justify-between mb-8">
                     <div>
-                      <h2 className="text-xl font-bold text-white font-satoshi">Attendance Tracker</h2>
+                      <h2 className="text-2xl font-bold text-white font-satoshi mb-1">Attendance Tracker</h2>
                       <p className="text-on-surface-variant text-sm mt-0.5">VTU minimum requirement: 75% per subject</p>
                     </div>
                     <span className="font-mono text-[10px] text-outline uppercase tracking-widest bg-surface-container-high px-3 py-1.5 rounded-lg">
@@ -800,6 +634,57 @@ const Portal = () => {
                     </span>
                   </div>
                   <AttendanceTracker />
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === 'academics' && (
+              <motion.div
+                key="academics"
+                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}
+              >
+                <div className="bg-surface-container-low rounded-xl p-6 ghost-border">
+                  <div className="flex items-center justify-between mb-5">
+                    <div>
+                      <h2 className="text-xl font-bold text-white font-satoshi">Internal Marks</h2>
+                      <p className="text-on-surface-variant text-sm mt-0.5">CIE Tracking & Academic Performance</p>
+                    </div>
+                  </div>
+                  <AcademicsDashboard />
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === 'library' && (
+              <motion.div
+                key="library"
+                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}
+              >
+                <div className="bg-surface-container-low rounded-xl p-6 ghost-border">
+                  <div className="flex items-center justify-between mb-5">
+                    <div>
+                      <h2 className="text-xl font-bold text-white font-satoshi">Digital Library</h2>
+                      <p className="text-on-surface-variant text-sm mt-0.5">Resources mapped to Sem {user.semester ?? '—'} · CSE</p>
+                    </div>
+                  </div>
+                  <LibraryDashboard semester={user.semester} />
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === 'commute' && (
+              <motion.div
+                key="commute"
+                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}
+              >
+                <div className="bg-surface-container-low rounded-xl p-6 ghost-border">
+                  <div className="flex items-center justify-between mb-5">
+                    <div>
+                      <h2 className="text-xl font-bold text-white font-satoshi">Live Transport Hub</h2>
+                      <p className="text-on-surface-variant text-sm mt-0.5">Intelligent Route Matching System</p>
+                    </div>
+                  </div>
+                  <CommuteDashboard address={user.address} />
                 </div>
               </motion.div>
             )}

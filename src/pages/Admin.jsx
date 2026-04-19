@@ -110,6 +110,16 @@ const CONFIGS = {
     display: null,
     fields: [],
   },
+  timetables: {
+    label: 'Timetables',
+    icon: 'calendar_month',
+    endpoint: '/api/timetables',
+    color: 'text-purple-400',
+    bg: 'bg-purple-500/10',
+    isTimetables: true,
+    display: null,
+    fields: [],
+  },
   support: {
     label: 'Support',
     icon: 'support_agent',
@@ -120,10 +130,74 @@ const CONFIGS = {
     display: null,
     fields: [],
   },
+  users: {
+    label: 'Users',
+    icon: 'group',
+    endpoint: '/api/users',
+    color: 'text-indigo-400',
+    bg: 'bg-indigo-500/10',
+    fields: [
+      { name: 'name', label: 'Name', type: 'text', disabled: true },
+      { name: 'email', label: 'Email', type: 'text', disabled: true },
+      { name: 'usn', label: 'USN', type: 'text', disabled: true },
+      { name: 'role', label: 'Role', type: 'select', options: ['student', 'faculty', 'admin'] },
+      { name: 'section', label: 'Section', type: 'text' },
+      { name: 'address', label: 'Address / Region', type: 'text' },
+      { name: 'semester', label: 'Semester', type: 'number' },
+    ],
+    display: (i) => ({ title: i.name, sub: `${i.email} · ${i.usn || 'No USN'}`, badge: i.role }),
+  },
+  resources: {
+    label: 'Resources',
+    icon: 'library_books',
+    endpoint: '/api/resources',
+    color: 'text-cyan-400',
+    bg: 'bg-cyan-500/10',
+    fields: [
+      { name: 'title', label: 'Title', type: 'text', required: true },
+      { name: 'type', label: 'Type', type: 'select', options: ['Syllabus', 'Notes', 'PYQ', 'Calendar', 'Other'] },
+      { name: 'semester', label: 'Semester', type: 'number', required: true },
+      { name: 'branch', label: 'Branch', type: 'select', options: ['CSE', 'ECE', 'MECH', 'CIVIL', 'ISE', 'General'] },
+      { name: 'url', label: 'Drive Link (URL)', type: 'text', required: true },
+    ],
+    display: (i) => ({ title: i.title, sub: `Sem ${i.semester} · ${i.branch}`, badge: i.type }),
+  },
+  transport: {
+    label: 'Transport',
+    icon: 'directions_bus',
+    endpoint: '/api/transport',
+    color: 'text-yellow-400',
+    bg: 'bg-yellow-500/10',
+    fields: [
+      { name: 'busNumber', label: 'Bus Number', type: 'number', required: true },
+      { name: 'destination', label: 'Destination', type: 'text', required: true },
+      { name: 'areasServed', label: 'Areas Served (Comma separated)', type: 'array', placeholder: 'Bangarpet, Kolar...' },
+      { name: 'driverName', label: 'Driver Name', type: 'text' },
+      { name: 'driverContact', label: 'Driver Contact', type: 'text' },
+      { name: 'schedule', label: 'Schedule', type: 'text' },
+    ],
+    display: (i) => ({ title: `Bus ${i.busNumber} — ${i.destination}`, sub: `Areas: ${i.areasServed?.join(', ')}`, badge: i.driverName ? 'Assigned' : 'Unassigned' }),
+  },
+  grades: {
+    label: 'Grades',
+    icon: 'military_tech',
+    endpoint: '/api/grades',
+    color: 'text-pink-400',
+    bg: 'bg-pink-500/10',
+    fields: [
+      { name: 'student', label: 'Student ID', type: 'text', required: true },
+      { name: 'course', label: 'Course ID', type: 'text', required: true },
+      { name: 'semester', label: 'Semester', type: 'number', required: true },
+      { name: 'cie1', label: 'CIE 1 Marks', type: 'number' },
+      { name: 'cie2', label: 'CIE 2 Marks', type: 'number' },
+      { name: 'cie3', label: 'CIE 3 Marks', type: 'number' },
+    ],
+    display: (i) => ({ title: `${i.course?.name || i.course} (Sem ${i.semester})`, sub: `Student: ${i.student?.name || i.student}`, badge: `${i.totalMarks || 0} / ${((i.maxCie || 50) * 3)}` }),
+  },
 };
 
-const CONTENT_TABS = ['announcements', 'courses', 'events', 'facilities'];
-const TABS = [...CONTENT_TABS, 'attendance', 'support'];
+const CONTENT_TABS = ['users', 'announcements', 'courses', 'events', 'facilities', 'resources', 'transport', 'grades'];
+const TABS = [...CONTENT_TABS, 'attendance', 'timetables', 'support'];
 
 const PRIORITY_COLOR = { low: 'text-outline', medium: 'text-secondary', high: 'text-primary', critical: 'text-red-400' };
 const STATUS_COLOR = {
@@ -204,6 +278,7 @@ function ItemForm({ fields, initial, onSave, onCancel, saving }) {
       if (f.type === 'checkbox') d[f.name] = initial?.[f.name] ?? false;
       else if (f.type === 'date' && initial?.[f.name]) d[f.name] = new Date(initial[f.name]).toISOString().split('T')[0];
       else if (f.type === 'menu-items') d[f.name] = initial?.[f.name] ?? [];
+      else if (f.type === 'array') d[f.name] = initial?.[f.name] ?? [];
       else d[f.name] = initial?.[f.name] ?? '';
     });
     return d;
@@ -245,13 +320,21 @@ function ItemForm({ fields, initial, onSave, onCancel, saving }) {
             </label>
           ) : f.type === 'menu-items' ? (
             <MenuItemsEditor value={values[f.name]} onChange={(v) => set(f.name, v)} />
+          ) : f.type === 'array' ? (
+            <input
+              type="text"
+              className={`w-full bg-surface-container-highest border border-outline-variant/20 rounded-lg py-2.5 px-3 text-on-surface text-sm placeholder:text-outline/50 focus:ring-1 focus:ring-primary outline-none transition-all ${f.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+              value={Array.isArray(values[f.name]) ? values[f.name].join(', ') : ''}
+              onChange={(e) => set(f.name, e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
+              required={f.required} placeholder={f.placeholder} disabled={f.disabled}
+            />
           ) : (
             <input
               type={f.type}
-              className="w-full bg-surface-container-highest border border-outline-variant/20 rounded-lg py-2.5 px-3 text-on-surface text-sm placeholder:text-outline/50 focus:ring-1 focus:ring-primary outline-none transition-all"
+              className={`w-full bg-surface-container-highest border border-outline-variant/20 rounded-lg py-2.5 px-3 text-on-surface text-sm placeholder:text-outline/50 focus:ring-1 focus:ring-primary outline-none transition-all ${f.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
               value={values[f.name]}
               onChange={(e) => set(f.name, f.type === 'number' ? (e.target.value === '' ? '' : Number(e.target.value)) : e.target.value)}
-              required={f.required} placeholder={f.placeholder}
+              required={f.required} placeholder={f.placeholder} disabled={f.disabled}
             />
           )}
         </div>
@@ -401,6 +484,212 @@ function AttendanceAdminPanel({ showToast }) {
         })}
       </ul>
     </>
+  );
+}
+
+// ── Timetable Admin Panel ─────────────────────────────────────────────────────
+function TimetableAdminPanel({ showToast }) {
+  const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const [sections, setSections] = useState([]);
+  const [selectedSection, setSelectedSection] = useState('');
+  const [loading, setLoading] = useState(true);
+  
+  const [formData, setFormData] = useState(null);
+  const [isNew, setIsNew] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    fetchSections();
+  }, []);
+
+  const fetchSections = () => {
+    setLoading(true);
+    api.get('/api/timetables')
+      .then(res => setSections(res.data.map(t => t.section)))
+      .catch(() => showToast('Failed to load sections', 'error'))
+      .finally(() => setLoading(false));
+  };
+
+  const loadTimetable = (section) => {
+    setLoading(true);
+    api.get(`/api/timetables/${section}`)
+      .then(res => {
+        setFormData(res.data);
+        setSelectedSection(section);
+        setIsNew(false);
+      })
+      .catch(() => showToast('Failed to load timetable', 'error'))
+      .finally(() => setLoading(false));
+  };
+
+  const initNewTimetable = () => {
+    const emptyDays = {};
+    DAYS.forEach(d => {
+      // Create 9 empty slots matching existing layout
+      emptyDays[d] = Array.from({ length: 9 }).map((_, i) => {
+        return { time: `Slot ${i+1}`, sub: '', note: '', type: '', span: false };
+      });
+    });
+    setFormData({ section: '', days: emptyDays, teachers: {}, meta: { room: '', classTeacher: '', proctor: '' } });
+    setSelectedSection('');
+    setIsNew(true);
+  };
+
+  const handleSave = async () => {
+    if (!formData.section) return showToast('Section name is required', 'error');
+    setSaving(true);
+    try {
+      if (isNew) {
+        await api.post('/api/timetables', formData);
+        showToast('Timetable created successfully');
+        fetchSections();
+        setIsNew(false);
+        setSelectedSection(formData.section);
+      } else {
+        await api.put(`/api/timetables/${formData.section}`, formData);
+        showToast('Timetable updated successfully');
+      }
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Failed to save timetable', 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCellChange = (day, rowIdx, field, val) => {
+    const updated = { ...formData };
+    if (!updated.days[day][rowIdx]) updated.days[day][rowIdx] = {};
+    updated.days[day][rowIdx][field] = val;
+    setFormData(updated);
+  };
+
+  const handleDelete = async () => {
+    if (!confirm(`Are you sure you want to delete the timetable for Section ${formData.section}?`)) return;
+    try {
+      await api.delete(`/api/timetables/${formData.section}`);
+      showToast('Timetable deleted');
+      setFormData(null);
+      setSelectedSection('');
+      fetchSections();
+    } catch {
+      showToast('Failed to delete', 'error');
+    }
+  };
+
+  if (loading && !formData && sections.length === 0) {
+    return (
+      <div className="p-6 text-center text-outline">Loading timetables...</div>
+    );
+  }
+
+  return (
+    <div className="p-6">
+      {/* Selector Array */}
+      <div className="flex items-center gap-4 mb-6 pb-6 border-b border-outline-variant/10 flex-wrap">
+        <select 
+          className="bg-surface-container-high text-white font-semibold text-sm px-4 py-2 border border-outline-variant/20 rounded-lg outline-none cursor-pointer"
+          value={isNew ? 'NEW' : selectedSection}
+          onChange={(e) => {
+            if (e.target.value === 'NEW') initNewTimetable();
+            else if (e.target.value) loadTimetable(e.target.value);
+            else { setFormData(null); setSelectedSection(''); setIsNew(false); }
+          }}
+        >
+          <option value="">Select Section...</option>
+          {sections.map(sec => <option key={sec} value={sec}>{sec}</option>)}
+          <option value="NEW">+ Create New Section Timetable</option>
+        </select>
+        {formData && (
+          <button 
+            disabled={saving}
+            onClick={handleSave} 
+            className="ml-auto bg-primary text-on-primary px-6 py-2 rounded-lg font-bold hover:bg-primary-fixed-dim transition-colors disabled:opacity-50"
+          >
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
+        )}
+        {formData && !isNew && (
+           <button onClick={handleDelete} className="bg-red-500/10 text-red-500 px-4 py-2 rounded-lg font-bold hover:bg-red-500/20">Delete</button>
+        )}
+      </div>
+
+      {formData ? (
+        <div className="space-y-8 animate-in fade-in zoom-in duration-300">
+          {/* Metadata Section */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-surface-container-high/50 p-4 rounded-xl border border-outline-variant/10">
+            <div>
+              <label className="text-[10px] font-mono text-outline uppercase tracking-wider block mb-1">Section Name (e.g. 8A)</label>
+              <input type="text" value={formData.section} disabled={!isNew} onChange={e => setFormData({...formData, section: e.target.value.toUpperCase()})} className="w-full bg-surface-container text-white px-3 py-2 rounded border border-outline-variant/20 outline-none focus:border-primary" />
+            </div>
+            <div>
+              <label className="text-[10px] font-mono text-outline uppercase tracking-wider block mb-1">Room No</label>
+              <input type="text" value={formData.meta.room} onChange={e => setFormData({...formData, meta: {...formData.meta, room: e.target.value}})} className="w-full bg-surface-container text-white px-3 py-2 rounded border border-outline-variant/20 outline-none focus:border-primary" />
+            </div>
+            <div>
+              <label className="text-[10px] font-mono text-outline uppercase tracking-wider block mb-1">Class Teacher</label>
+              <input type="text" value={formData.meta.classTeacher} onChange={e => setFormData({...formData, meta: {...formData.meta, classTeacher: e.target.value}})} className="w-full bg-surface-container text-white px-3 py-2 rounded border border-outline-variant/20 outline-none focus:border-primary" />
+            </div>
+            <div>
+              <label className="text-[10px] font-mono text-outline uppercase tracking-wider block mb-1">Proctor</label>
+              <input type="text" value={formData.meta.proctor} onChange={e => setFormData({...formData, meta: {...formData.meta, proctor: e.target.value}})} className="w-full bg-surface-container text-white px-3 py-2 rounded border border-outline-variant/20 outline-none focus:border-primary" />
+            </div>
+          </div>
+
+          {/* Grid Editor */}
+          <div className="overflow-x-auto bg-surface-container-high/20 rounded-xl p-4 border border-outline-variant/10">
+            <h3 className="text-white font-bold mb-4 font-satoshi text-lg flex items-center gap-2">
+              <span className="material-symbols-outlined text-purple-400">grid_on</span>
+              Grid Planner
+            </h3>
+            <table className="w-full text-left min-w-[900px]">
+              <thead>
+                <tr>
+                  <th className="w-32 uppercase text-[10px] text-outline tracking-wider pb-4 px-2">Days / Slots</th>
+                  {Array.from({ length: 9 }).map((_, i) => (
+                    <th key={i} className="px-1 pb-4 text-[10px] text-outline font-mono text-center tracking-wider w-24">Slot {i+1}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {DAYS.map((day) => (
+                  <tr key={day} className="border-t border-outline-variant/10 last:border-b-0">
+                    <td className="py-3 px-2 font-bold text-sm text-white font-mono bg-surface-container/30">{day}</td>
+                    {Array.from({ length: 9 }).map((_, rowIdx) => {
+                      const cell = formData.days[day]?.[rowIdx] || { time: '', sub: '', type: '', span: false };
+                      return (
+                        <td key={rowIdx} className="p-1 align-top relative group">
+                           <div className={`p-1.5 rounded-md border flex flex-col gap-1 transition-colors ${
+                              cell.type === 'break' ? 'border-primary/30 bg-primary/5' : 
+                              cell.type === 'lunch' ? 'border-orange-500/30 bg-orange-500/5' : 
+                              cell.sub ? 'border-purple-500/30 bg-purple-500/5' : 
+                              'border-outline-variant/20 bg-surface-container block hover:border-outline-variant/50'
+                           }`}>
+                             <input placeholder="Time" className="w-full text-[9px] bg-transparent outline-none text-white font-mono px-1 pb-0.5 border-b border-outline-variant/10 placeholder-outline" value={cell.time} onChange={e => handleCellChange(day, rowIdx, 'time', e.target.value)} />
+                             <input placeholder="Sub" className="w-full text-[10px] bg-transparent outline-none text-white font-bold px-1" value={cell.sub || ''} onChange={e => handleCellChange(day, rowIdx, 'sub', e.target.value)} />
+                             <input placeholder="Type (break/lunch)" className="w-full text-[9px] bg-transparent outline-none text-outline px-1 placeholder-outline/50" value={cell.type || ''} onChange={e => handleCellChange(day, rowIdx, 'type', e.target.value)} />
+                             <label className="flex items-center gap-1.5 px-1 mt-0.5 cursor-pointer">
+                                <input type="checkbox" className="w-2.5 h-2.5 rounded bg-surface border-outline" checked={cell.span} onChange={e => handleCellChange(day, rowIdx, 'span', e.target.checked)} />
+                                <span className="text-[8px] text-outline uppercase">Span</span>
+                             </label>
+                           </div>
+                        </td>
+                      )
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      ) : (
+        <div className="py-20 text-center text-on-surface-variant flex flex-col items-center">
+          <span className="material-symbols-outlined text-6xl text-outline mb-4">edit_calendar</span>
+          <p className="text-lg text-white font-semibold mb-2">Manage Class Timetables</p>
+          <p className="max-w-sm mb-6">Select a section dynamically fetch its timetable, or create a new matrix grid entirely from scratch.</p>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -621,6 +910,7 @@ const Admin = () => {
   const cfg = CONFIGS[activeTab];
   const isAttendanceTab = cfg.isAttendance;
   const isSupportTab = cfg.isSupport;
+  const isTimetablesTab = cfg.isTimetables;
 
   // Auth guard
   useEffect(() => {
@@ -639,17 +929,17 @@ const Admin = () => {
     ).then((results) => setStats(Object.assign({}, ...results)));
   }, [user]);
 
-  // Load tab items (skip for attendance/support — they render their own panels)
+  // Load tab items (skip for attendance/support/timetables — they render their own panels)
   useEffect(() => {
     if (!user || user.role !== 'admin') return;
-    if (isAttendanceTab || isSupportTab) return;
+    if (isAttendanceTab || isSupportTab || isTimetablesTab) return;
     setLoadingItems(true);
     setError('');
     api.get(cfg.endpoint)
       .then((r) => setItems(Array.isArray(r.data) ? r.data : []))
       .catch(() => setError(`Failed to load ${cfg.label.toLowerCase()}.`))
       .finally(() => setLoadingItems(false));
-  }, [activeTab, user, isAttendanceTab, isSupportTab]);
+  }, [activeTab, user, isAttendanceTab, isSupportTab, isTimetablesTab]);
 
   const showToast = (msg, type = 'success') => {
     setToast({ msg, type });
@@ -752,7 +1042,7 @@ const Admin = () => {
             >
               <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: active ? "'FILL' 1" : "'FILL' 0" }}>{tc.icon}</span>
               <span className="hidden sm:inline">{tc.label}</span>
-              {!tc.isAttendance && stats[tab] !== undefined && (
+              {!tc.isAttendance && !tc.isSupport && !tc.isTimetables && stats[tab] !== undefined && (
                 <span className={`text-xs px-1.5 py-0.5 rounded-full ${active ? 'bg-white/20' : 'bg-surface-container-high'}`}>
                   {stats[tab]}
                 </span>
@@ -785,7 +1075,7 @@ const Admin = () => {
           <div className="flex items-center gap-3">
             <span className={`material-symbols-outlined ${cfg.color}`} style={{ fontVariationSettings: "'FILL' 1" }}>{cfg.icon}</span>
             <h2 className="text-lg font-bold text-white">{cfg.label}</h2>
-            {!isAttendanceTab && !isSupportTab && !loadingItems && (
+            {!isAttendanceTab && !isSupportTab && !isTimetablesTab && !loadingItems && (
               <span className="text-xs font-mono text-outline bg-surface-container-high px-2 py-0.5 rounded-full">
                 {items.length}
               </span>
@@ -800,8 +1090,13 @@ const Admin = () => {
                 ticket inbox
               </span>
             )}
+            {isTimetablesTab && (
+              <span className="text-xs font-mono text-outline bg-surface-container-high px-2 py-0.5 rounded-full">
+                matrix editor
+              </span>
+            )}
           </div>
-          {!isAttendanceTab && !isSupportTab && (
+          {!isAttendanceTab && !isSupportTab && !isTimetablesTab && (
             <button
               onClick={() => { setError(''); setModal({ mode: 'add' }); }}
               className="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary-fixed-dim transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
@@ -820,13 +1115,20 @@ const Admin = () => {
               Read-only · Resolve tickets here
             </p>
           )}
+          {isTimetablesTab && (
+            <p className="text-xs text-on-surface-variant font-mono">
+               Visual Matrix Manager
+            </p>
+          )}
         </div>
 
-        {/* ── Attendance special panel ── */}
+        {/* ── Dynamic Panels ── */}
         {isAttendanceTab ? (
           <AttendanceAdminPanel showToast={showToast} />
         ) : isSupportTab ? (
           <SupportAdminPanel showToast={showToast} />
+        ) : isTimetablesTab ? (
+          <TimetableAdminPanel showToast={showToast} />
         ) : loadingItems ? (
           <div className="p-6 space-y-3">
             {Array.from({ length: 5 }).map((_, i) => (

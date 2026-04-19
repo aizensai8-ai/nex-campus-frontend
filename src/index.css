@@ -10,7 +10,7 @@
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: 'Satoshi', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
 
   /* Global background grain at ~3.5% opacity */
@@ -71,6 +71,31 @@
 
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Top 1% Masking - fades out the bottom/top of scroll containers */
+  .mask-fade-y {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 5%, black 95%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+  }
+  
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent);
+    mask-image: linear-gradient(to bottom, black 80%, transparent);
+  }
+
+  /* Orbital Mesh Gradient Physics */
+  @keyframes orbit {
+    0%   { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+  }
+  
+  .mesh-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    animation: orbit 20s linear infinite;
   }
 
   .bento-grid-pattern {

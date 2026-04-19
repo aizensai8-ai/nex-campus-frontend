@@ -9,11 +9,13 @@ const Signup = () => {
     const { register } = useAuth();
     const { showToast } = useToast();
     const navigate = useNavigate();
-    const [form, setForm] = useState({ name: '', email: '', usn: '', password: '', semester: '', sectionLetter: '' });
+    const [form, setForm] = useState({ name: '', email: '', usn: '', password: '', semester: '', sectionLetter: '', address: '' });
     const [agreed, setAgreed] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [modal, setModal] = useState(null); // 'terms' | 'privacy' | null
+    const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
 
     const handleChange = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
 
@@ -28,7 +30,7 @@ const Signup = () => {
         const section = `${form.semester}${form.sectionLetter}`;
         setLoading(true);
         try {
-            await register({ name: form.name, email: form.email, usn: form.usn, password: form.password, section, semester: parseInt(form.semester) });
+            await register({ name: form.name, email: form.email, usn: form.usn, password: form.password, section, semester: parseInt(form.semester), address: form.address }, rememberMe);
             showToast({ message: 'Account created! Welcome to Nex Campus.', type: 'success' });
             navigate('/portal');
         } catch (err) {
@@ -90,6 +92,11 @@ const Signup = () => {
                                 <input className="w-full bg-surface-container-highest border-none rounded-lg py-3.5 px-4 text-on-surface placeholder:text-outline font-mono focus:ring-1 focus:ring-primary-container transition-all outline-none" placeholder="e.g. 1ck24cs001" type="text" name="usn" value={form.usn} onChange={(e) => setForm(f => ({ ...f, usn: e.target.value.toLowerCase() }))} required />
                             </div>
 
+                            <div className="space-y-2">
+                                <label className="text-xs font-mono tracking-widest text-outline uppercase ml-1">Home Region / Address</label>
+                                <input className="w-full bg-surface-container-highest border-none rounded-lg py-3.5 px-4 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary-container transition-all outline-none" placeholder="e.g. Bangarpet, Mulbagal..." type="text" name="address" value={form.address} onChange={handleChange} required />
+                            </div>
+
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-xs font-mono tracking-widest text-outline uppercase ml-1">Semester <span className="text-primary">*</span></label>
@@ -131,7 +138,41 @@ const Signup = () => {
                             </div>
                             <div className="space-y-2">
                                 <label className="text-xs font-mono tracking-widest text-outline uppercase ml-1">Password</label>
-                                <input className="w-full bg-surface-container-highest border-none rounded-lg py-3.5 px-4 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary-container transition-all outline-none" placeholder="••••••••" type="password" name="password" value={form.password} onChange={handleChange} required minLength={6} />
+                                <div className="relative">
+                                    <input 
+                                        className="w-full bg-surface-container-highest border-none rounded-lg py-3.5 pl-4 pr-12 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary-container transition-all outline-none" 
+                                        placeholder="••••••••" 
+                                        type={showPassword ? "text" : "password"} 
+                                        name="password" 
+                                        value={form.password} 
+                                        onChange={handleChange} 
+                                        required 
+                                        minLength={6} 
+                                    />
+                                    <button 
+                                        type="button"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-white transition-colors p-1"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        tabIndex="-1"
+                                    >
+                                        <span className="material-symbols-outlined text-[20px]">
+                                            {showPassword ? 'visibility_off' : 'visibility'}
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3 py-2">
+                                <input
+                                    className="mt-1 h-4 w-4 rounded-sm bg-surface-variant border-outline-variant text-primary focus:ring-primary/20"
+                                    id="rememberMe"
+                                    type="checkbox"
+                                    checked={rememberMe}
+                                    onChange={(e) => setRememberMe(e.target.checked)}
+                                />
+                                <label className="text-sm text-on-surface-variant leading-tight" htmlFor="rememberMe">
+                                    Remember me on this device
+                                </label>
                             </div>
 
                             <div className="flex items-start gap-3 py-2">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { pageTransition } from '../lib/animations';
@@ -6,21 +6,32 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
 const Login = () => {
-    const { login } = useAuth();
+    const { login, user, loading: authLoading } = useAuth();
     const { showToast } = useToast();
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!authLoading && user) {
+            navigate('/portal', { replace: true });
+        }
+    }, [authLoading, navigate, user]);
+
+    if (authLoading) {
+        return null;
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
         try {
-            await login(email, password);
+            await login(email, password, rememberMe);
             showToast({ message: 'Welcome back! Signed in successfully.', type: 'success' });
             navigate('/portal');
         } catch (err) {
@@ -124,6 +135,19 @@ const Login = () => {
                                         </span>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div className="flex items-center gap-3 px-1">
+                                <input
+                                    className="h-4 w-4 rounded border-outline-variant/40 bg-surface-container-low text-primary focus:ring-primary"
+                                    id="rememberMe"
+                                    type="checkbox"
+                                    checked={rememberMe}
+                                    onChange={(e) => setRememberMe(e.target.checked)}
+                                />
+                                <label className="text-sm text-on-surface-variant" htmlFor="rememberMe">
+                                    Remember me on this device
+                                </label>
                             </div>
 
                             <button

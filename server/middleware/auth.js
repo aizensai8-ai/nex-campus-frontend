@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import User from '../models/User.js';
+import { getOfflineAdminUserById } from '../utils/offlineAuth.js';
 
 // ── Verify JWT and attach req.user ────────────────────────────────────────────
 const protect = async (req, res, next) => {
@@ -17,6 +19,21 @@ const protect = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (mongoose.connection.readyState !== 1) {
+      const offlineUser = getOfflineAdminUserById(decoded.id);
+
+      if (offlineUser) {
+        req.user = offlineUser;
+        return next();
+      }
+
+      return res.status(503).json({
+        success: false,
+        message: 'Authentication is temporarily unavailable while MongoDB is disconnected',
+      });
+    }
+
     const user = await User.findById(decoded.id);
 
     if (!user) {
@@ -60,6 +77,15 @@ const optionalAuth = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (mongoose.connection.readyState !== 1) {
+      const offlineUser = getOfflineAdminUserById(decoded.id);
+      if (offlineUser) {
+        req.user = offlineUser;
+      }
+      return next();
+    }
+
     req.user = await User.findById(decoded.id);
   } catch (_) {
     // Silently ignore invalid tokens for optional auth

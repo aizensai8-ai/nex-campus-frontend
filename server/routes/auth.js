@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import { body, validationResult } from 'express-validator';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
@@ -7,6 +8,10 @@ import { protect } from '../middleware/auth.js';
 import crypto from 'crypto';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { sendResetEmail } from '../utils/mailer.js';
+import {
+  getOfflineAdminUserByEmail,
+  isOfflineAdminPassword,
+} from '../utils/offlineAuth.js';
 
 const router = express.Router();
 
@@ -35,6 +40,7 @@ const sendTokenResponse = (user, statusCode, res) => {
         usn: user.usn,
         semester: user.semester,
         section: user.section,
+        address: user.address,
         avatar: user.avatar,
       },
     });
@@ -52,6 +58,7 @@ const registerRules = [
     .matches(/^[A-Z0-9]+$/)
     .withMessage('USN must be alphanumeric'),
   body('role').optional().isIn(['student', 'faculty']).withMessage('Role must be student or faculty'),
+  body('address').optional().trim().isString(),
 ];
 
 const loginRules = [
@@ -69,7 +76,7 @@ router.post(
       return res.status(400).json({ success: false, errors: errors.array() });
     }
 
-    const { name, email, password, usn, role, section, semester } = req.body;
+    const { name, email, password, usn, role, section, semester, address } = req.body;
 
     // Gmail-only policy
     if (!email.toLowerCase().endsWith('@gmail.com')) {
@@ -90,7 +97,7 @@ router.post(
     }
 
     const semNum = semester ? parseInt(semester) : parseInt(section[0]);
-    const user = await User.create({ name, email, password, usn, role: safeRole, section, semester: semNum });
+    const user = await User.create({ name, email, password, usn, role: safeRole, section, semester: semNum, address: address || '' });
     sendTokenResponse(user, 201, res);
   })
 );
@@ -106,6 +113,19 @@ router.post(
     }
 
     const { email, password } = req.body;
+
+    if (mongoose.connection.readyState !== 1) {
+      const offlineUser = getOfflineAdminUserByEmail(email);
+
+      if (offlineUser && isOfflineAdminPassword(password)) {
+        return sendTokenResponse(offlineUser, 200, res);
+      }
+
+      return res.status(503).json({
+        success: false,
+        message: 'Authentication is temporarily unavailable while MongoDB is disconnected',
+      });
+    }
 
     const user = await User.findOne({ email }).select('+password');
     if (!user || !user.password) {
@@ -211,6 +231,10 @@ router.get(
   '/me',
   protect,
   asyncHandler(async (req, res) => {
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(200).json({ success: true, data: req.user });
+    }
+
     const user = await User.findById(req.user._id)
       .populate('enrolledCourses', 'code name credits department')
       .populate('registeredEvents', 'title date location status');

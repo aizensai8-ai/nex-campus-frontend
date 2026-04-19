@@ -63,13 +63,12 @@ export default {
           "full": "0.75rem"
         },
         "fontFamily": {
+          "sans": ["Inter", "sans-serif"],
           "satoshi": ["Satoshi", "sans-serif"],
           "headline": ["Satoshi", "sans-serif"],
-          "body": ["Satoshi", "sans-serif"],
-          "label": ["Satoshi", "sans-serif"],
-          "inter": ["Satoshi", "sans-serif"],
-          "mono": ["Berkeley Mono", "JetBrains Mono", "monospace"],
-          "berkeley-mono": ["Berkeley Mono", "JetBrains Mono", "monospace"]
+          "body": ["Inter", "sans-serif"],
+          "label": ["Inter", "sans-serif"],
+          "mono": ["Berkeley Mono", "JetBrains Mono", "monospace"]
         }
       },
     },

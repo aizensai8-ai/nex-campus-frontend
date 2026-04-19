@@ -154,20 +154,29 @@ router.get(
   })
 );
 
-// ── PUT /api/users/:id/role — Admin: change user role ────────────────────────
+// ── PUT /api/users/:id — Admin: change user details (role, section, address) ───
 router.put(
-  '/:id/role',
+  '/:id',
   authorize('admin'),
-  [body('role').isIn(['student', 'faculty', 'admin']).withMessage('Invalid role')],
+  [
+    body('role').optional().isIn(['student', 'faculty', 'admin']).withMessage('Invalid role'),
+    body('section').optional({ nullable: true, checkFalsy: true }).matches(/^[1-8][A-E]$/).withMessage('Invalid section'),
+    body('address').optional().isString()
+  ],
   asyncHandler(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ success: false, errors: errors.array() });
     }
 
+    const updates = {};
+    if (req.body.role) updates.role = req.body.role;
+    if (req.body.section !== undefined) updates.section = req.body.section;
+    if (req.body.address !== undefined) updates.address = req.body.address;
+
     const user = await User.findByIdAndUpdate(
       req.params.id,
-      { role: req.body.role },
+      updates,
       { new: true, runValidators: true }
     );
 

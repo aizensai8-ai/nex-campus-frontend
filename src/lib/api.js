@@ -1,13 +1,24 @@
 import axios from 'axios';
 
+const TOKEN_KEY = 'token';
+const USER_KEY = 'user';
+const getStoredToken = () => localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY);
+const clearStoredToken = () => {
+  localStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+  sessionStorage.removeItem(USER_KEY);
+};
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
+  // Use relative path to leverage Vite's proxy so Ngrok tunnels both cleanly
+  baseURL: import.meta.env.VITE_API_URL || '',
   withCredentials: false,
 });
 
 // Attach token to every request if present
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = getStoredToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -25,7 +36,7 @@ api.interceptors.response.use(
   },
   (err) => {
     if (err.response?.status === 401) {
-      localStorage.removeItem('token');
+      clearStoredToken();
     }
     return Promise.reject(err);
   }

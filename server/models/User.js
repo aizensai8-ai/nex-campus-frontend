@@ -54,6 +54,11 @@ const userSchema = new mongoose.Schema(
       default: null,
       match: [/^[1-8][A-E]$/, 'Section must be format like 4C or 6B'],
     },
+    address: {
+      type: String,
+      default: '',
+      trim: true,
+    },
     googleId: {
       type: String,
       sparse: true,
