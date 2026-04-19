@@ -79,7 +79,7 @@ const NexBot = () => {
 
   const fetchAttendance = useCallback(async () => {
     const res = await api.get('/api/attendance/summary');
-    const data = res.data.data || [];
+    const data = Array.isArray(res.data) ? res.data : [];
     if (!data.length) return {
       type: 'text', icon: 'fact_check',
       text: 'No attendance records yet. Check back after classes begin.',
@@ -177,7 +177,7 @@ const NexBot = () => {
 
   const fetchGrades = useCallback(async () => {
     const res = await api.get('/api/grades/mine');
-    const grades = res.data.data || [];
+    const grades = Array.isArray(res.data) ? res.data : [];
     if (!grades.length) return {
       type: 'text', icon: 'military_tech',
       text: 'No grades published yet. Check back after CIE results.',
@@ -204,7 +204,7 @@ const NexBot = () => {
 
   const fetchAnnouncements = useCallback(async () => {
     const res = await api.get('/api/announcements?limit=4');
-    const data = res.data.data || [];
+    const data = Array.isArray(res.data) ? res.data : [];
     if (!data.length) return { type: 'text', icon: 'campaign', text: 'No announcements at the moment. Check back later.' };
     const items = data.map(a => {
       const tag = a.pinned ? '📌 ' : a.priority === 'critical' ? '🚨 ' : a.priority === 'high' ? '⚡ ' : '';
@@ -212,13 +212,13 @@ const NexBot = () => {
     });
     return {
       type: 'list', title: 'Latest Announcements',
-      items, link: '/events', linkText: 'See all →',
+      items, link: '/portal', linkText: 'See all →',
     };
   }, []);
 
   const fetchBus = useCallback(async () => {
     const res = await api.get('/api/transport');
-    const buses = res.data.data || [];
+    const buses = Array.isArray(res.data) ? res.data : [];
     if (!buses.length) return {
       type: 'text', icon: 'directions_bus',
       text: 'No transport routes configured yet.',
@@ -250,7 +250,7 @@ const NexBot = () => {
     const from = new Date().toISOString();
     const to = new Date(Date.now() + 7 * 86400000).toISOString();
     const res = await api.get(`/api/events?from=${from}&to=${to}&sort=date&limit=5`);
-    const data = res.data.data || [];
+    const data = Array.isArray(res.data) ? res.data : [];
     if (!data.length) return {
       type: 'text', icon: 'event',
       text: 'No events scheduled this week. Check the events page for upcoming ones.',
@@ -286,7 +286,7 @@ const NexBot = () => {
     const subject = match?.[1]?.trim();
     if (!subject) return { type: 'text', icon: 'school', text: 'Try: "Who teaches DBMS?" or "Instructor for ADA?"' };
     const res = await api.get(`/api/courses?search=${encodeURIComponent(subject)}&limit=3`);
-    const courses = res.data.data || [];
+    const courses = Array.isArray(res.data) ? res.data : [];
     if (!courses.length) return {
       type: 'text', icon: 'school',
       text: `No course found matching "${subject}". Check spelling or try the full name.`,

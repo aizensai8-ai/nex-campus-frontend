@@ -297,9 +297,9 @@ function AttendanceAdminPanel({ showToast }) {
     setLoading(true);
     api.get('/api/attendance/admin/summary')
       .then((r) => setCourses(Array.isArray(r.data) ? r.data : []))
-      .catch(() => {})
+      .catch(() => showToast('Failed to load attendance data.', 'error'))
       .finally(() => setLoading(false));
-  }, []);
+  }, [showToast]);
 
   const addClassHeld = async (courseId) => {
     setAdding(courseId);
@@ -512,9 +512,9 @@ function SupportAdminPanel({ showToast }) {
   useEffect(() => {
     api.get('/api/support')
       .then((r) => setTickets(Array.isArray(r.data) ? r.data : []))
-      .catch(() => {})
+      .catch(() => showToast('Failed to load support tickets.', 'error'))
       .finally(() => setLoading(false));
-  }, []);
+  }, [showToast]);
 
   const resolve = async (id) => {
     setResolving(id);

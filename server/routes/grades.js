@@ -59,7 +59,7 @@ router.post(
       grade.cie1 = req.body.cie1 ?? grade.cie1;
       grade.cie2 = req.body.cie2 ?? grade.cie2;
       grade.cie3 = req.body.cie3 ?? grade.cie3;
-      grade.totalMarks = (grade.cie1 + grade.cie2 + grade.cie3);
+      grade.totalMarks = (grade.cie1 || 0) + (grade.cie2 || 0) + (grade.cie3 || 0);
       await grade.save();
     } else {
       // Create new
@@ -86,7 +86,7 @@ router.put(
     grade.cie2 = req.body.cie2 ?? grade.cie2;
     grade.cie3 = req.body.cie3 ?? grade.cie3;
     grade.maxCie = req.body.maxCie ?? grade.maxCie;
-    grade.totalMarks = grade.cie1 + grade.cie2 + grade.cie3;
+    grade.totalMarks = (grade.cie1 || 0) + (grade.cie2 || 0) + (grade.cie3 || 0);
     
     await grade.save();
     res.status(200).json({ success: true, data: grade });

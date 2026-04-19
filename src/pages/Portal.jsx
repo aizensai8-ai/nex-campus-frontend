@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { pageTransition, staggerContainer, staggerItem, fadeUpBlur } from '../lib/animations';
 import { useAuth } from '../context/AuthContext';
@@ -719,17 +719,18 @@ const DashboardHome = ({ user, timetableData, loadingTimetable, announcements, e
 const Portal = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [activeTab, setActiveTab] = useState(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     return params.get('tab') || 'dashboard';
   });
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     const tab = params.get('tab');
     if (tab) setActiveTab(tab);
-  }, [window.location.search]);
+  }, [location.search]);
 
   const handleTabChange = (key) => {
     setActiveTab(key);
