@@ -463,7 +463,7 @@ const Home = () => {
           >
             <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white font-satoshi">Built for students who value their time</h2>
             <p className="text-on-surface-variant text-xl leading-relaxed">
-              Nex Campus seamlessly manages the heavy lifting—from tracking dynamic attendance records to synchronizing module PDFs and daily timetables.
+              Nex Campus keeps your attendance, timetables, and course materials in one place — no more juggling three different portals before 8 AM.
             </p>
             <ul className="space-y-6">
               <li className="flex gap-4">

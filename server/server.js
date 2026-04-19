@@ -26,6 +26,7 @@ import timetableRoutes from './routes/timetables.js';
 import transportRoutes from './routes/transport.js';
 import resourceRoutes from './routes/resources.js';
 import gradeRoutes from './routes/grades.js';
+import lostFoundRoutes from './routes/lostfound.js';
 import { seedTimetables } from './utils/seedTimetables.js';
 import { claimPort } from './utils/portManager.js';
 
@@ -146,6 +147,7 @@ app.use('/api/timetables', timetableRoutes);
 app.use('/api/transport', transportRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/grades', gradeRoutes);
+app.use('/api/lostfound', lostFoundRoutes);
 
 // ── Health check ──────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {

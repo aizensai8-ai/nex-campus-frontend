@@ -6,6 +6,7 @@ import App from './App.jsx'
 import LoadingScreen from './components/LoadingScreen.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { ToastProvider } from './context/ToastContext.jsx'
+import { NotificationProvider } from './context/NotificationContext.jsx'
 import './index.css'
 
 function Root() {
@@ -27,12 +28,14 @@ function Root() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <ToastProvider>
-          <App />
-          <AnimatePresence>
-            {loading && <LoadingScreen key="loader" />}
-          </AnimatePresence>
-        </ToastProvider>
+        <NotificationProvider>
+          <ToastProvider>
+            <App />
+            <AnimatePresence>
+              {loading && <LoadingScreen key="loader" />}
+            </AnimatePresence>
+          </ToastProvider>
+        </NotificationProvider>
       </AuthProvider>
     </BrowserRouter>
   );

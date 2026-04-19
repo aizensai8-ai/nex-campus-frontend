@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const FLOORS = [
@@ -110,10 +110,78 @@ const MAP_DATA = {
   ]
 };
 
+// Walking directions from Main Gate to key locations
+const DIRECTIONS = {
+  'CAFE':                 { route: 'Main Gate → Straight through lobby → Ground floor, left wing', eta: '1 min' },
+  'LAB 1':               { route: 'Main Gate → Main Block entrance → Ground floor, right side', eta: '2 min' },
+  'LAB 2':               { route: 'Main Gate → Main Block → Ground floor, far right', eta: '2 min' },
+  'LAB 3':               { route: 'Main Gate → Main Block → Right side staircase → Ground floor east', eta: '3 min' },
+  'LAB 4':               { route: 'Main Gate → Main Block → Top corridor, second door', eta: '2 min' },
+  'LAB 5':               { route: 'Main Gate → Main Block → Top corridor, third door', eta: '2 min' },
+  'PRINCIPAL':           { route: 'Main Gate → Straight → Ground floor, left corner office', eta: '2 min' },
+  'OFFICE':              { route: 'Main Gate → Straight → Ground floor, next to Principal cabin', eta: '2 min' },
+  'LOBBY':               { route: 'Main Gate → Walk straight 20 m → You\'re at the lobby', eta: '1 min' },
+  'TEACHER AUDITORIUM':  { route: 'Main Gate → Left side ground floor corridor', eta: '3 min' },
+  'MATHS STAFF':         { route: 'Main Gate → Main Block → 1st Floor stairs → Turn left', eta: '3 min' },
+  'SEMINAR HALL':        { route: 'Main Gate → Main Block → 1st Floor stairs → Turn right', eta: '3 min' },
+  'AIML STAFF':          { route: 'Main Gate → Main Block → 2nd Floor stairs → Turn left (AIML corridor)', eta: '4 min' },
+  'CSE HOD':             { route: 'Main Gate → Main Block → 2nd Floor stairs → Right side, end of corridor', eta: '4 min' },
+  'STAFF':               { route: 'Main Gate → Main Block → Target floor via stairs → Staff room', eta: '4–5 min' },
+  'AUDITORIUM':          { route: 'Main Gate → Main Block → 3rd Floor stairs → Right wing, large hall', eta: '5 min' },
+  'YOGA':                { route: 'Main Gate → Main Block → 3rd Floor stairs → Bottom corridor, center', eta: '5 min' },
+  'Solar Panels':        { route: 'Main Gate → Main Block → Terrace stairs → Rooftop (restricted access)', eta: '6 min' },
+  'Boys-hostel':         { route: 'Main Gate → Left on campus road → 200 m → Hostel entrance', eta: '4 min' },
+  'Civil-block/Library': { route: 'Main Gate → Straight → Right at junction → Civil Block (Library on ground floor)', eta: '5 min' },
+  'Mechanical-block':    { route: 'Main Gate → Straight → Far right end of campus road', eta: '6 min' },
+  'Canteen':             { route: 'Main Gate → Left → 50 m down the road → Canteen building on left', eta: '2 min' },
+  'Main-branch':         { route: 'Main Gate → Walk straight → You\'re at the Main Block entrance', eta: '1 min' },
+  'Prakruthi-college':   { route: 'Main Gate → Straight, past Main Block → Far right of campus', eta: '7 min' },
+  'SECURITY':            { route: 'Main Gate → 10 m inside → Security cabin on right', eta: '< 1 min' },
+  'Main Gate':           { route: 'You are at the Main Gate.', eta: '0 min' },
+  'Back Gate':           { route: 'Main Gate → Straight → Through campus → Back Gate', eta: '8 min' },
+};
+
+// Searchable index: flatten all rooms across all floors
+const buildSearchIndex = () => {
+  const index = [];
+  Object.entries(MAP_DATA).forEach(([floor, rooms]) => {
+    rooms.forEach(r => {
+      if (r.type === 'Stairs') return;
+      index.push({ name: r.name, floor, type: r.type });
+    });
+  });
+  // Add campus grounds buildings
+  ['Boys-hostel','Civil-block/Library','Mechanical-block','Canteen','Main-branch','Prakruthi-college','SECURITY','Main Gate','Back Gate'].forEach(name => {
+    index.push({ name, floor: 'Campus Grounds', type: 'Special' });
+  });
+  return index;
+};
+
 export default function CampusMap() {
   const [selectedFloor, setSelectedFloor] = useState('Ground Floor');
   const [hoveredRoom, setHoveredRoom] = useState(null);
   const [activeRoom, setActiveRoom] = useState(null);
+  const [search, setSearch] = useState('');
+  const [searchFocus, setSearchFocus] = useState(false);
+  const searchRef = useRef(null);
+  const searchIndex = useMemo(buildSearchIndex, []);
+
+  const suggestions = useMemo(() => {
+    if (!search.trim()) return [];
+    const q = search.toLowerCase();
+    return searchIndex.filter(r => r.name.toLowerCase().includes(q)).slice(0, 8);
+  }, [search, searchIndex]);
+
+  const goToRoom = (room) => {
+    setSearch('');
+    setSearchFocus(false);
+    if (room.floor === 'Campus Grounds') {
+      setSelectedFloor('Campus Grounds');
+    } else {
+      setSelectedFloor(room.floor);
+    }
+    setActiveRoom({ name: room.name, type: room.type, floor: room.floor });
+  };
 
   const renderFloor = () => {
     const rooms = MAP_DATA[selectedFloor];
@@ -412,15 +480,60 @@ export default function CampusMap() {
   };
 
   return (
-    <main className="min-h-screen bg-[#0a1628] pt-8 pb-24 text-white flex flex-col items-center">
+    <main className="min-h-screen bg-[#0a1628] pt-24 pb-24 text-white flex flex-col items-center">
       <div className="w-full max-w-[700px] px-6 flex flex-col items-center">
-        
+
         {/* Header */}
         <div className="mb-6 text-center w-full">
-          <h1 className="text-3xl font-bold tracking-tight mb-2 font-satoshi text-[#4a9eff]">Campus Blueprint</h1>
+          <h1 className="text-3xl font-bold tracking-tight mb-1 font-satoshi text-[#4a9eff]">Campus Blueprint</h1>
           <p className="text-white/50 text-xs tracking-widest uppercase border-b border-white/10 pb-4 font-berkeley-mono">
             Interactive floor plan mapping system
           </p>
+        </div>
+
+        {/* Search bar */}
+        <div className="relative w-full mb-6" ref={searchRef}>
+          <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#4a9eff]/60 text-xl">search</span>
+          <input
+            className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-sm text-white placeholder:text-white/30 focus:ring-2 focus:ring-[#4a9eff]/40 focus:border-[#4a9eff]/30 outline-none font-berkeley-mono transition-all"
+            placeholder='Find a room — "CSE Lab", "Library", "Canteen"...'
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            onFocus={() => setSearchFocus(true)}
+            onBlur={() => setTimeout(() => setSearchFocus(false), 150)}
+          />
+          {search && (
+            <button onClick={() => setSearch('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white transition-colors">
+              <span className="material-symbols-outlined text-lg">close</span>
+            </button>
+          )}
+
+          {/* Suggestions dropdown */}
+          <AnimatePresence>
+            {searchFocus && suggestions.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.15 }}
+                className="absolute top-full left-0 right-0 mt-2 bg-[#0d1322] border border-white/10 rounded-xl overflow-hidden shadow-2xl z-50">
+                {suggestions.map((r, i) => (
+                  <button key={i} onMouseDown={() => goToRoom(r)}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 transition-colors text-left">
+                    <span className="material-symbols-outlined text-[#4a9eff]/60 text-base" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      {r.type === 'Labs' ? 'computer' : r.type === 'Classrooms' ? 'school' : r.type === 'Staff' ? 'person' : r.type === 'Washrooms' ? 'wc' : 'location_on'}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-sm text-white font-berkeley-mono truncate">{r.name}</p>
+                      <p className="text-[10px] text-white/30">{r.floor}</p>
+                    </div>
+                    {DIRECTIONS[r.name] && (
+                      <span className="ml-auto text-[10px] text-[#4a9eff]/50 font-berkeley-mono">{DIRECTIONS[r.name].eta}</span>
+                    )}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Legend */}
@@ -476,26 +589,42 @@ export default function CampusMap() {
 
         {/* Popup Map Card on Click */}
         <AnimatePresence>
-           {activeRoom && (
-             <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                className="absolute bottom-6 bg-[#0a1628]/95 backdrop-blur border border-white/10 shadow-2xl rounded p-4 min-w-[200px] z-50 border-t-[#3b82f6] border-t-2"
-             >
-                <button onClick={() => setActiveRoom(null)} className="absolute top-2 right-2 text-white/50 hover:text-white">
-                  <span className="material-symbols-outlined text-[14px]">close</span>
-                </button>
-                <div className="mb-1 text-[#4a9eff] font-berkeley-mono text-[9px] tracking-widest uppercase">{activeRoom.floor}</div>
-                <h3 className="text-sm font-bold text-white mb-2 font-berkeley-mono">{activeRoom.name}</h3>
-                <div className="flex items-center gap-1.5">
-                   <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: LEGEND.find(l => l.label.includes(activeRoom.type) || (activeRoom.type === 'Labs' && l.label === 'Laboratories'))?.color || '#fff' }}></div>
-                   <span className="text-[10px] uppercase font-berkeley-mono text-white/60">
-                     {activeRoom.type}
-                   </span>
+          {activeRoom && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.2 }}
+              className="absolute bottom-4 left-4 right-4 bg-[#0a1628]/98 backdrop-blur border border-[#3b82f6]/30 shadow-2xl rounded-xl p-4 z-50"
+            >
+              <button onClick={() => setActiveRoom(null)}
+                className="absolute top-3 right-3 text-white/40 hover:text-white transition-colors">
+                <span className="material-symbols-outlined text-base">close</span>
+              </button>
+
+              <div className="mb-1 text-[#4a9eff] font-berkeley-mono text-[9px] tracking-widest uppercase flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: LEGEND.find(l => l.label === 'Laboratories' && activeRoom.type === 'Labs' ? true : l.label.includes(activeRoom.type))?.color || '#4a9eff' }} />
+                {activeRoom.floor} · {activeRoom.type}
+              </div>
+              <h3 className="text-base font-bold text-white mb-3 font-berkeley-mono pr-6">{activeRoom.name}</h3>
+
+              {DIRECTIONS[activeRoom.name] ? (
+                <div className="space-y-2">
+                  <div className="flex items-start gap-2 p-2.5 bg-white/3 rounded-lg border border-white/5">
+                    <span className="material-symbols-outlined text-[#4a9eff] text-base flex-shrink-0 mt-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>directions_walk</span>
+                    <div>
+                      <p className="text-[10px] font-berkeley-mono text-white/40 uppercase tracking-widest mb-1">Route from Main Gate</p>
+                      <p className="text-xs text-white/80 leading-relaxed">{DIRECTIONS[activeRoom.name].route}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px] font-berkeley-mono text-white/40">
+                    <span className="material-symbols-outlined text-xs" style={{ fontVariationSettings: "'FILL' 1" }}>schedule</span>
+                    Walking time: {DIRECTIONS[activeRoom.name].eta}
+                  </div>
                 </div>
-             </motion.div>
-           )}
+              ) : (
+                <p className="text-[11px] text-white/40 font-berkeley-mono">Use the stairs on either side to reach this location.</p>
+              )}
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
     </main>

@@ -132,7 +132,7 @@ const Facilities = () => {
           <div>
             <h1 className="text-5xl md:text-6xl font-bold tracking-tighter text-white mb-4 font-satoshi">Campus Infrastructure.</h1>
             <p className="text-on-surface-variant max-w-xl text-lg leading-relaxed">
-              Access state-of-the-art learning environments, specialized labs, and collaborative spaces designed for the next generation of pioneers.
+              Labs, seminar halls, and study spaces you'll actually use every day at CBIT Kolar — from the server room to the rooftop canteen.
             </p>
           </div>
           <div className="flex gap-3">

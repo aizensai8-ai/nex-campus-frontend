@@ -17,6 +17,9 @@ import EditProfile from './pages/EditProfile';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import CampusMap from './pages/CampusMap';
+import Faculty from './pages/Faculty';
+import Placements from './pages/Placements';
+import LostFound from './pages/LostFound';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -34,6 +37,9 @@ function App() {
           <Route path="/events" element={<Events />} />
           <Route path="/facilities" element={<Facilities />} />
           <Route path="/campus-map" element={<CampusMap />} />
+          <Route path="/faculty" element={<Faculty />} />
+          <Route path="/placements" element={<Placements />} />
+          <Route path="/lost-found" element={<LostFound />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/support" element={<Support />} />
           <Route path="/profile" element={<EditProfile />} />

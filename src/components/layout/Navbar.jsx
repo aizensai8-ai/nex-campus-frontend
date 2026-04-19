@@ -3,21 +3,116 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
+import { useNotifications } from '../../context/NotificationContext';
 
 const NAV_ITEMS = [
   { label: 'Home', path: '/' },
   { label: 'Portal', path: '/portal' },
   { label: 'Events', path: '/events' },
   { label: 'Courses', path: '/courses' },
+  { label: 'Faculty', path: '/faculty' },
+  { label: 'Placements', path: '/placements' },
+  { label: 'Lost & Found', path: '/lost-found' },
   { label: 'Facilities', path: '/facilities' },
   { label: 'Campus Map', path: '/campus-map' },
   { label: 'Support', path: '/support' },
 ];
 
+const TYPE_ICON = {
+  announcement: 'campaign',
+  event: 'event',
+  placement: 'work',
+  attendance: 'warning',
+  support: 'support_agent',
+};
+
+const NotificationBell = () => {
+  const { notifications, unreadCount, readIds, markRead, markAllRead } = useNotifications();
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+
+  const handleClick = (n) => {
+    markRead(n.id);
+    setOpen(false);
+    if (n.link) navigate(n.link);
+  };
+
+  return (
+    <div className="relative" ref={ref}>
+      <button onClick={() => setOpen(v => !v)}
+        className="relative w-8 h-8 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-white hover:bg-surface-container-high transition-colors">
+        <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: unreadCount > 0 ? "'FILL' 1" : "'FILL' 0" }}>
+          notifications
+        </span>
+        {unreadCount > 0 && (
+          <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center px-0.5 leading-none">
+            {unreadCount > 9 ? '9+' : unreadCount}
+          </span>
+        )}
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -6, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 top-11 w-80 bg-surface-container-low border border-outline-variant/20 rounded-xl shadow-2xl overflow-hidden z-50"
+          >
+            <div className="flex items-center justify-between px-4 py-3 border-b border-outline-variant/10">
+              <span className="text-sm font-bold text-white">Notifications</span>
+              {unreadCount > 0 && (
+                <button onClick={markAllRead} className="text-xs text-primary hover:underline">Mark all read</button>
+              )}
+            </div>
+
+            <div className="overflow-y-auto max-h-80">
+              {notifications.length === 0 ? (
+                <div className="py-10 text-center">
+                  <span className="material-symbols-outlined text-3xl text-outline/30 block mb-2">notifications_off</span>
+                  <p className="text-xs text-on-surface-variant">No notifications yet</p>
+                </div>
+              ) : notifications.map(n => {
+                const unread = !readIds.has(n.id);
+                return (
+                  <button key={n.id} onClick={() => handleClick(n)}
+                    className={`w-full flex items-start gap-3 px-4 py-3 hover:bg-surface-container transition-colors text-left border-b border-outline-variant/5 last:border-0 ${unread ? 'bg-primary/[0.07]' : ''}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${n.urgent ? 'bg-yellow-400/10' : 'bg-surface-container'}`}>
+                      <span className={`material-symbols-outlined text-sm ${n.urgent ? 'text-yellow-400' : 'text-outline'}`}
+                        style={{ fontVariationSettings: "'FILL' 1" }}>
+                        {TYPE_ICON[n.type] || 'circle'}
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-xs font-semibold leading-snug ${unread ? 'text-white' : 'text-on-surface-variant'}`}>{n.title}</p>
+                      <p className="text-[11px] text-outline line-clamp-1 mt-0.5">{n.message}</p>
+                      <p className="text-[10px] text-outline/60 mt-1">{n.time}</p>
+                    </div>
+                    {unread && <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0 mt-2" />}
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  // NotificationBell is its own component with internal state
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -188,6 +283,9 @@ const Navbar = () => {
               </button>
             )}
           </AnimatePresence>
+
+          {/* Notification bell */}
+          <NotificationBell />
 
           {/* Auth button */}
           {!user && (
