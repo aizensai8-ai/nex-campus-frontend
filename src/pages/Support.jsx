@@ -269,7 +269,7 @@ const Support = () => {
                         placeholder="Your full name" />
                     </div>
                     <div>
-                      <label className="text-[10px] font-mono uppercase tracking-widest text-outline block mb-1.5">Gmail *</label>
+                      <label className="text-[10px] font-mono uppercase tracking-widest text-outline block mb-1.5">Email *</label>
                       <input name="email" value={form.email} onChange={handle} required type="email"
                         className="w-full bg-surface-container-high border border-outline-variant/10 rounded-lg py-2.5 px-4 text-on-surface text-sm placeholder:text-outline focus:ring-1 focus:ring-primary outline-none"
                         placeholder="you@gmail.com" />

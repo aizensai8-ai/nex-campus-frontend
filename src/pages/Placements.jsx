@@ -181,7 +181,7 @@ const CompanyModal = ({ drive, registered, onRegister, onClose }) => {
             )}
             <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold ${isExpired ? 'text-red-400 bg-red-400/10' : isSoon ? 'text-yellow-400 bg-yellow-400/10' : 'text-on-surface-variant bg-surface-container'}`}>
               <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>calendar_today</span>
-              {isExpired ? 'Deadline passed' : days === 0 ? 'Deadline today' : `${days} days left`}
+              {isExpired ? 'Deadline passed' : days === null ? 'Date TBA' : days === 0 ? 'Deadline today' : `${days} days left`}
             </span>
             {drive.location && (
               <span className="flex items-center gap-1.5 text-on-surface-variant bg-surface-container px-3 py-1.5 rounded-lg">
@@ -300,7 +300,7 @@ const DriveCard = ({ drive, registered, onRegister, onClick }) => {
 
         {!isExpired && (
           <span className={`text-xs font-semibold ${days !== null && days <= 3 ? 'text-yellow-400' : 'text-primary'}`}>
-            {days === 0 ? 'Closes today' : days === 1 ? '1 day left' : `${days} days left`}
+            {days === null ? 'Date TBA' : days === 0 ? 'Closes today' : days === 1 ? '1 day left' : `${days} days left`}
           </span>
         )}
       </div>

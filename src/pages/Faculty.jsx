@@ -219,11 +219,6 @@ const Faculty = () => {
           if (!map[key]) {
             map[key] = { name: key, department: c.department || 'General', subjects: [] };
           }
-          // Prefer a mapped department from static profile if available
-          const profile = FACULTY_PROFILES[key];
-          if (profile) {
-            // Keep the department from courses but we use it for display
-          }
           const exists = map[key].subjects.some(s => s.code === c.code);
           if (!exists) {
             map[key].subjects.push({ code: c.code, name: c.name });

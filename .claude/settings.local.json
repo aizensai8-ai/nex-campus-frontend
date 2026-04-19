@@ -23,7 +23,9 @@
       "Bash(git commit *)",
       "Bash(git push *)",
       "Bash(npx vite *)",
-      "Bash(xargs ls *)"
+      "Bash(xargs ls *)",
+      "Bash(sed -n '32,40p' /c/sm-campus/server/routes/announcements.js)",
+      "Bash(sed -n '43,55p' /c/sm-campus/server/routes/events.js)"
     ]
   }
 }
