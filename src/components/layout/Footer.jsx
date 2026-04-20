@@ -94,16 +94,16 @@ const Footer = () => {
 
   return (
     <>
-      <footer className="w-full bg-[#0d1322] relative">
+      <footer className="w-full bg-[#111827] relative">
         {/* Gradient separator */}
-        <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(59,130,246,0.4) 40%, rgba(139,92,246,0.4) 60%, transparent 100%)' }} />
+        <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(16,185,129,0.3) 50%, transparent 100%)' }} />
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 px-8 py-12 max-w-7xl mx-auto">
           {/* Brand */}
           <div className="col-span-1 md:col-span-1">
-            <span className="font-berkeley-mono text-xs uppercase tracking-widest text-primary block mb-3">Nex Campus</span>
-            <p className="text-sm text-[#8c909f] leading-relaxed mb-4">
-              The Intelligent Monolith for modern education. Scalable, secure, and unified.
+            <span className="font-mono text-xs uppercase tracking-widest text-primary block mb-3">Nex Campus</span>
+            <p className="text-sm text-[#9ca3af] leading-relaxed mb-4">
+              Your campus dashboard for CBIT Kolar. Attendance, courses, and events in one place.
             </p>
             <div className="flex gap-3">
               <a
@@ -128,7 +128,7 @@ const Footer = () => {
           {/* Navigation */}
           <div>
             <span className="text-white text-xs font-bold uppercase tracking-widest block mb-5">Navigation</span>
-            <ul className="space-y-3 text-sm text-[#8c909f]">
+            <ul className="space-y-3 text-sm text-[#9ca3af]">
               {[
                 { label: 'Portal', to: '/portal' },
                 { label: 'Courses', to: '/courses' },
@@ -136,7 +136,7 @@ const Footer = () => {
                 { label: 'Facilities', to: '/facilities' },
               ].map(({ label, to }) => (
                 <li key={label}>
-                  <Link className="footer-link hover:text-[#adc6ff]" to={to}>{label}</Link>
+                  <Link className="footer-link hover:text-primary" to={to}>{label}</Link>
                 </li>
               ))}
             </ul>
@@ -145,11 +145,11 @@ const Footer = () => {
           {/* Platform */}
           <div>
             <span className="text-white text-xs font-bold uppercase tracking-widest block mb-5">Platform</span>
-            <ul className="space-y-3 text-sm text-[#8c909f]">
+            <ul className="space-y-3 text-sm text-[#9ca3af]">
               <li>
                 <button
                   onClick={() => setModal('privacy')}
-                  className="footer-link hover:text-[#adc6ff] text-left"
+                  className="footer-link hover:text-primary text-left"
                 >
                   Privacy Policy
                 </button>
@@ -157,16 +157,16 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => setModal('terms')}
-                  className="footer-link hover:text-[#adc6ff] text-left"
+                  className="footer-link hover:text-primary text-left"
                 >
                   Terms of Service
                 </button>
               </li>
               <li>
-                <Link className="footer-link hover:text-[#adc6ff]" to="/support">Support</Link>
+                <Link className="footer-link hover:text-primary" to="/support">Support</Link>
               </li>
               <li>
-                <span className="flex items-center gap-1.5 text-[#8c909f]">
+                <span className="flex items-center gap-1.5 text-[#9ca3af]">
                   <span className="inline-flex relative">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-ping absolute" />
                     <span className="w-1.5 h-1.5 rounded-full bg-green-400 relative" />
@@ -180,7 +180,7 @@ const Footer = () => {
           {/* Newsletter */}
           <div>
             <span className="text-white text-xs font-bold uppercase tracking-widest block mb-5">Stay Updated</span>
-            <p className="text-xs text-[#8c909f] mb-4 leading-relaxed">
+            <p className="text-xs text-[#9ca3af] mb-4 leading-relaxed">
               Get campus announcements and event updates in your inbox.
             </p>
             <AnimatePresence mode="wait">
@@ -223,8 +223,8 @@ const Footer = () => {
 
         {/* Bottom bar */}
         <div className="max-w-7xl mx-auto px-8 py-5 border-t border-outline-variant/10 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-[#8c909f]">© 2026 Nex Campus · Precision in Education</p>
-          <p className="text-xs text-[#8c909f]">
+          <p className="text-xs text-[#9ca3af]">© 2026 Nex Campus · Built for CBIT Kolar</p>
+          <p className="text-xs text-[#9ca3af]">
             Built for{' '}
             <span className="text-primary font-semibold">CBIT Kolar</span>
           </p>

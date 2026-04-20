@@ -50,8 +50,8 @@ const Login = () => {
                 {/* Left Side: Branding & Image */}
                 <section className="relative w-full md:w-1/2 h-64 md:h-screen flex items-center justify-center overflow-hidden">
                     <div className="absolute inset-0 z-0 bg-surface-container-low">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-[#0d1322]/60 to-secondary/5" />
-                        <div className="absolute top-0 left-0 w-full h-full opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(#adc6ff 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-[#111827]/60 to-secondary/5" />
+                        <div className="absolute top-0 left-0 w-full h-full opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(#374151 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
                         <div className="absolute bottom-0 right-0 w-72 h-72 bg-primary/8 rounded-full blur-3xl" />
                         <div className="absolute top-1/3 left-1/4 w-48 h-48 bg-secondary/5 rounded-full blur-3xl" />
                     </div>
@@ -66,7 +66,7 @@ const Login = () => {
                             Welcome back to Nex Campus.
                         </h1>
                         <p className="text-on-surface-variant text-lg max-w-md font-normal leading-relaxed">
-                            The intelligent monolith for precision education and campus management. Access your ecosystem with ease.
+                            Your campus dashboard for CBIT Kolar. Attendance, timetables, and courses — all in one place.
                         </p>
                         <div className="mt-12 flex items-center gap-6">
                             <div className="flex -space-x-3">
@@ -81,7 +81,7 @@ const Login = () => {
 
                 {/* Right Side: Login Form */}
                 <section className="w-full md:w-1/2 flex items-center justify-center p-8 md:p-20 bg-background relative">
-                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#adc6ff 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
+                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#374151 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
 
                     <div className="w-full max-w-md relative z-10">
                         <div className="mb-10">
@@ -151,7 +151,7 @@ const Login = () => {
                             </div>
 
                             <button
-                                className="w-full bg-[#3B82F6] hover:bg-primary-container text-on-primary-container font-semibold py-3.5 rounded-md transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/10 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="w-full bg-primary hover:bg-[#34d399] text-on-primary font-semibold py-3.5 rounded-md transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                 type="submit" disabled={loading}
                             >
                                 {loading ? (
@@ -193,7 +193,7 @@ const Login = () => {
 
                     <div className="absolute bottom-8 text-center w-full px-8 left-0">
                         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-outline/40">
-                            Precision in Education © 2024 Nex Campus
+                            © 2026 NexCampus · Built for CBIT Kolar
                         </span>
                     </div>
                 </section>

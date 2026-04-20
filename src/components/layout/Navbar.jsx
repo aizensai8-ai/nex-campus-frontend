@@ -205,7 +205,7 @@ const Navbar = () => {
     <motion.header
       animate={{ y: navHidden ? '-100%' : '0%' }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
-      className="sticky top-0 z-50 border-b border-white/5 backdrop-blur-xl bg-[#0d1322]/80">
+      className="sticky top-0 z-50 border-b border-white/5 backdrop-blur-xl bg-[#111827]/80">
       <nav className="flex justify-between items-center w-full px-6 py-3 max-w-[1440px] mx-auto">
         <div className="flex items-center gap-8">
           <Link to="/" className="text-xl font-bold tracking-tighter text-white font-satoshi hover:opacity-90 transition-opacity">
@@ -291,10 +291,9 @@ const Navbar = () => {
           {!user && (
             <Link
               to="/login"
-              className="bg-[#242a3a] text-primary px-4 py-1.5 text-sm font-semibold rounded hover:bg-[#2f3445] transition-all duration-200 active:opacity-80 flex items-center gap-2 hover:scale-[1.02]"
+              className="bg-surface-container-high text-primary px-4 py-1.5 text-sm font-semibold rounded border border-outline-variant/20 hover:bg-surface-variant transition-all duration-200 active:opacity-80 flex items-center gap-2 hover:scale-[1.02]"
             >
-              <span className="material-symbols-outlined text-sm hidden md:inline">sensors</span>
-              Portal Live
+              Log In
             </Link>
           )}
 
@@ -357,7 +356,7 @@ const Navbar = () => {
                       {deferredPrompt && (
                         <button
                           onClick={handleInstallClick}
-                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#adc6ff] hover:bg-surface-container-high transition-colors"
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-primary hover:bg-surface-container-high transition-colors"
                         >
                           <span className="material-symbols-outlined text-sm">download</span>
                           Install App
@@ -422,7 +421,7 @@ const Navbar = () => {
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed top-0 left-0 bottom-0 z-50 w-72 bg-[#0d1322] border-r border-white/5 flex flex-col md:hidden"
+            className="fixed top-0 left-0 bottom-0 z-50 w-72 bg-[#111827] border-r border-white/5 flex flex-col md:hidden"
           >
             {/* Panel header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">

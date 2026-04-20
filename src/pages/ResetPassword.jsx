@@ -43,8 +43,8 @@ const ResetPassword = () => {
         >
             <main className="min-h-screen flex items-center justify-center relative p-6">
                 <div className="absolute inset-0 z-0 bg-surface-container-low">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-[#0d1322] to-secondary/5" />
-                    <div className="absolute top-0 left-0 w-full h-full opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(#adc6ff 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-[#111827] to-secondary/5" />
+                    <div className="absolute top-0 left-0 w-full h-full opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(#374151 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
                 </div>
                 
                 <div className="w-full max-w-md relative z-10 bg-surface-container-lowest p-8 rounded-2xl shadow-2xl border border-outline-variant/20">
@@ -102,7 +102,7 @@ const ResetPassword = () => {
                         </div>
 
                         <button
-                            className="w-full bg-[#3B82F6] hover:bg-primary-container text-on-primary-container font-semibold py-3.5 rounded-md transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/10 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="w-full bg-primary hover:bg-[#34d399] text-on-primary font-semibold py-3.5 rounded-md transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             type="submit" disabled={loading}
                         >
                             {loading ? (

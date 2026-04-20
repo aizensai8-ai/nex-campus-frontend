@@ -243,9 +243,9 @@ const Signup = () => {
             <footer className="w-full border-t border-outline-variant/15 bg-background">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 px-8 py-12 max-w-7xl mx-auto">
                     <div className="md:col-span-1">
-                        <div className="font-mono text-xs uppercase tracking-widest text-[#adc6ff] mb-4">Nex Campus</div>
+                        <div className="font-mono text-xs uppercase tracking-widest text-primary mb-4">Nex Campus</div>
                         <p className="text-sm text-outline leading-relaxed max-w-xs">
-                            The precision platform for modern educational ecosystems. Smart. Scalable. Secure.
+                            Your campus dashboard for CBIT Kolar. Attendance, courses, and events in one place.
                         </p>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 md:col-span-3 gap-8">
@@ -273,7 +273,7 @@ const Signup = () => {
                     </div>
                 </div>
                 <div className="px-8 py-6 border-t border-outline-variant/10 text-center flex flex-col md:flex-row justify-between items-center gap-4 max-w-7xl mx-auto">
-                    <p className="font-inter text-xs text-[#c2c6d6]">© 2024 Nex Campus. Precision in Education.</p>
+                    <p className="font-inter text-xs text-[#9ca3af]">© 2026 NexCampus · Built for CBIT Kolar</p>
                     <div className="flex gap-6">
                         <span className="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors text-[20px]">terminal</span>
                         <span className="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors text-[20px]">database</span>
