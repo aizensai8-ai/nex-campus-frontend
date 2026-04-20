@@ -9,7 +9,7 @@ export const CommuteDashboard = ({ address }) => {
 
   useEffect(() => {
     api.get('/api/transport')
-      .then(res => setBuses(res.data.data || []))
+      .then(res => setBuses(res.data || []))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -101,7 +101,7 @@ export const LibraryDashboard = ({ semester }) => {
   useEffect(() => {
     // Ideally query by semester, but we fetch all and filter client side for UX robustness
     api.get('/api/resources')
-      .then(res => setResources(res.data.data || []))
+      .then(res => setResources(res.data || []))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -173,7 +173,7 @@ export const AcademicsDashboard = () => {
 
   useEffect(() => {
     api.get('/api/grades/mine')
-      .then(res => setGrades(res.data.data || []))
+      .then(res => setGrades(res.data || []))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);

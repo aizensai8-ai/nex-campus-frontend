@@ -227,7 +227,7 @@ const CompanyModal = ({ drive, registered, onRegister, onClose }) => {
             <button onClick={() => { onRegister(drive._id); onClose(); }}
               disabled={registered}
               className={`w-full py-3 rounded-xl text-sm font-bold transition-all ${registered ? 'bg-green-400/15 text-green-400 cursor-default' : seats === 0 ? 'bg-surface-container text-on-surface-variant cursor-not-allowed' : 'bg-primary text-black hover:bg-primary/90'}`}>
-              {registered ? 'Registered' : seats === 0 ? 'Full — Join Waitlist' : 'Register Now'}
+              {registered ? 'Registered' : seats === 0 ? 'Registrations Closed' : 'Register Now'}
             </button>
           )}
         </div>
@@ -522,39 +522,12 @@ const Placements = () => {
         {/* Interview Experiences */}
         <motion.section {...fadeUpBlur} className="mb-16">
           <div className="mb-5">
-            <h2 className="text-2xl font-bold text-white tracking-tight">Sample Alumni Experiences</h2>
-            <p className="text-on-surface-variant text-sm mt-1">Example accounts from past placement drives.</p>
+            <h2 className="text-2xl font-bold text-white tracking-tight">Interview Experiences</h2>
+            <p className="text-on-surface-variant text-sm mt-1">First-hand accounts from students who've been through campus placements.</p>
           </div>
-
-          {/* Sample data notice */}
-          <div className="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 border-dashed mb-5">
-            <span className="material-symbols-outlined text-outline text-base flex-shrink-0 mt-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>info</span>
-            <p className="text-xs text-on-surface-variant leading-relaxed">
-              <span className="text-outline font-semibold">Placeholder content.</span> These are illustrative examples of what alumni submissions look like. Verified student experiences will appear here once the submission portal is active.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 opacity-70">
-            {[
-              { company: 'Infosys', role: 'Systems Engineer', student: '2024 CSE', rounds: '3 rounds: Aptitude → Technical → HR', outcome: 'Selected', tip: 'Focus on basic DSA and explain your thought process clearly. They value communication as much as code.' },
-              { company: 'TCS', role: 'Assistant System Engineer', student: '2024 CSE', rounds: '2 rounds: TCS NQT → HR', outcome: 'Selected', tip: 'NQT has verbal, quant, and coding sections. Practice IndiaBIX and LeetCode Easy.' },
-              { company: 'Wipro', role: 'Project Engineer', student: '2023 ISE', rounds: '3 rounds: Online Test → Technical → HR', outcome: 'Selected', tip: 'Strong on SQL and Java OOP. Review your final year project thoroughly — they ask about it.' },
-              { company: 'Cognizant', role: 'Programmer Analyst', student: '2024 AIML', rounds: '2 rounds: GenC Next Test → HR', outcome: 'Selected', tip: 'GenC Next has a higher difficulty aptitude. Python ML knowledge gave me an edge in the technical round.' },
-            ].map((exp, i) => (
-              <div key={i} className="p-5 bg-surface-container border border-outline-variant/10 border-dashed rounded-xl">
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <p className="text-sm font-bold text-on-surface">{exp.company}</p>
-                    <p className="text-xs text-on-surface-variant">{exp.role} · {exp.student}</p>
-                  </div>
-                  <span className="text-xs text-outline bg-surface-container-high px-2.5 py-1 rounded-lg font-semibold">{exp.outcome}</span>
-                </div>
-                <p className="text-xs text-outline mb-2 flex items-center gap-1">
-                  <span className="material-symbols-outlined text-xs">route</span>{exp.rounds}
-                </p>
-                <p className="text-xs text-on-surface-variant leading-relaxed">"{exp.tip}"</p>
-              </div>
-            ))}
+          <div className="py-12 text-center border-2 border-dashed border-outline-variant/15 rounded-2xl">
+            <span className="material-symbols-outlined text-outline text-4xl mb-3 block">forum</span>
+            <p className="text-on-surface-variant text-sm">Interview experiences will appear here once students begin submitting them.</p>
           </div>
         </motion.section>
 

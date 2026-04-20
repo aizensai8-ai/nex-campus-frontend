@@ -25,6 +25,10 @@ dist-ssr
 # Added by code-review-graph
 .code-review-graph/
 
+# Environment variable files (contain secrets — never commit)
+.env
+server/.env
+
 # Runtime port negotiation file (written by server on startup)
 server/.port
 REVIEW-FILES/

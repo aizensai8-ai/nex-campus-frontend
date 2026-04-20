@@ -22,7 +22,7 @@ export const sendSupportEmail = async (ticket) => {
     // Email to Admin
     await transporter.sendMail({
       from: `"Nex Campus Support" <${process.env.SMTP_EMAIL}>`,
-      to: 'jinkazamaxui@gmail.com',
+      to: process.env.SUPPORT_EMAIL || process.env.SMTP_EMAIL,
       subject: `New Support Query: ${ticket.usn || ticket.name}`,
       text: `
 New Support Ticket Submitted.

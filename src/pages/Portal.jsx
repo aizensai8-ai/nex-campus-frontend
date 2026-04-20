@@ -37,17 +37,6 @@ const getGreeting = () => {
 
 const semLabel = (n) => n === 1 ? '1st' : n === 2 ? '2nd' : n === 3 ? '3rd' : n ? `${n}th` : null;
 
-const deptFromSection = (section) => {
-  if (!section) return null;
-  const s = section.toUpperCase();
-  if (s.includes('AIML')) return 'AIML';
-  if (s.includes('ISE')) return 'ISE';
-  if (s.includes('ECE')) return 'ECE';
-  if (s.includes('EEE')) return 'EEE';
-  if (s.includes('MECH')) return 'Mechanical';
-  if (s.includes('CIVIL')) return 'Civil';
-  return 'CSE';
-};
 
 const getNextAndLastClass = (timetableData) => {
   if (!timetableData?.days) return { next: null, last: null };
@@ -590,7 +579,7 @@ const DashboardHome = ({ user, timetableData, loadingTimetable, announcements, e
           </h1>
           <p className="text-on-surface-variant text-sm mt-1">
             {today}
-            {user.section && <> · Section {user.section}{sem ? ` · ${sem} Sem ${deptFromSection(user.section)}` : ''}</>}
+            {user.section && <> · Section {user.section}{sem ? ` · ${sem} Sem` : ''}</>}
           </p>
         </div>
         <Link to="/profile" className="flex items-center gap-2 text-xs text-outline hover:text-white border border-outline-variant/20 hover:border-outline-variant/40 px-3 py-1.5 rounded-lg transition-colors">
@@ -894,7 +883,7 @@ const Portal = () => {
                     <div>
                       <h2 className="text-2xl font-bold text-white font-satoshi mb-1">Weekly Timetable</h2>
                       <p className="text-on-surface-variant text-sm mt-0.5">
-                        Section {user.section ?? '—'} · {semLabel(parseInt(user.section?.[0])) ?? '—'} Semester {deptFromSection(user.section)} · CBIT Kolar
+                        Section {user.section ?? '—'} · {semLabel(parseInt(user.section?.[0])) ?? '—'} Semester · CBIT Kolar
                       </p>
                     </div>
                     <div className="flex items-center gap-2 text-[10px] font-mono text-outline uppercase tracking-widest">
@@ -959,7 +948,7 @@ const Portal = () => {
                   <div className="flex items-center justify-between mb-5">
                     <div>
                       <h2 className="text-xl font-bold text-white font-satoshi">Digital Library</h2>
-                      <p className="text-on-surface-variant text-sm mt-0.5">Resources for Sem {user.semester ?? '—'} · {deptFromSection(user.section)}</p>
+                      <p className="text-on-surface-variant text-sm mt-0.5">Resources for Sem {user.semester ?? '—'} · Section {user.section ?? '—'}</p>
                     </div>
                   </div>
                   <LibraryDashboard semester={user.semester} />

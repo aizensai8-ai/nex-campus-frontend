@@ -1,17 +1,17 @@
 import jwt from 'jsonwebtoken';
 
-export const OFFLINE_ADMIN_EMAIL = 'jinkazamaxui@gmail.com';
-export const OFFLINE_ADMIN_PASSWORD = 'sai@7860';
-export const OFFLINE_ADMIN_ID = '000000000000000000000001';
+const OFFLINE_ADMIN_EMAIL = process.env.OFFLINE_ADMIN_EMAIL;
+const OFFLINE_ADMIN_PASSWORD = process.env.OFFLINE_ADMIN_PASSWORD;
+const OFFLINE_ADMIN_ID = process.env.OFFLINE_ADMIN_ID || '000000000000000000000001';
 
 const buildOfflineAdminUser = () => ({
   _id: OFFLINE_ADMIN_ID,
-  name: 'Sai',
+  name: 'Admin',
   email: OFFLINE_ADMIN_EMAIL,
   role: 'admin',
-  usn: '1ck24cs104',
-  semester: 4,
-  section: '4C',
+  usn: '',
+  semester: null,
+  section: null,
   address: '',
   avatar: '',
   getSignedJwtToken() {
@@ -26,8 +26,8 @@ export const isOfflineMongo = () => false;
 export const createOfflineAdminUser = () => buildOfflineAdminUser();
 
 export const getOfflineAdminUserByEmail = (email) => {
-  if (!email) return null;
-  if (email.toLowerCase() !== OFFLINE_ADMIN_EMAIL) return null;
+  if (!email || !OFFLINE_ADMIN_EMAIL) return null;
+  if (email.toLowerCase() !== OFFLINE_ADMIN_EMAIL.toLowerCase()) return null;
   return buildOfflineAdminUser();
 };
 
@@ -36,4 +36,5 @@ export const getOfflineAdminUserById = (id) => {
   return buildOfflineAdminUser();
 };
 
-export const isOfflineAdminPassword = (password) => password === OFFLINE_ADMIN_PASSWORD;
+export const isOfflineAdminPassword = (password) =>
+  OFFLINE_ADMIN_PASSWORD ? password === OFFLINE_ADMIN_PASSWORD : false;
