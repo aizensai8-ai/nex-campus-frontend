@@ -5,8 +5,10 @@ const errorHandler = (err, req, res, next) => {
   const isDbUnavailable =
     /buffering timed out/i.test(message) ||
     /server selection timed out/i.test(message) ||
+    /client must be connected/i.test(message) ||
     err.name === 'MongoNetworkError' ||
-    err.name === 'MongoServerSelectionError';
+    err.name === 'MongoServerSelectionError' ||
+    err.name === 'MongoNotConnectedError';
 
   if (process.env.NODE_ENV === 'development' && !isDbUnavailable) {
     console.error('[ERROR]', err.stack);

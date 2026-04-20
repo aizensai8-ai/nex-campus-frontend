@@ -10,7 +10,7 @@ import { rateLimit } from 'express-rate-limit';
 import mongoSanitize from 'express-mongo-sanitize';
 import passport from 'passport';
 
-import connectDB from './config/db.js';
+import connectDB, { scheduleReconnect } from './config/db.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 // ── Route imports ──────────────────────────────────────────────────────────────
@@ -40,6 +40,7 @@ connectDB()
   .catch((err) => {
     if (process.env.NODE_ENV === 'development') {
       console.warn('⚠️  MongoDB unavailable; continuing in degraded local mode.');
+      scheduleReconnect();
       return;
     }
 

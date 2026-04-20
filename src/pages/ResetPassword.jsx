@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { pageTransition } from '../lib/animations';
 import { useToast } from '../context/ToastContext';
@@ -42,6 +42,12 @@ const ResetPassword = () => {
             className="antialiased overflow-hidden min-h-screen bg-background text-on-surface"
         >
             <main className="min-h-screen flex items-center justify-center relative p-6">
+                <Link to="/" className="absolute top-6 left-6 z-20 flex items-center gap-3">
+                    <div className="w-8 h-8 bg-primary-container rounded-sm flex items-center justify-center">
+                        <span className="material-symbols-outlined text-on-primary-container text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>architecture</span>
+                    </div>
+                    <span className="text-xl font-bold tracking-tighter text-white">Nex Campus</span>
+                </Link>
                 <div className="absolute inset-0 z-0 bg-surface-container-low">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-[#111827] to-secondary/5" />
                     <div className="absolute top-0 left-0 w-full h-full opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(#374151 1px, transparent 1px)', backgroundSize: '32px 32px' }} />

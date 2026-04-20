@@ -200,6 +200,15 @@ const Home = () => {
               >
                 Browse Courses
               </button>
+              <a
+                href="https://youtu.be/9DdZPA73mL0"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ripple inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-lg border border-primary/30 text-primary bg-primary/5 hover:bg-primary/10 hover:border-primary/60 hover:scale-[1.02] active:scale-[0.97] transition-all duration-200"
+              >
+                <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>play_circle</span>
+                Watch Walkthrough
+              </a>
             </motion.div>
           </div>
 

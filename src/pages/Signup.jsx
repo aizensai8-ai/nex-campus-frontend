@@ -48,9 +48,9 @@ const Signup = () => {
             {/* TopNavBar */}
             <header className="fixed top-0 left-0 w-full z-50 border-b border-outline-variant/10" style={{ backdropFilter: 'blur(20px)', background: 'rgba(13, 19, 34, 0.8)' }}>
                 <div className="flex justify-between items-center w-full px-6 py-4 max-w-[1440px] mx-auto">
-                    <div className="text-xl font-bold tracking-tighter text-white font-headline">
+                    <Link to="/" className="text-xl font-bold tracking-tighter text-white font-headline">
                         Nex Campus
-                    </div>
+                    </Link>
                     <div className="flex items-center gap-4">
                         <span className="font-mono text-[10px] tracking-widest text-outline uppercase">System Status: Optimal</span>
                         <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(173,198,255,0.6)]"></div>

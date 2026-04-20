@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { pageTransition } from '../lib/animations';
 import { useAuth } from '../context/AuthContext';
@@ -56,12 +56,12 @@ const Login = () => {
                         <div className="absolute top-1/3 left-1/4 w-48 h-48 bg-secondary/5 rounded-full blur-3xl" />
                     </div>
                     <div className="relative z-10 p-8 md:p-20 w-full max-w-2xl">
-                        <div className="mb-12 flex items-center gap-3">
+                        <Link to="/" className="mb-12 flex items-center gap-3">
                             <div className="w-8 h-8 bg-primary-container rounded-sm flex items-center justify-center">
                                 <span className="material-symbols-outlined text-on-primary-container text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>architecture</span>
                             </div>
                             <span className="text-xl font-bold tracking-tighter text-white">Nex Campus</span>
-                        </div>
+                        </Link>
                         <h1 className="text-4xl md:text-6xl font-semibold tracking-tighter text-white leading-[1.1] mb-6 font-satoshi">
                             Welcome back to Nex Campus.
                         </h1>
