@@ -573,7 +573,7 @@ const QUICK_ACTIONS = [
 ];
 
 // ── Dashboard Home ────────────────────────────────────────────────────────────
-const DashboardHome = ({ user, timetableData, loadingTimetable, announcements, events, transport, attSummary, attLoading, onTabChange, navigate }) => {
+const DashboardHome = ({ user, timetableData, loadingTimetable, announcements, events, transport, attSummary, attLoading, placementDrives, onTabChange, navigate }) => {
   const { next: nextClass, last: lastClass } = getNextAndLastClass(timetableData);
   const firstName = user.name?.split(' ')[0] || 'there';
   const sem = semLabel(user.semester);
@@ -664,28 +664,38 @@ const DashboardHome = ({ user, timetableData, loadingTimetable, announcements, e
 
           {/* Placements */}
           <div className="bg-surface-container-low rounded-xl p-4 border border-outline-variant/10 flex flex-col">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="material-symbols-outlined text-primary text-[16px]">work</span>
-              <span className="text-xs font-semibold text-white">Placements</span>
-              <span className="ml-auto text-[9px] font-mono text-outline border border-outline-variant/20 px-1.5 py-0.5 rounded">Soon</span>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-[16px]">work</span>
+                <span className="text-xs font-semibold text-white">Placements</span>
+              </div>
+              <Link to="/placements" className="text-[10px] text-outline hover:text-primary transition-colors">See all</Link>
             </div>
-            <div className="flex-1 flex flex-col items-start justify-center gap-2.5">
-              {[
-                { company: 'TCS', role: 'SDE', pkg: '3.5 LPA' },
-                { company: 'Infosys', role: 'Systems Eng.', pkg: '3.6 LPA' },
-              ].map(p => (
-                <div key={p.company} className="flex items-center gap-2 w-full opacity-40">
-                  <div className="w-6 h-6 rounded bg-surface-container-highest flex items-center justify-center">
-                    <span className="material-symbols-outlined text-[12px] text-outline">business</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white text-xs font-medium">{p.company} · {p.role}</p>
-                    <p className="text-outline text-[10px]">{p.pkg}</p>
-                  </div>
-                </div>
-              ))}
-              <p className="text-outline text-[10px] mt-1">Placement data coming soon.</p>
-            </div>
+            {placementDrives.length === 0 ? (
+              <div className="flex-1 flex flex-col items-start justify-center gap-1">
+                <p className="text-outline text-xs">No active drives right now.</p>
+                <Link to="/placements" className="text-primary text-[10px] hover:underline">Browse placement resources →</Link>
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                {placementDrives.slice(0, 3).map(d => {
+                  const days = Math.ceil((new Date(d.date) - Date.now()) / 86400000);
+                  const open = days >= 0;
+                  return (
+                    <div key={d._id} className="flex items-center gap-2 w-full">
+                      <div className="w-6 h-6 rounded bg-surface-container-highest flex items-center justify-center flex-shrink-0">
+                        <span className="material-symbols-outlined text-[12px] text-primary">business</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white text-xs font-medium truncate">{d.title}</p>
+                        <p className="text-outline text-[10px]">{open ? `${days}d left` : 'Closed'}</p>
+                      </div>
+                      {open && <span className="w-1.5 h-1.5 rounded-full bg-green-400 flex-shrink-0" />}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
         </div>
@@ -744,6 +754,7 @@ const Portal = () => {
   const [transport, setTransport] = useState([]);
   const [attSummary, setAttSummary] = useState([]);
   const [attLoading, setAttLoading] = useState(true);
+  const [placementDrives, setPlacementDrives] = useState([]);
 
   // Timetable
   useEffect(() => {
@@ -780,6 +791,17 @@ const Portal = () => {
       .then(res => setAttSummary(Array.isArray(res.data) ? res.data : []))
       .catch(() => {})
       .finally(() => setAttLoading(false));
+
+    api.get('/api/events?limit=50')
+      .then(res => {
+        const all = Array.isArray(res.data) ? res.data : [];
+        setPlacementDrives(all.filter(e =>
+          e.organizer === 'Placement Cell' ||
+          e.category === 'networking' ||
+          /placement|recruit|campus drive|hiring/i.test(e.title)
+        ));
+      })
+      .catch(() => {});
   }, [user]);
 
   const TABS = [
@@ -858,6 +880,7 @@ const Portal = () => {
                   transport={transport}
                   attSummary={attSummary}
                   attLoading={attLoading}
+                  placementDrives={placementDrives}
                   onTabChange={handleTabChange}
                   navigate={navigate}
                 />

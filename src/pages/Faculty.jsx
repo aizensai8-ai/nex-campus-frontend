@@ -207,28 +207,17 @@ const Faculty = () => {
   useEffect(() => {
     setLoading(true);
     setApiError(false);
-    api.get('/api/courses?limit=200')
+    api.get('/api/courses/faculty')
       .then(res => {
-        const courses = Array.isArray(res.data) ? res.data : [];
+        const fromApi = Array.isArray(res.data) ? res.data : [];
 
-        // Group by instructor name
+        // Merge API results with static profiles (profiles fill in cabin/hours/email;
+        // API fills in subjects. Faculty in static profiles but not in DB still appear.)
         const map = {};
-        courses.forEach(c => {
-          if (!c.instructor) return;
-          const key = c.instructor.trim();
-          if (!map[key]) {
-            map[key] = { name: key, department: c.department || 'General', subjects: [] };
-          }
-          const exists = map[key].subjects.some(s => s.code === c.code);
-          if (!exists) {
-            map[key].subjects.push({ code: c.code, name: c.name });
-          }
-        });
+        fromApi.forEach(f => { map[f.name] = f; });
 
-        // Merge with static profiles that might not have courses yet
         Object.keys(FACULTY_PROFILES).forEach(name => {
           if (!map[name]) {
-            // Infer department from cabin room
             const cabin = FACULTY_PROFILES[name].cabin || '';
             let dept = 'General';
             if (cabin.includes('CSE')) dept = 'Computer Science';
@@ -250,8 +239,8 @@ const Faculty = () => {
       .catch(() => {
         setApiError(true);
         const list = Object.entries(FACULTY_PROFILES).map(([name, p]) => {
-          let dept = 'General';
           const cabin = p.cabin || '';
+          let dept = 'General';
           if (cabin.includes('CSE')) dept = 'Computer Science';
           else if (cabin.includes('AIML')) dept = 'Artificial Intelligence';
           else if (cabin.includes('ISE')) dept = 'Data Science';

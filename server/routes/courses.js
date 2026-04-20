@@ -38,6 +38,24 @@ router.get(
   })
 );
 
+// ── GET /api/courses/faculty — instructor directory grouped from courses ───────
+router.get(
+  '/faculty',
+  asyncHandler(async (req, res) => {
+    const courses = await Course.find({}).select('instructor department code name').lean();
+    const map = {};
+    courses.forEach(c => {
+      if (!c.instructor) return;
+      const key = c.instructor.trim();
+      if (!map[key]) map[key] = { name: key, department: c.department || 'General', subjects: [] };
+      if (!map[key].subjects.some(s => s.code === c.code)) {
+        map[key].subjects.push({ code: c.code, name: c.name });
+      }
+    });
+    res.status(200).json({ success: true, data: Object.values(map) });
+  })
+);
+
 // ── GET /api/courses/:id ──────────────────────────────────────────────────────
 router.get(
   '/:id',

@@ -80,7 +80,16 @@ export function NotificationProvider({ children }) {
     }
   }, []);
 
-  useEffect(() => { refresh(); }, [refresh]);
+  useEffect(() => {
+    refresh();
+    const interval = setInterval(refresh, 5 * 60 * 1000);
+    const onFocus = () => refresh();
+    window.addEventListener('focus', onFocus);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', onFocus);
+    };
+  }, [refresh]);
 
   const unreadCount = notifications.filter(n => !readIds.has(n.id)).length;
 
