@@ -47,60 +47,60 @@ const MAP_DATA = {
   ],
   '1st Floor': [
     { name: 'MATHS STAFF', type: 'Staff', x: 0, y: 0, w: 200, h: 60 },
-    { name: 'LAB', type: 'Labs', x: 200, y: 0, w: 150, h: 60 },
-    { name: 'LAB', type: 'Labs', x: 350, y: 0, w: 150, h: 60 },
+    { name: 'LAB 101', type: 'Labs', x: 200, y: 0, w: 150, h: 60 },
+    { name: 'LAB 102', type: 'Labs', x: 350, y: 0, w: 150, h: 60 },
     { name: 'GIRLS RESTROOM', type: 'Washrooms', x: 500, y: 0, w: 200, h: 60 },
     { name: 'Stairs', type: 'Stairs', x: 700, y: 40, w: 60, h: 80 },
-    { name: 'Class', type: 'Classrooms', x: 640, y: 60, w: 60, h: 95 },
-    { name: 'Class', type: 'Classrooms', x: 640, y: 155, w: 60, h: 95 },
-    { name: 'Class', type: 'Classrooms', x: 640, y: 250, w: 60, h: 95 },
-    { name: 'Class', type: 'Classrooms', x: 640, y: 345, w: 60, h: 95 },
+    { name: 'CLASS 103', type: 'Classrooms', x: 640, y: 60, w: 60, h: 95 },
+    { name: 'CLASS 104', type: 'Classrooms', x: 640, y: 155, w: 60, h: 95 },
+    { name: 'CLASS 105', type: 'Classrooms', x: 640, y: 250, w: 60, h: 95 },
+    { name: 'CLASS 106', type: 'Classrooms', x: 640, y: 345, w: 60, h: 95 },
     { name: 'SEMINAR HALL', type: 'Special', x: 0, y: 440, w: 140, h: 60 },
-    { name: 'LAB', type: 'Labs', x: 140, y: 440, w: 280, h: 60 },
-    { name: 'LAB', type: 'Labs', x: 420, y: 440, w: 280, h: 60 },
+    { name: 'LAB 107', type: 'Labs', x: 140, y: 440, w: 280, h: 60 },
+    { name: 'LAB 108', type: 'Labs', x: 420, y: 440, w: 280, h: 60 },
     { name: 'Stairs', type: 'Stairs', x: -60, y: 80, w: 60, h: 80 },
     { name: 'WATER', type: 'Special', x: 0, y: 60, w: 60, h: 80 },
     { name: 'SEMINAR CONT', type: 'Special', x: 0, y: 140, w: 60, h: 300 },
   ],
   '2nd Floor': [
     { name: 'AIML STAFF', type: 'Staff', x: 0, y: 0, w: 140, h: 60 },
-    { name: 'Class', type: 'Classrooms', x: 140, y: 0, w: 140, h: 60 },
-    { name: 'LAB', type: 'Labs', x: 280, y: 0, w: 140, h: 60 },
-    { name: 'Class', type: 'Classrooms', x: 420, y: 0, w: 140, h: 60 },
+    { name: 'CLASS 201', type: 'Classrooms', x: 140, y: 0, w: 140, h: 60 },
+    { name: 'LAB 202', type: 'Labs', x: 280, y: 0, w: 140, h: 60 },
+    { name: 'CLASS 203', type: 'Classrooms', x: 420, y: 0, w: 140, h: 60 },
     { name: 'BOYS RESTROOM', splitName: ['BOYS', 'RESTROOM'], type: 'Washrooms', x: 560, y: 0, w: 70, h: 60 },
     { name: 'GIRLS RESTROOM', splitName: ['GIRLS', 'RESTROOM'], type: 'Washrooms', x: 630, y: 0, w: 70, h: 60 },
     { name: 'Stairs', type: 'Stairs', x: 700, y: 40, w: 60, h: 80 },
-    { name: 'LAB', type: 'Labs', x: 640, y: 60, w: 60, h: 120 },
-    { name: 'LAB', type: 'Labs', x: 640, y: 180, w: 60, h: 120 },
+    { name: 'LAB 204', type: 'Labs', x: 640, y: 60, w: 60, h: 120 },
+    { name: 'LAB 205', type: 'Labs', x: 640, y: 180, w: 60, h: 120 },
     { name: 'CSE HOD', type: 'Staff', x: 640, y: 300, w: 60, h: 140 },
     { name: 'STAFF', type: 'Staff', x: 0, y: 440, w: 100, h: 60 },
-    { name: 'Class', type: 'Classrooms', x: 100, y: 440, w: 100, h: 60 },
-    { name: 'Class', type: 'Classrooms', x: 200, y: 440, w: 100, h: 60 },
-    { name: 'LAB', type: 'Labs', x: 300, y: 440, w: 200, h: 60 },
-    { name: 'LAB', type: 'Labs', x: 500, y: 440, w: 200, h: 60 },
+    { name: 'CLASS 206', type: 'Classrooms', x: 100, y: 440, w: 100, h: 60 },
+    { name: 'CLASS 207', type: 'Classrooms', x: 200, y: 440, w: 100, h: 60 },
+    { name: 'LAB 208', type: 'Labs', x: 300, y: 440, w: 200, h: 60 },
+    { name: 'LAB 209', type: 'Labs', x: 500, y: 440, w: 200, h: 60 },
     { name: 'Stairs', type: 'Stairs', x: -60, y: 100, w: 60, h: 80 },
-    { name: 'LAB', type: 'Labs', x: 0, y: 60, w: 60, h: 140 },
-    { name: 'Class', type: 'Classrooms', x: 0, y: 200, w: 60, h: 140 },
+    { name: 'LAB 210', type: 'Labs', x: 0, y: 60, w: 60, h: 140 },
+    { name: 'CLASS 211', type: 'Classrooms', x: 0, y: 200, w: 60, h: 140 },
     { name: 'STAFF', type: 'Staff', x: 0, y: 340, w: 60, h: 100 },
   ],
   '3rd Floor': [
     { name: 'STAFF', type: 'Staff', x: 0, y: 0, w: 140, h: 60 },
-    { name: 'Class', type: 'Classrooms', x: 140, y: 0, w: 140, h: 60 },
-    { name: 'Class', type: 'Classrooms', x: 280, y: 0, w: 140, h: 60 },
-    { name: 'Class', type: 'Classrooms', x: 420, y: 0, w: 140, h: 60 },
+    { name: 'CLASS 301', type: 'Classrooms', x: 140, y: 0, w: 140, h: 60 },
+    { name: 'CLASS 302', type: 'Classrooms', x: 280, y: 0, w: 140, h: 60 },
+    { name: 'CLASS 303', type: 'Classrooms', x: 420, y: 0, w: 140, h: 60 },
     { name: 'BOYS RESTROOM', splitName: ['BOYS', 'RESTROOM'], type: 'Washrooms', x: 560, y: 0, w: 70, h: 60 },
     { name: 'GIRLS RESTROOM', splitName: ['GIRLS', 'RESTROOM'], type: 'Washrooms', x: 630, y: 0, w: 70, h: 60 },
     { name: 'Stairs', type: 'Stairs', x: 700, y: 40, w: 60, h: 80 },
     { name: 'AUDITORIUM', type: 'Special', x: 640, y: 60, w: 60, h: 380 },
     { name: 'STAFF', type: 'Staff', x: 0, y: 440, w: 120, h: 60 },
-    { name: 'Class', type: 'Classrooms', x: 120, y: 440, w: 140, h: 60 },
+    { name: 'CLASS 304', type: 'Classrooms', x: 120, y: 440, w: 140, h: 60 },
     { name: 'YOGA', type: 'Special', x: 260, y: 440, w: 160, h: 60 },
-    { name: 'Class', type: 'Classrooms', x: 420, y: 440, w: 140, h: 60 },
-    { name: 'Class', type: 'Classrooms', x: 560, y: 440, w: 140, h: 60 },
+    { name: 'CLASS 305', type: 'Classrooms', x: 420, y: 440, w: 140, h: 60 },
+    { name: 'CLASS 306', type: 'Classrooms', x: 560, y: 440, w: 140, h: 60 },
     { name: 'Stairs', type: 'Stairs', x: -60, y: 100, w: 60, h: 80 },
-    { name: 'Class', type: 'Classrooms', x: 0, y: 60, w: 60, h: 126 },
-    { name: 'Class', type: 'Classrooms', x: 0, y: 186, w: 60, h: 126 },
-    { name: 'Class', type: 'Classrooms', x: 0, y: 312, w: 60, h: 128 },
+    { name: 'CLASS 307', type: 'Classrooms', x: 0, y: 60, w: 60, h: 126 },
+    { name: 'CLASS 308', type: 'Classrooms', x: 0, y: 186, w: 60, h: 126 },
+    { name: 'CLASS 309', type: 'Classrooms', x: 0, y: 312, w: 60, h: 128 },
   ],
   'Terrace': [
     { name: 'Solar Panels', type: 'Special', x: 0, y: 0, w: 700, h: 60 },
@@ -165,6 +165,12 @@ export default function CampusMap() {
   const [searchFocus, setSearchFocus] = useState(false);
   const searchRef = useRef(null);
   const searchIndex = useMemo(buildSearchIndex, []);
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') setActiveRoom(null); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   const suggestions = useMemo(() => {
     if (!search.trim()) return [];
@@ -580,7 +586,7 @@ export default function CampusMap() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.1 }}
               className="fixed z-50 pointer-events-none px-2 py-1 bg-[#0a1628]/95 backdrop-blur rounded border border-[#3b82f6]/50 shadow-lg"
-              style={{ left: hoveredRoom.x + 10, top: hoveredRoom.y + 10 }}
+              style={{ left: Math.min(hoveredRoom.x + 10, window.innerWidth - 180), top: hoveredRoom.y + 10 }}
             >
               <span className="text-[#4a9eff] text-[10px] font-berkeley-mono uppercase tracking-widest">{hoveredRoom.name}</span>
             </motion.div>
