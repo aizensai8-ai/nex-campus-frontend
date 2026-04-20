@@ -2,6 +2,12 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Walkthrough Video
+
+https://youtu.be/9DdZPA73mL0
+
+Full walkthrough of the NexCampus MERN campus management platform.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
